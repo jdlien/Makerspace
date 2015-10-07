@@ -1,0 +1,46 @@
+-Add interface to create/rename categories
+-Allow categories to be displayed or hidden from the day view
+
+
+DONE	-Allow editing of maxes
+
+-Implement checking of maxes and prevent entering times of max has been exceeded for the day.
+
+
+BUG: Blocked times show up on single-item view even when they are not applicable to that item
+
+Use a multiselect. Make my display handle a list of resources.
+
+
+getBookings.cfm needs to support a 'type' parameter.
+Also, for some reason, getbookings has the full path hardcoded in 15 times. I'll need to adjust that.
+
+-Labels have to pay attention to the TypeID field.
+-All my calculations for columns have to be redone based on TypeID
+
+
+
+
+-When choosing "All Resources" from the dropdown, blocked times don't show for gaming (or anything, maybe?)
+-Blocked Times for gaming show for other resources. My guess is that the query I'm running in getBlockedTimes.cfm is flawed somehow.
+
+-I need to figure out a way to calculate number of columns required on the fly in JS based on a list of types.
+
+-Make resource selector a chosen multiselect dropdown
+
+
+-This chosen multiselect isnt' really going to be the optimal way to interface with this.
+
+Let's convert this into a list of checkboxes with labels.
+
+Gaming[]  Video[]  Creative[]  Digital Conversion []
+
+I'll probably need some javascript to convert the list of checkboxes that have a certain class into a comma separated list or array.
+I may consider shortening the labels.
+
+
+-----------
+-Set initial value of checkboxes based on typeID
+-Look at handleTypeID
+
+clicking columns books the wrong resources

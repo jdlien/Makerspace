@@ -1,0 +1,181 @@
+Makerspace calendar todo:
+
+DONE-see if I can prevent the user from selecting more than one timeslot by dragging.
+-show existing time slots that are already taken
+DONE-Prevent user from booking timeslots that are already taken. Can I limit a block to having only one event?
+DONE (so far) Only allow the user to edit their time slot. Show it in a different color.
+DONE-can timeslots start 5 mins after the hour?
+
+When do I do the database insert? Instantly?
+
+Database insert:
+
+DONE-check that the entry doesn't overlap any existing entries
+DONE-time must be in the future and less than a week from now
+DONE-Insert the new entry
+DONE-reload the calendar JSON data
+
+
+Next steps:
+
+DONE-Add color field to the resource editor
+DONE-Add dropdown to select the resource
+DONE-Write CFM to fetch calendar events from the DB and output ajax
+
+DONE  getBookings should only fetch bookings for the selected system. Make it go.
+
+  /**************************************/
+ /****** Workflow Visualization ********/
+/**************************************/
+Use case 1: Staff Use
+
+
+Use case 2: Customer use from public website
+
+	-User comes. Enters in card number.
+	-If it's not cool error appears. Otherwise:
+		Next field appears for system to book.
+		View of all bookings for the week appears.
+	-Select a resource
+	-click on a time slot. Time is booked. Confirmation message appears.
+		-If another time slot is clicked for this user, the original will be changed. User will be warned that the original will be moved.
+
+Next step:
+	-Confirm that card number has been entered and that it is valid.
+
+DONE If you click another time slot (and your other booking hasn't happened yet), it'll change.
+DONE If the prior booking has already happened, create a new booking and don't touch the prior one.
+
+DONE-darken times in the past
+DONE-delete any entries where the end time is before now and the user is the same
+	
+DONE-don't require a resource to be selected in order to choose a day from month view.
+
+
+	DONE -Interface to block off time that cannot be booked (one time or routine)
+	CANCELLED  -Not necessary -Inserting player slots
+	DONE - you're allowed one booking for each type
+	DONE - Interface to show bookings for a single customer
+	
+	-ability to cancel bookings
+	-Click on booking, see (X) that can be clicked to cancel
+	-Ensure card number validation is also done server side.
+	-Show notifications when customer information has been altered, etc.
+	
+-Ensure customer's personal information is not being passed to the browser with ajax.
+
+
+
+  /**************************************/
+ /******      Blocked Time      ********/
+/**************************************/
+
+*How does a time being 'blocked' off affect the user experience of an app?
+
+-It shouldn't appear the same as an appointment. Perhaps if only because it's grayed out with black text... or something.
+
+-Blocked Times are specified with a start time and end time. A range of time.
+-If day of the week is specified, then it only takes effect on the one day of the week specified.
+-If day of the week is not specified, then the time is continuous through the period specified.
+
+If you wanted to block out a certain time for every single day of the week for a period, you'd have to enter it in seven times. Otherwise it would block out the whole time.
+
+
+Consider the following Scenarios:
+-Every single day we are closed from 21:00 to 09:00 the following day. How can I make that a single entry? (and not... 14 entries - two for each day of the week?)
+
+I could do it with... two - One for daily.
+How would daily work?
+-I think I'd need a special db field to flag "Daily"
+
+Perhaps times and dates should be separate fields in the DB
+If continuous, day of week is Null.
+If Every day, day of week is null and continuous flag is set?
+
+
+ 
+ 
+****************************
+DONE	Sizing Columns for Resource Type Blocked Time
+Ability to toggle view of only gaming/creative types
+
+
+  /**************************************/
+ /****** Remaining Functionality *******/
+/**************************************/
+-Ask the user to confirm the action when making a booking will cause other bookings to be deleted.
+-Offer a way to delete bookings without logging in as a user.
+
+-Setting blocked times on top of existing bookings should cause those bookings to be erased.
+
+Provide a resource multi-select option for creating blocked time that automatically inserts multiple blockedtimes for several resourses
+
+
+-Prevent users from booking more than two hours on all gaming resources in one day
+	-On weekends, there may be different hours (one hour per day)
+-Different limits may be applied to the green screen and digital conversion
+
+Simplest solution for dealing with blocked cards:
+	-Do not flag "error" for blocked. Set a different flag and display a message indicating what cannot be booked.
+Test blocked card:
+21221020494677
+
+obviate need for 'check' button - can use validation callback
+
+-Column headers in day view
+
+
+  /**************************************/
+ /******         Name Bug        *******/
+/**************************************/
+
+It appears that sometimes, the wrong id is being entered for a user.
+This might be because I'm not refreshing the ID field before I pass it somewhere...
+let's see if I can figure out which one is correct for the bookings I've got
+
+
+Examples of incorrect accounts are:
+
+21221022582040	Robert Allan	Dignard -> Samatar Shafi Ahmed
+21221023347211	Robert Allan	Dignard 
+
+21221021902959	Thomas Michael	McCallum
+21221023327841	Thomas Michael	McCallum -> Trevor J Jordet is BLOCKED.
+
+21221022124587	Eduardo Kempfer	Bastos
+21221022977125	Eduardo Kempfer	Bastos -> Conrad Bittern
+
+
+When selecting Benjamin DLI from the list, it errors and kills itself. Wtf?
+
+  /**************************************/
+ /****** Blocked Time Display Bug ******/
+/**************************************/
+
+-Tour with Boys & Girls Club 15:45-18:00 Monday 2014-Jun-02
+The issue manifests when there are partially overlapping time slots
+
+-Partial solution is to force the width for BlockedTimes for all resources
+
+
+  /**************************************/
+ /************ Version 1.1 *************/
+/**************************************/
+
+-Allow the ability to create and modify resource types
+	-Can't delete a type if it is used by a resource
+-Set time slot limits on resources and types
+
+-Allow the public to use the booking tool
+-Add in lines to delineate columns
+-Include a mode to show only certain types/tags
+-allow resources to have 'tags' instead of types (or in addition to?)
+	-this is an idea that would allow certain groupings of resources
+
+-Create a separate table for past users
+-remove the columns for user's first/last name & email from the bookings table
+-allow users to be hidden from the prior users list by adding a flag to the users table
+
+
+-Look into speeding up the loading of events. It's slower than I'd like atm.
+-MAYBE Allow for some resources to book more than one slot in the future... (we have an acceptable workaround for this)
