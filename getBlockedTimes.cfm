@@ -41,17 +41,17 @@
 <!--- Retreive relevant blockedTimes - only show non-null RID/TypeID if relevant RID is passed --->
 <cfquery name="BlockedTimes" datasource="SecureSource" dbtype="ODBC">
 	SELECT t.BID, ISNULL(t.RID, btr.RID) AS RID, ISNULL(t.TypeID, btr.TypeID) AS TypeID, StartTime, EndTime,
-	DayofWeek, Continuous, t.Description, t.ModifiedBy,
+	DayofWeek, Continuous, t.Description, t.OfficeCode, t.ModifiedBy,
 	t.Modified, r.ResourceName, ty.TypeName
-	FROM MakerspaceBlockedTimes t
-	LEFT JOIN MakerspaceBlockedTimeResources btr on btr.BID=t.BID
-	LEFT JOIN MakerspaceBookingResources r on t.RID=r.rid OR btr.RID=r.rid
-	LEFT JOIN MakerspaceBookingResourceTypes ty on t.TypeID=ty.TypeID OR btr.TypeID=ty.TypeID
+	FROM vsd.MakerspaceBlockedTimes t
+	LEFT JOIN vsd.MakerspaceBlockedTimeResources btr on btr.BID=t.BID
+	LEFT JOIN vsd.MakerspaceBookingResources r on t.RID=r.rid OR btr.RID=r.rid
+	LEFT JOIN vsd.MakerspaceBookingResourceTypes ty on t.TypeID=ty.TypeID OR btr.TypeID=ty.TypeID
 	WHERE t.OfficeCode='#ThisLocation#'
 	<cfif isDefined('form.rid') AND form.rid NEQ "">
 		AND ((t.RID='#form.rid#' OR btr.RID='#form.rid#')
 		<cfif isDefined('resourceType') AND resourceType NEQ "">OR (t.TypeID='#ResourceType#' OR btr.TypeID='#ResourceType#')</cfif>)
-		OR (t.RID IS NULL AND t.TypeID IS NULL AND btr.RID IS NULL AND btr.TypeID IS NULL)
+		OR (t.RID IS NULL AND t.TypeID IS NULL AND btr.RID IS NULL AND btr.TypeID IS NULL AND t.OfficeCode='#ThisLocation#')
 	</cfif>
 	<cfif isDefined('form.TypeID') AND len(form.TypeID)>
 		<!--- Retrieve blocked times applicable to TypesResources in this type, or the types themselves --->
