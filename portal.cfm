@@ -797,7 +797,7 @@ $(document).ready(function(){
 				if (typeClassIdx >= 0) {
 					//console.log(eval(event.className[typeClassIdx]+"Col"));
 					numCols=eval(event.className[typeClassIdx]+"Col").columns;
-					$(".blockedTime."+event.className[typeClassIdx]).css('width',evenWidth()*numCols+((numCols-1)*4));
+					$(".blockedTime."+event.className[typeClassIdx]).css('width',evenWidth()*numCols+((numCols-1)*4)-3);
 					//console.log('setting .blockedTime.'+event.className[1]+' to '+evenWidth()+numCols);
 					//new offset value comes from the Resources[x] object.
 					//Use first RID for the type, get offset from Resoruces array.
@@ -809,7 +809,7 @@ $(document).ready(function(){
 					var thisRID=event.className[1].replace(/Res/i, "");
 					var offset=Resources[thisRID].offset;
 				} else { //If no resource is associated it applies to all columns
-					$(".blockedTime.All").css('width',$(calHeader).width());
+					$(".blockedTime.All").css('width',$(calHeader).width()-3);
 					$(".blockedTime.All").css('left',0);
 				}
 				

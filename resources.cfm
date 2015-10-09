@@ -24,6 +24,12 @@
 		width:100%;
 		height:22px;
 	}
+
+	.numberControl {
+		padding-left:2px !important;
+		padding-right:2px !important;
+		white-space:nowrap;
+	}
 	
 	.numberControl button {
 		margin-right:0px;
@@ -72,10 +78,11 @@
 		<th>Type</th>
 		<!---<th style="text-align:center;">Max Users</th>--->
 		<th style="text-align:center;">Color</th>
-		<th style="text-align:center;" title="Customers with blocked library cards may use this resource">Allow<br />Blocked</th>
+		<th style="text-align:center;" title="Customers with blocked library cards may use this resource">Allow<br />Blckd</th>
 		<th style="text-align:center;">WkDay<br />Max</th>
 		<th style="text-align:center;">WkEnd<br />Max</th>
-		<th style="text-align:center;" title="Allow this to be booked even if someone already has a simultaneous booking">Allow<br />Concurrent</th>
+		<th style="text-align:center;">Future<br />Max</th>
+		<th style="text-align:center;" title="Allow this to be booked even if someone already has a simultaneous booking">Allow<br />Cncrrnt</th>
 		<th style="text-align:center;">Delete</th>
 	</tr>
 	
@@ -106,17 +113,26 @@
 			<button type="button" onClick="decNum('#RID#', 'WeekendMaxBookings');">-</button
 			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="#RID#WeekendMaxBookings" id="#RID#WeekendMaxBookings" size="2" value="#WeekendMaxBookings#" readonly/><button type="button" onClick="incNum('#RID#', 'WeekendMaxBookings')">+</button>
 		</td>
+		<td class="numberControl" style="text-align:center;">
+			<button type="button" onClick="decNum('#RID#', 'FutureMaxBookings');">-</button
+			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="#RID#FutureMaxBookings" id="#RID#FutureMaxBookings" size="2" value="#FutureMaxBookings#" readonly/><button type="button" onClick="incNum('#RID#', 'FutureMaxBookings')">+</button>
+		</td>		
 		<td style="text-align:center;"><input type="checkbox" class="allowConcurrentCheckbox" name="#RID#allowConcurrent" id="#RID#allowConcurrent" <cfif #Concurrent# EQ 1>checked="checked"</cfif>/></td>
 		<td style="text-align:center;"><a class="delete" href="javascript:void(0);" onClick="deleteItem('#RID#', '#ResourceName#');">Delete</a></td>
 	</tr>
 	</cfoutput>
 	<tr>
 		<td colspan="4"><b>Add New Resource</b></td>
+		<th>Blckd</th>
+		<th>WkDay</th>
+		<th>WkEnd</th>
+		<th>Future</th>
+		<th>Cncurrnt</th>
 	</tr>
 	<tr class="altRow">
 		<form name="newResource" id="newResource" action="insertResource.cfm" method="post">
 		<td><input type="text" name="resourceName" id="resourceName" placeholder="Enter a Name" /></td>
-		<td><input type="text" name="description" id="description" style="width:400px;" placeholder="Enter a Description"/></td>
+		<td><input type="text" name="description" id="description" style="width:370px;" placeholder="Enter a Description"/></td>
 		<td>
 			<select name="typeId" id="typeId" class="chzn-select" data-placeholder="Select a Type">
 				<option value=""></option>
@@ -138,16 +154,19 @@
 		<td style="text-align:center;">
 		<input type="text" class="dayMax" name="wkendMax" id="wkendMax" style="max-width:40px;margin-bottom:2px;margin-left:0px;text-align:center;" value="" />
 		</td>--->
-		<td class="numberControl visibleButtons" style="text-align:center;">
+		<td class="numberControl visibleButtons" style="text-align:center;" title="Maximum Weekday Bookings Per Person">
 			<button type="button" onClick="decNum('', 'WeekdayMaxBookings');">-</button
 			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="WeekdayMaxBookings" id="WeekdayMaxBookings" size="2" value="" readonly/><button type="button" onClick="incNum('', 'WeekdayMaxBookings')">+</button>
 		</td>
-		<td class="numberControl visibleButtons" style="text-align:center;">
+		<td class="numberControl visibleButtons" style="text-align:center;" title="Maximum Weekend Bookings Per Person">
 			<button type="button" onClick="decNum('', 'WeekendMaxBookings');">-</button
 			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="WeekendMaxBookings" id="WeekendMaxBookings" size="2" value="" readonly/><button type="button" onClick="incNum('', 'WeekendMaxBookings')">+</button>
 		</td>
-		
-		<td style="text-align:center;"><input type="checkbox" name="allowConcurrent" id="allowConcurrent" /></td>
+		<td class="numberControl visibleButtons" style="text-align:center;" title="Maximum Future Bookings Allowed">
+			<button type="button" onClick="decNum('', 'FutureMaxBookings');">-</button
+			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="WeekendMaxBookings" id="FutureMaxBookings" size="2" value="" readonly/><button type="button" onClick="incNum('', 'FutureMaxBookings')">+</button>
+		</td>		
+		<td style="text-align:center;"><input type="checkbox" name="allowConcurrent" id="allowConcurrent" title="Allow Concurrent Bookings" /></td>
 		
 		<td><input type="Submit" name="SubmitNew" value="Add New" /></td>
 		</form>
@@ -172,6 +191,7 @@
 		<th style="text-align:center;">Display<br />by Default</th>
 		<th style="text-align:center;">WkDay<br />Max</th>
 		<th style="text-align:center;">WkEnd<br />Max</th>
+		<th style="text-align:center;">Future<br />Max</th>
 		<th style="text-align:center;">Delete</th>
 	</tr>
 	
@@ -192,6 +212,10 @@
 		<td class="numberControl" style="text-align:center;">
 			<button type="button" onClick="decNum('#TypeID#', 'TypeWeekendMaxBookings');">-</button
 			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="#TypeID#TypeWeekendMaxBookings" id="#TypeID#TypeWeekendMaxBookings" size="2" value="#TypeWeekendMaxBookings#" readonly/><button type="button" onClick="incNum('#TypeID#', 'TypeWeekendMaxBookings')">+</button>
+		</td>
+		<td class="numberControl" style="text-align:center;">
+			<button type="button" onClick="decNum('#TypeID#', 'TypeFutureMaxBookings');">-</button
+			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="#TypeID#TypeFutureMaxBookings" id="#TypeID#TypeFutureMaxBookings" size="2" value="#TypeFutureMaxBookings#" readonly/><button type="button" onClick="incNum('#TypeID#', 'TypeFutureMaxBookings')">+</button>
 		</td>
 		<td style="text-align:center;"><a class="delete" href="javascript:void(0);" onClick="deleteType('#TypeID#', '#TypeName#');">Delete</a></td>
 	</tr>
@@ -219,6 +243,10 @@
 			<button type="button" onClick="decNum('', 'TypeWeekendMaxBookings');">-</button
 			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="TypeWeekendMaxBookings" id="TypeWeekendMaxBookings" size="2" value="" readonly/><button type="button" onClick="incNum('', 'TypeWeekendMaxBookings')">+</button>
 		</td>		
+		<td class="numberControl visibleButtons" style="text-align:center;" title="Maximum Future Bookings For All Resources of Type">
+			<button type="button" onClick="decNum('', 'TypeFutureMaxBookings');">-</button
+			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="TypeFutureMaxBookings" id="TypeFutureMaxBookings" size="2" value="" readonly/><button type="button" onClick="incNum('', 'TypeFutureMaxBookings')">+</button>
+		</td>
 		<td><input type="Submit" name="SubmitNew" value="Add New" /></td>
 		</form>
 	</tr>
