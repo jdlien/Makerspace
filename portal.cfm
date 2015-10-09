@@ -1065,10 +1065,31 @@ $(document).ready(function(){
 });//document.ready
 
 <cfif permissions.delete eq 1>
+
+//This is supposed to return an event object with a particular TID, but it's not working :-/
+function getEvents(thisTid){
+    var events = new Array();      
+    events = $('#calendar').fullCalendar('clientEvents');
+    var filterevents = new Array();
+    var theEventID;
+    for(var j in events){ 
+        if(events[j].tid == thisTid)
+        {
+            theEventID = events[j]._id;
+        }
+    }           
+    return theEventID;
+}
+
+
+
 function deleteEvent(tid, title) {
 	if (confirm('Delete '+title+'?')) {
 		$.post('deleteBooking.cfm', {"id":tid});
-		$('.event'+tid).fadeOut(200);
+		//console.log('RemoveEvents '+tid);
+		$('#calendar').fullCalendar('removeEvents', getEvents(tid));
+		//$('.event'+tid).fadeOut(200);
+		//Can I remove the event from here?
 	}
 }
 </cfif>
