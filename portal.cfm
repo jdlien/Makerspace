@@ -146,11 +146,23 @@
 		border:0;
 		border-bottom:1px dashed red;
 		height:1px;
-		/*background-color:red;*/
 		color:red;
 		z-index:99;
 	}
 	
+	.timeline2 {
+		width:100%;
+		padding:0;
+		margin:0;
+		position:absolute;
+		bottom:0px;
+		border:0;
+		border-bottom:1px dashed red;
+		height:1px;
+		color:red;
+		z-index:99;
+	}
+
 	.grayButton {
 		margin:3px 3px;
 		margin-bottom:15px;
@@ -358,8 +370,8 @@
 		width:20px;
 		position:absolute;
 		border:none;
-		top:-2px;
-		right:-2px;
+		top:0px;
+		right:0px;
 		z-index:30;
 	}
 
@@ -368,8 +380,8 @@
 		width:20px;
 		position:absolute;
 		border:none;
-		bottom:-3px;
-		left:-3px;
+		bottom:0px;
+		left:0px;
 		z-index:30;
 	}
 </style>
@@ -600,16 +612,20 @@ function setTimeline(view, element) {
 	var parentDiv = jQuery(".fc-time-grid>.fc-bg");
 	var timeline = parentDiv.children(".timeline");
 	if (timeline.length == 0) { //if timeline isn't there, add it
-		timeline = jQuery("<div><hr /></div>").addClass("timeline");
+		timeline = jQuery('<div class="timeline"><hr /></div>').addClass("timeline");
 		parentDiv.prepend(timeline);
+		timeline2 = jQuery('<hr />').addClass("timeline2");
+		$('.fc-time-grid-container').prepend(timeline2);
 	}
 
 	var curTime = moment();
 	curTimeUTC=curTime.clone().add('h',-6);
 	if (view.start <= curTimeUTC && view.end >= curTimeUTC) {
 		timeline.show();
+		timeline2.show();
 	} else {
 		timeline.hide();
+		timeline2.hide();
 		return;
 	}
 
@@ -627,6 +643,7 @@ function setTimeline(view, element) {
 	var topLoc = Math.floor(parentDiv.height() * percentOfDay);
 
 	timeline.css("bottom", topLoc + "px");
+	timeline2.css("bottom", topLoc + "px");
 	
 	if (view.name == "agendaWeek") { //week view, don't want the timeline to go the whole way across
 		var dayCol = jQuery(".fc-today:visible");
@@ -636,6 +653,10 @@ function setTimeline(view, element) {
 			left: left + "px",
 			width: width + "px"
 		});
+		timeline2.css({
+			left: left + "px",
+			width: width + "px"
+		});		
 	}
 
 }//end setTimeline()
