@@ -2,7 +2,7 @@
 <cfset RemoveSidebar="yes">
 <cfset PermissionsMaxApplication="MakerspaceBooking">
 <cfset pagetitle="Makerspace Booking System">
-<cfset enableFullCalendar="yes">
+<cfset enableFullCalendar24="yes">
 
 
 <!--- List structure of permissions, links, and descriptions for which to get admin links --->
@@ -22,8 +22,8 @@
 <cfset ArrayAppend(adminButtons, adminButton)>	
 
 <cfinclude template="/AppsRoot/Includes/IntraHeader.cfm">
-<!--- Used for the current location of the user --->
-<cfset MBSPath="/DLI/Makerspace" />
+<!--- Used for the current location of the user in Makerspace Booking System --->
+<cfset MBSPath="/dev/Makerspace" />
 <cfset ThisLocation=RealStateBuilding/>
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
@@ -67,7 +67,18 @@
 <style type="text/css">
 
 	.fc-widget-content {
-		height:40px;
+		height:40px !important;
+		/*Overrides .fc-time-grid .fc-slats td { height: 1.5em*/
+	}
+
+
+	.fc-time-grid-container {
+		/*height:none !important;*/
+		overflow:hidden;
+	}
+
+	.fc-time-grid-event {
+		/*overflow:visible !important;*/
 	}
 
 	.notice {
@@ -216,9 +227,9 @@
 	
 	.DayResourceLabel {
 		position:relative;
-		z-index:2;
+		z-index:4;
 		float:left;
-		margin:0 2px;
+		margin:0 1px;
 		border:1px solid #AAAAAA;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
@@ -241,24 +252,24 @@
 		border-left:1px solid #EEEEEE;
 		border-right:1px solid #EEEEEE;
 		margin:0 2px;
-		z-index:1;
+		z-index:3;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;		
 	}
 	
 	.clearResourceButton {
+		color:#999;
 		font-weight:bold;
-		color:#444444;
-		margin-left:7px;
-		font-size:18px;
-		padding:0px 6px;
-		-webkit-border-radius: 50%;
-		-moz-border-radius: 50%;
-		border-radius: 50%;		
-		text-align:center;
-		background-color:#DFDFDF;
+		width:18px;
+		height:18px;
 		visibility:hidden;
+		display:inline-block;;
+		text-align:center;
+		font-size:17px;
+		margin-right:6px;
+		margin-left:6px;
+		vertical-align: middle;
 	}
 
 	.clearResourceButton:visited {
@@ -268,7 +279,17 @@
 	.clearResourceButton:hover {
 		text-decoration:none;
 		color:#D60000;
-		background-color:#E7D4D4;
+	}
+
+	.clearResourceButton svg #closeBtn {
+		stroke:black;
+		stroke-width:2;
+		fill:#ddd;
+	}
+
+	.clearResourceButton svg #closeBtn:hover {
+		stroke:red;
+		fill:#eee;
 	}
 
 	#resourceSelection {
@@ -305,21 +326,20 @@
 		width:375px;
 	}
 	
-	.fc-header-right span {
+	.fc-right span {
 		text-align:right; /* This causes the positions to get switched :( */
 	}
 	
-	.fc-header-left {
+	.fc-left {
 		width: 180px;
 		text-align: left;
 		}
 		
-	.fc-header-center {
+	.fc-center {
 		text-align: left;
 		}
 		
-	.fc-header-right {
-		width: 50%;
+	.fc-right {
 		text-align: right;
 		}
 	
@@ -338,9 +358,9 @@
 		width:20px;
 		position:absolute;
 		border:none;
-		top:-7px;
-		right:-7px;
-		z-index:20;
+		top:-2px;
+		right:-2px;
+		z-index:30;
 	}
 
 	.eventNoteButton img {
@@ -348,9 +368,9 @@
 		width:20px;
 		position:absolute;
 		border:none;
-		bottom:-10px;
-		left:-9px;
-		z-index:20;
+		bottom:-3px;
+		left:-3px;
+		z-index:30;
 	}
 </style>
 
@@ -433,7 +453,7 @@ Opentip.styles.eventInfo = {
 };
 		
 /* Get the width of the contents of the Makerspace Booking Calendar where events go */
-var calHeader='th.fc-col0.fc-widget-header.fc-last';
+var calHeader='.fc-day-header.fc-widget-header';
 		
 /* attach a submit handler to the login form */
 $(document).on('submit', '#userSelectionForm', function(event) {
@@ -577,7 +597,7 @@ function strTimeToMinutes(str_time) {
 
 /* Show a line indicating the current time */	
 function setTimeline(view, element) {
-	var parentDiv = jQuery(".fc-agenda-slots:visible").parent();
+	var parentDiv = jQuery(".fc-time-grid>.fc-bg");
 	var timeline = parentDiv.children(".timeline");
 	if (timeline.length == 0) { //if timeline isn't there, add it
 		timeline = jQuery("<div><hr /></div>").addClass("timeline");
@@ -628,7 +648,7 @@ function evenWidth() {
 function labelColumns() {
 
 	//Clear the header in day view
-	$('.fc-col0.fc-last.fc-widget-header:first').html('').css('padding-left','2px');
+	$('.fc-day-header.fc-widget-header:first').html('').css('padding-left','2px');
 	
 	//Redo this as a loop of our Resources[] array. Only include columns for resources in types in the typeid hidden field
 	var i, types, count=0;
@@ -648,7 +668,7 @@ function labelColumns() {
 		for( var j=0; j < Resources.length; j++) {
 			if (typeof Resources[j] === "object") {
 				if (Resources[j].typeID == arguments[i]) {
-					$('.fc-col0.fc-last.fc-widget-header').append('<a href="javascript:void(0);" id="DayResourceLabel'+j+'" class="DayResourceLabel" style="width:'+evenWidth()+'px;background-color:'+Resources[j].color+';border-color:'+Resources[j].color+';">'+Resources[j].name+'</a>');	
+					$('.fc-day-header.fc-widget-header').append('<a href="javascript:void(0);" id="DayResourceLabel'+j+'" class="DayResourceLabel" style="width:'+evenWidth()+'px;background-color:'+Resources[j].color+';border-color:'+Resources[j].color+';">'+Resources[j].name+'</a>');	
 				}
 			}
 		}
@@ -698,7 +718,7 @@ $(document).ready(function(){
 
 	$('#highlightHelp').opentip("Make it easy to see this customer's bookings.", {style:'eventInfo'});
 	$('#altCardHelp').opentip("Allow entry of any kind of card number.<br />Press ENTER&#8629; to submit.", {style:'eventInfo'});
-	$clearResourceButton='<a href="javascript:void(0);" class="clearResourceButton" title="Show all Resources">&#215;</a>';
+	$clearResourceButton='<a href="javascript:void(0);" class="clearResourceButton" title="Show all Resources"><svg width="100%" height="100%"><g id="closeBtn"><circle cx="50%" cy="50%" r="50%" stroke="black" stroke-width="0"></circle><line x1="25%" y1="25%" x2="75%" y2="75%"></line><line x1="25%" y1="75%" x2="75%" y2="25%"></line></g></svg></a>';
 
 	$resourceSel='<div id="resourceSelection"><select name="ridDD" id="ridDD" data-placeholder="Choose a resource"><option value=""></option><cfoutput query="ResourceList"><option value="#RID#">#JSStringFormat(ResourceName)#</option></cfoutput></select>'+$clearResourceButton+'</div>';
 
@@ -728,7 +748,7 @@ $(document).ready(function(){
 		header: {left:'prev,today,next', center:'title', right:'agendaDay,agendaWeek'},
 		titleFormat: {month:'MMMM YYYY', week: "MMMM D YYYY", day: 'dddd MMMM Do YYYY'},
 		columnFormat: {week: 'dddd MMM D', day: ''},
-		contentHeight:700, //Doesn't seem to work :-/
+		contentHeight:"auto",
 		defaultView:'agendaDay',
 		timeFormat: {agenda:'h:mm t'},
 		slotDuration:'01:00:00',
@@ -769,17 +789,17 @@ $(document).ready(function(){
 					var offset=Resources[thisRID].offset;
 				} else { //If no resource is associated it applies to all columns
 					$(".blockedTime.All").css('width',$(calHeader).width());
-					$(".blockedTime.All").css('left',54);
+					$(".blockedTime.All").css('left',0);
 				}
 				
 				//           Left time col    col position for res    'margin'
-				position = (50-evenWidth()) + (evenWidth()*offset) + (offset*4);
+				position = (evenWidth()*offset) + (offset*4) - evenWidth() -3;
 				element.css('left',position);
 				labelColumns();
 				$('#resourceSelection').remove();
 			} else if (view.name=="agendaWeek" && $('#resourceSelection').length==0) {
 				$('#typeSelection').remove();
-				$('.fc-header-right:first').prepend($resourceSel);
+				$('.fc-right:first').prepend($resourceSel);
 				$('#ridDD').chosen();
 				if($('#ridDD').val()=='') {
 					$($('#ridDD')).css('color', '#999999');
@@ -812,7 +832,7 @@ $(document).ready(function(){
 
 				//Include checkboxes to choose the resource types shown
 				if ($('#typeSelection').length==0) {
-					$('.fc-header-right:first').prepend($typeSel);
+					$('.fc-right:first').prepend($typeSel);
 					var typeArray=$('#typeID').val().split(',');
 					//Set checkboxes based on initial value of #typeID
 					for( var i=0; i < typeArray.length; i++) {
@@ -929,7 +949,7 @@ $(document).ready(function(){
 		});
 		/* This should only be required in day view */
 		if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val() !='') {
-			$('.fc-col0.fc-last.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
+			$('.fc-day-header.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
 			$('.clearResourceButton').css('visibility', 'visible');
 			$('.clearResourceButton').on('click', function(){
 				$('#rid').val('');
@@ -979,7 +999,7 @@ $(document).ready(function(){
 		});
 		/* This should only be required in day view */
 		if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val() !='') {
-			$('.fc-col0.fc-last.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
+			$('.fc-day-header.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
 			$('.clearResourceButton').css('visibility', 'visible');
 			$('.clearResourceButton').on('click', function(){
 				$('#rid').val('');

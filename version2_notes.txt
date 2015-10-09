@@ -1,0 +1,28 @@
+Why can't something be added after an element is deleted?
+
+-I could remove the restriction that prevents an event from being booked on an existing event in the first place...
+
+Or I could reload the events after the delete
+
+Is it possible to change the restrictions after a delete? This prevents a full reload of the events which is crappy
+
+This would occur around line 1030
+$('.event'+tid).fadeOut(200);
+
+allowedToBook isOverlappingEvent
+
+Need to remove event from $('#calendar').fullCalendar('clientEvents');
+
+
+
+Upgrading to Full Calendar 2.4
+-Need to remove height attribute from fc-time-grid-container
+	Is there a 'proper' way to do this?
+
+Need to recalculate column clicks
+(evenWidth()*offset) + (offset*4) - evenWidth() -3;
+
+
+BIG LIST OF BUGS
+
+X and notes are now inside event
