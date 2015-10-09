@@ -44,3 +44,5 @@ I may consider shortening the labels.
 -Look at handleTypeID
 
 clicking columns books the wrong resources
+
+-Recalculate width of entire page for single-item views.
