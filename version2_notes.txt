@@ -25,4 +25,17 @@ Need to recalculate column clicks
 
 BIG LIST OF BUGS
 
-X and notes are now inside event
+DONE 	X and notes are now inside event
+
+In order to get the Delete and Note buttons to 'float off' the button, I have to make overflow visible, but that usually has the side-effects of making other text fall off the event boundaries.
+
+
+--------------------------------
+Allow specification of limit to future bookings
+-Will apply to both resources and resource types
+
+
+Showing Resource from Other branch on single-item view
+
+
+-When switching days in a single-item view, the heading label gets replaced with day.

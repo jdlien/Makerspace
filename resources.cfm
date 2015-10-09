@@ -164,7 +164,7 @@
 		</td>
 		<td class="numberControl visibleButtons" style="text-align:center;" title="Maximum Future Bookings Allowed">
 			<button type="button" onClick="decNum('', 'FutureMaxBookings');">-</button
-			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="WeekendMaxBookings" id="FutureMaxBookings" size="2" value="" readonly/><button type="button" onClick="incNum('', 'FutureMaxBookings')">+</button>
+			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="FutureMaxBookings" id="FutureMaxBookings" size="2" value="" readonly/><button type="button" onClick="incNum('', 'FutureMaxBookings')">+</button>
 		</td>		
 		<td style="text-align:center;"><input type="checkbox" name="allowConcurrent" id="allowConcurrent" title="Allow Concurrent Bookings" /></td>
 		

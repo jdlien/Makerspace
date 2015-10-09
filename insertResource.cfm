@@ -5,7 +5,18 @@
 <cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
 <cfif isDefined('SubmitNew')>
 	<cfquery name="InsertResource" datasource="ReadWriteSource" dbtype="ODBC">
-		INSERT INTO MakerSpaceBookingResources (ResourceName, Description, TypeID, MaxUsers, Color, AllowBlocked, WeekdayMaxBookings, WeekendMaxBookings, ModifiedBy, Modified)
+		INSERT INTO MakerSpaceBookingResources (
+			ResourceName,
+			Description,
+			TypeID,
+			MaxUsers,
+			Color,
+			AllowBlocked,
+			WeekdayMaxBookings,
+			WeekendMaxBookings,
+			FutureMaxBookings,
+			ModifiedBy,
+			Modified)
 		VALUES(
 			'#form.resourceName#',
 			'#form.description#',
@@ -15,6 +26,7 @@
 			<cfif isDefined('form.AllowBlocked') AND form.AllowBlocked IS 'on'>1<cfelse>0</cfif>,
 			<cfif isDefined('form.WeekdayMaxBookings') AND IsNumeric(form.WeekdayMaxBookings)>#form.WeekdayMaxBookings#<cfelse>NULL</cfif>,
 			<cfif isDefined('form.WeekendMaxBookings') AND IsNumeric(form.WeekendMaxBookings)>#form.WeekendMaxBookings#<cfelse>NULL</cfif>,
+			<cfif isDefined('form.FutureMaxBookings') AND IsNumeric(form.FutureMaxBookings)>#form.FutureMaxBookings#<cfelse>NULL</cfif>,
 			'#YouKnowIAm#',
 			GETDATE()
 			)
