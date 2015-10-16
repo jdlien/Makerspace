@@ -1,0 +1,62 @@
+Why can't something be added after an element is deleted?
+
+-I could remove the restriction that prevents an event from being booked on an existing event in the first place...
+
+Or I could reload the events after the delete
+
+Is it possible to change the restrictions after a delete? This prevents a full reload of the events which is crappy
+
+This would occur around line 1030
+$('.event'+tid).fadeOut(200);
+
+allowedToBook isOverlappingEvent
+
+Need to remove event from $('#calendar').fullCalendar('clientEvents');
+
+
+
+Upgrading to Full Calendar 2.4
+-Need to remove height attribute from fc-time-grid-container
+	Is there a 'proper' way to do this?
+
+Need to recalculate column clicks
+(evenWidth()*offset) + (offset*4) - evenWidth() -3;
+
+
+BIG LIST OF BUGS
+
+DONE 	X and notes are now inside event
+
+In order to get the Delete and Note buttons to 'float off' the button, I have to make overflow visible, but that usually has the side-effects of making other text fall off the event boundaries.
+
+
+--------------------------------
+Allow specification of limit to future bookings
+-Will apply to both resources and resource types
+
+
+Showing Resource from Other branch on single-item view
+
+
+-When switching days in a single-item view, the heading label gets replaced with day.
+
+
+
+
+Display Only on October 10 at WOO
+
+
+let x1 = my age
+let x2 = years here
+
+(x1+(x2-3) = 85 
+
+
+24
+
+
+Change extrabookings query to return the number of future bookings of that resource and resource type.
+
+Compare those two numbers with the limits.
+
+Now, when asking to cancel future bookings, the user will have to get a list of the bookings to be cancelled. 

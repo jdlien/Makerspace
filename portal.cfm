@@ -2,7 +2,7 @@
 <cfset RemoveSidebar="yes">
 <cfset PermissionsMaxApplication="MakerspaceBooking">
 <cfset pagetitle="Makerspace Booking System">
-<cfset enableFullCalendar="yes">
+<cfset enableFullCalendar24="yes">
 
 
 <!--- List structure of permissions, links, and descriptions for which to get admin links --->
@@ -22,8 +22,8 @@
 <cfset ArrayAppend(adminButtons, adminButton)>	
 
 <cfinclude template="/AppsRoot/Includes/IntraHeader.cfm">
-<!--- Used for the current location of the user --->
-<cfset MBSPath="/DLI/Makerspace" />
+<!--- Used for the current location of the user in Makerspace Booking System --->
+<cfset MBSPath="/dev/Makerspace" />
 <cfset ThisLocation=RealStateBuilding/>
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
@@ -67,7 +67,18 @@
 <style type="text/css">
 
 	.fc-widget-content {
-		height:40px;
+		height:40px !important;
+		/*Overrides .fc-time-grid .fc-slats td { height: 1.5em*/
+	}
+
+
+	.fc-time-grid-container {
+		/*height:none !important;*/
+		overflow:hidden;
+	}
+
+	.fc-time-grid-event {
+		/*overflow:visible !important;*/
 	}
 
 	.notice {
@@ -135,11 +146,23 @@
 		border:0;
 		border-bottom:1px dashed red;
 		height:1px;
-		/*background-color:red;*/
 		color:red;
 		z-index:99;
 	}
 	
+	.timeline2 {
+		width:100%;
+		padding:0;
+		margin:0;
+		position:absolute;
+		bottom:0px;
+		border:0;
+		border-bottom:1px dashed red;
+		height:1px;
+		color:red;
+		z-index:99;
+	}
+
 	.grayButton {
 		margin:3px 3px;
 		margin-bottom:15px;
@@ -216,9 +239,9 @@
 	
 	.DayResourceLabel {
 		position:relative;
-		z-index:2;
+		z-index:4;
 		float:left;
-		margin:0 2px;
+		margin:0 1px;
 		border:1px solid #AAAAAA;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
@@ -241,24 +264,24 @@
 		border-left:1px solid #EEEEEE;
 		border-right:1px solid #EEEEEE;
 		margin:0 2px;
-		z-index:1;
+		z-index:3;
 		-webkit-border-radius: 3px;
 		-moz-border-radius: 3px;
 		border-radius: 3px;		
 	}
 	
 	.clearResourceButton {
+		color:#999;
 		font-weight:bold;
-		color:#444444;
-		margin-left:7px;
-		font-size:18px;
-		padding:0px 6px;
-		-webkit-border-radius: 50%;
-		-moz-border-radius: 50%;
-		border-radius: 50%;		
-		text-align:center;
-		background-color:#DFDFDF;
+		width:18px;
+		height:18px;
 		visibility:hidden;
+		display:inline-block;;
+		text-align:center;
+		font-size:17px;
+		margin-right:6px;
+		margin-left:6px;
+		vertical-align: middle;
 	}
 
 	.clearResourceButton:visited {
@@ -268,7 +291,17 @@
 	.clearResourceButton:hover {
 		text-decoration:none;
 		color:#D60000;
-		background-color:#E7D4D4;
+	}
+
+	.clearResourceButton svg #closeBtn {
+		stroke:black;
+		stroke-width:2;
+		fill:#ddd;
+	}
+
+	.clearResourceButton svg #closeBtn:hover {
+		stroke:red;
+		fill:#eee;
 	}
 
 	#resourceSelection {
@@ -305,21 +338,20 @@
 		width:375px;
 	}
 	
-	.fc-header-right span {
+	.fc-right span {
 		text-align:right; /* This causes the positions to get switched :( */
 	}
 	
-	.fc-header-left {
+	.fc-left {
 		width: 180px;
 		text-align: left;
 		}
 		
-	.fc-header-center {
+	.fc-center {
 		text-align: left;
 		}
 		
-	.fc-header-right {
-		width: 50%;
+	.fc-right {
 		text-align: right;
 		}
 	
@@ -338,9 +370,9 @@
 		width:20px;
 		position:absolute;
 		border:none;
-		top:-7px;
-		right:-7px;
-		z-index:20;
+		top:0px;
+		right:0px;
+		z-index:30;
 	}
 
 	.eventNoteButton img {
@@ -348,9 +380,9 @@
 		width:20px;
 		position:absolute;
 		border:none;
-		bottom:-10px;
-		left:-9px;
-		z-index:20;
+		bottom:0px;
+		left:0px;
+		z-index:30;
 	}
 </style>
 
@@ -433,7 +465,7 @@ Opentip.styles.eventInfo = {
 };
 		
 /* Get the width of the contents of the Makerspace Booking Calendar where events go */
-var calHeader='th.fc-col0.fc-widget-header.fc-last';
+var calHeader='.fc-day-header.fc-widget-header';
 		
 /* attach a submit handler to the login form */
 $(document).on('submit', '#userSelectionForm', function(event) {
@@ -577,19 +609,23 @@ function strTimeToMinutes(str_time) {
 
 /* Show a line indicating the current time */	
 function setTimeline(view, element) {
-	var parentDiv = jQuery(".fc-agenda-slots:visible").parent();
+	var parentDiv = jQuery(".fc-time-grid>.fc-bg");
 	var timeline = parentDiv.children(".timeline");
 	if (timeline.length == 0) { //if timeline isn't there, add it
-		timeline = jQuery("<div><hr /></div>").addClass("timeline");
+		timeline = jQuery('<div class="timeline"><hr /></div>').addClass("timeline");
 		parentDiv.prepend(timeline);
+		timeline2 = jQuery('<hr />').addClass("timeline2");
+		$('.fc-time-grid-container').prepend(timeline2);
 	}
 
 	var curTime = moment();
 	curTimeUTC=curTime.clone().add('h',-6);
 	if (view.start <= curTimeUTC && view.end >= curTimeUTC) {
 		timeline.show();
+		timeline2.show();
 	} else {
 		timeline.hide();
+		timeline2.hide();
 		return;
 	}
 
@@ -607,6 +643,7 @@ function setTimeline(view, element) {
 	var topLoc = Math.floor(parentDiv.height() * percentOfDay);
 
 	timeline.css("bottom", topLoc + "px");
+	timeline2.css("bottom", topLoc + "px");
 	
 	if (view.name == "agendaWeek") { //week view, don't want the timeline to go the whole way across
 		var dayCol = jQuery(".fc-today:visible");
@@ -616,6 +653,10 @@ function setTimeline(view, element) {
 			left: left + "px",
 			width: width + "px"
 		});
+		timeline2.css({
+			left: left + "px",
+			width: width + "px"
+		});		
 	}
 
 }//end setTimeline()
@@ -628,7 +669,7 @@ function evenWidth() {
 function labelColumns() {
 
 	//Clear the header in day view
-	$('.fc-col0.fc-last.fc-widget-header:first').html('').css('padding-left','2px');
+	$('.fc-day-header.fc-widget-header:first').html('').css('padding-left','2px');
 	
 	//Redo this as a loop of our Resources[] array. Only include columns for resources in types in the typeid hidden field
 	var i, types, count=0;
@@ -648,7 +689,7 @@ function labelColumns() {
 		for( var j=0; j < Resources.length; j++) {
 			if (typeof Resources[j] === "object") {
 				if (Resources[j].typeID == arguments[i]) {
-					$('.fc-col0.fc-last.fc-widget-header').append('<a href="javascript:void(0);" id="DayResourceLabel'+j+'" class="DayResourceLabel" style="width:'+evenWidth()+'px;background-color:'+Resources[j].color+';border-color:'+Resources[j].color+';">'+Resources[j].name+'</a>');	
+					$('.fc-day-header.fc-widget-header').append('<a href="javascript:void(0);" id="DayResourceLabel'+j+'" class="DayResourceLabel" style="width:'+evenWidth()+'px;background-color:'+Resources[j].color+';border-color:'+Resources[j].color+';">'+Resources[j].name+'</a>');	
 				}
 			}
 		}
@@ -698,7 +739,7 @@ $(document).ready(function(){
 
 	$('#highlightHelp').opentip("Make it easy to see this customer's bookings.", {style:'eventInfo'});
 	$('#altCardHelp').opentip("Allow entry of any kind of card number.<br />Press ENTER&#8629; to submit.", {style:'eventInfo'});
-	$clearResourceButton='<a href="javascript:void(0);" class="clearResourceButton" title="Show all Resources">&#215;</a>';
+	$clearResourceButton='<a href="javascript:void(0);" class="clearResourceButton" title="Show all Resources"><svg width="100%" height="100%"><g id="closeBtn"><circle cx="50%" cy="50%" r="50%" stroke="black" stroke-width="0"></circle><line x1="25%" y1="25%" x2="75%" y2="75%"></line><line x1="25%" y1="75%" x2="75%" y2="25%"></line></g></svg></a>';
 
 	$resourceSel='<div id="resourceSelection"><select name="ridDD" id="ridDD" data-placeholder="Choose a resource"><option value=""></option><cfoutput query="ResourceList"><option value="#RID#">#JSStringFormat(ResourceName)#</option></cfoutput></select>'+$clearResourceButton+'</div>';
 
@@ -728,7 +769,7 @@ $(document).ready(function(){
 		header: {left:'prev,today,next', center:'title', right:'agendaDay,agendaWeek'},
 		titleFormat: {month:'MMMM YYYY', week: "MMMM D YYYY", day: 'dddd MMMM Do YYYY'},
 		columnFormat: {week: 'dddd MMM D', day: ''},
-		contentHeight:700, //Doesn't seem to work :-/
+		contentHeight:"auto",
 		defaultView:'agendaDay',
 		timeFormat: {agenda:'h:mm t'},
 		slotDuration:'01:00:00',
@@ -756,7 +797,7 @@ $(document).ready(function(){
 				if (typeClassIdx >= 0) {
 					//console.log(eval(event.className[typeClassIdx]+"Col"));
 					numCols=eval(event.className[typeClassIdx]+"Col").columns;
-					$(".blockedTime."+event.className[typeClassIdx]).css('width',evenWidth()*numCols+((numCols-1)*4));
+					$(".blockedTime."+event.className[typeClassIdx]).css('width',evenWidth()*numCols+((numCols-1)*4)-3);
 					//console.log('setting .blockedTime.'+event.className[1]+' to '+evenWidth()+numCols);
 					//new offset value comes from the Resources[x] object.
 					//Use first RID for the type, get offset from Resoruces array.
@@ -768,18 +809,18 @@ $(document).ready(function(){
 					var thisRID=event.className[1].replace(/Res/i, "");
 					var offset=Resources[thisRID].offset;
 				} else { //If no resource is associated it applies to all columns
-					$(".blockedTime.All").css('width',$(calHeader).width());
-					$(".blockedTime.All").css('left',54);
+					$(".blockedTime.All").css('width',$(calHeader).width()-3);
+					$(".blockedTime.All").css('left',0);
 				}
 				
 				//           Left time col    col position for res    'margin'
-				position = (50-evenWidth()) + (evenWidth()*offset) + (offset*4);
+				position = (evenWidth()*offset) + (offset*4) - evenWidth() -3;
 				element.css('left',position);
 				labelColumns();
 				$('#resourceSelection').remove();
 			} else if (view.name=="agendaWeek" && $('#resourceSelection').length==0) {
 				$('#typeSelection').remove();
-				$('.fc-header-right:first').prepend($resourceSel);
+				$('.fc-right:first').prepend($resourceSel);
 				$('#ridDD').chosen();
 				if($('#ridDD').val()=='') {
 					$($('#ridDD')).css('color', '#999999');
@@ -812,7 +853,7 @@ $(document).ready(function(){
 
 				//Include checkboxes to choose the resource types shown
 				if ($('#typeSelection').length==0) {
-					$('.fc-header-right:first').prepend($typeSel);
+					$('.fc-right:first').prepend($typeSel);
 					var typeArray=$('#typeID').val().split(',');
 					//Set checkboxes based on initial value of #typeID
 					for( var i=0; i < typeArray.length; i++) {
@@ -929,7 +970,7 @@ $(document).ready(function(){
 		});
 		/* This should only be required in day view */
 		if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val() !='') {
-			$('.fc-col0.fc-last.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
+			$('.fc-day-header.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
 			$('.clearResourceButton').css('visibility', 'visible');
 			$('.clearResourceButton').on('click', function(){
 				$('#rid').val('');
@@ -979,7 +1020,7 @@ $(document).ready(function(){
 		});
 		/* This should only be required in day view */
 		if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val() !='') {
-			$('.fc-col0.fc-last.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
+			$('.fc-day-header.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
 			$('.clearResourceButton').css('visibility', 'visible');
 			$('.clearResourceButton').on('click', function(){
 				$('#rid').val('');
@@ -1024,10 +1065,31 @@ $(document).ready(function(){
 });//document.ready
 
 <cfif permissions.delete eq 1>
+
+//This is supposed to return an event object with a particular TID, but it's not working :-/
+function getEvents(thisTid){
+    var events = new Array();      
+    events = $('#calendar').fullCalendar('clientEvents');
+    var filterevents = new Array();
+    var theEventID;
+    for(var j in events){ 
+        if(events[j].tid == thisTid)
+        {
+            theEventID = events[j]._id;
+        }
+    }           
+    return theEventID;
+}
+
+
+
 function deleteEvent(tid, title) {
 	if (confirm('Delete '+title+'?')) {
 		$.post('deleteBooking.cfm', {"id":tid});
-		$('.event'+tid).fadeOut(200);
+		//console.log('RemoveEvents '+tid);
+		$('#calendar').fullCalendar('removeEvents', getEvents(tid));
+		//$('.event'+tid).fadeOut(200);
+		//Can I remove the event from here?
 	}
 }
 </cfif>
@@ -1102,36 +1164,55 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 					noticeMsg+='<a href="javascript:void(0);">No</a></div>';
 				}//end else if
 
-				if (typeof bookingInfoObj.PRIORBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM != true) {
-					var arrLen=bookingInfoObj.PRIORBOOKINGS.length;
+				if (typeof bookingInfoObj.CONFLICTINGBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM != true) {
+					var arrLen=bookingInfoObj.CONFLICTINGBOOKINGS.length;
 					for (var i = 0; i < arrLen; i++) {
-						noticeMsg+='<br /><span class="warning">Your prior <b>'
-							+Resources[bookingInfoObj.PRIORBOOKINGS[i].RID].name
-							+'</b> booking for <b>'+moment(bookingInfoObj.PRIORBOOKINGS[i].START).format("dddd [at] h:mm a")
+						noticeMsg+='<br /><span class="warning">Your <b>'
+							+Resources[bookingInfoObj.CONFLICTINGBOOKINGS[i].RID].name
+							+'</b> booking for <b>'+moment(bookingInfoObj.CONFLICTINGBOOKINGS[i].START).format("dddd [at] h:mm a")
 							+'</b> has been cancelled.</span>';
 					}//end array loop
-				} else if (typeof bookingInfoObj.PRIORBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM == true) {
-					var arrLen=bookingInfoObj.PRIORBOOKINGS.length;
-					noticeMsg+='<br /><span class="warning">To make this booking, these other bookings must be cancelled:<b><br />';
+				} else if (typeof bookingInfoObj.CONFLICTINGBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM == true) {
+					var arrLen=bookingInfoObj.CONFLICTINGBOOKINGS.length;
+					noticeMsg+='<br /><span class="warning">To make this booking, a conflicting booking must be cancelled.<b><br />';
 					for (var i = 0; i < arrLen; i++) {
-							noticeMsg+=Resources[bookingInfoObj.PRIORBOOKINGS[i].RID].name
-							+'</b> booking for <b>'+moment(bookingInfoObj.PRIORBOOKINGS[i].START).format("dddd [at] h:mm a")+'</b>';
+							noticeMsg+=Resources[bookingInfoObj.CONFLICTINGBOOKINGS[i].RID].name
+							+'</b> booking for <b>'+moment(bookingInfoObj.CONFLICTINGBOOKINGS[i].START).format("dddd [at] h:mm a")+'</b>';
 					}//end for loop
 					window.tempjsEvent=jsEvent;
 					window.tempView=view;
 					noticeMsg+='</span><div class="confirmQuestion">Schedule the new booking?</div>';
 					<!--- On clicking confirmdeletion, I have to resubmit this whole thing again but with confirmdelete set. --->
-					noticeMsg+='<div class="confirmDeletion"><a href="javascript:void(0);" onclick="doDayClick(tempDate, tempjsEvent, tempView, true)">Yes - cancel other bookings</a>';
+					noticeMsg+='<div class="confirmDeletion"><a href="javascript:void(0);" onclick="doDayClick(tempDate, tempjsEvent, tempView, true)">Yes - cancel other booking</a>';
 					noticeMsg+='<a href="javascript:void(0);">No - Don&#146;t cancel anything</a></div>';
 				}//end else if
+
+
+
+
+
+
 				if (typeof bookingInfoObj.ERRORMSG != 'undefined' && bookingInfoObj.ERRORMSG.length > 0) {
 					noticeMsg+=bookingInfoObj.ERRORMSG;
-				}//end priorbookings if
+
+					//Handle the display of future events
+					if (typeof bookingInfoObj.FUTUREBOOKINGS != 'undefined') {
+						var arrLen=bookingInfoObj.FUTUREBOOKINGS.length;
+						noticeMsg+='<br /><br />The following are already booked:<br />';
+						for (var i = 0; i < arrLen; i++) {
+								if (i>0) {noticeMsg+="<br />";}
+								noticeMsg+=Resources[bookingInfoObj.FUTUREBOOKINGS[i].RID].name
+								+' <b>'+moment(bookingInfoObj.FUTUREBOOKINGS[i].START).format("dddd [at] h:mm a")+'</b>';
+						}//end for loop
+					}
+
+
+				}//end CONFLICTINGBOOKINGS if
 				
 				if (bookingInfoObj.ERROR) {
 					toastr.options.timeOut = 6000;
 					toastr.error(noticeMsg);
-				}else if (bookingInfoObj.PRIORBOOKINGS || bookingInfoObj.PASTDATE) {
+				}else if (bookingInfoObj.CONFLICTINGBOOKINGS || bookingInfoObj.PASTDATE) {
 					toastr.options.timeOut = 0;
 					toastr.warning(noticeMsg);
 				}else {
