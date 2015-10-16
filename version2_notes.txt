@@ -39,3 +39,24 @@ Showing Resource from Other branch on single-item view
 
 
 -When switching days in a single-item view, the heading label gets replaced with day.
+
+
+
+
+Display Only on October 10 at WOO
+
+
+let x1 = my age
+let x2 = years here
+
+(x1+(x2-3) = 85 
+
+
+24
+
+
+Change extrabookings query to return the number of future bookings of that resource and resource type.
+
+Compare those two numbers with the limits.
+
+Now, when asking to cancel future bookings, the user will have to get a list of the bookings to be cancelled. 

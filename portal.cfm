@@ -1164,36 +1164,55 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 					noticeMsg+='<a href="javascript:void(0);">No</a></div>';
 				}//end else if
 
-				if (typeof bookingInfoObj.PRIORBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM != true) {
-					var arrLen=bookingInfoObj.PRIORBOOKINGS.length;
+				if (typeof bookingInfoObj.CONFLICTINGBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM != true) {
+					var arrLen=bookingInfoObj.CONFLICTINGBOOKINGS.length;
 					for (var i = 0; i < arrLen; i++) {
-						noticeMsg+='<br /><span class="warning">Your prior <b>'
-							+Resources[bookingInfoObj.PRIORBOOKINGS[i].RID].name
-							+'</b> booking for <b>'+moment(bookingInfoObj.PRIORBOOKINGS[i].START).format("dddd [at] h:mm a")
+						noticeMsg+='<br /><span class="warning">Your <b>'
+							+Resources[bookingInfoObj.CONFLICTINGBOOKINGS[i].RID].name
+							+'</b> booking for <b>'+moment(bookingInfoObj.CONFLICTINGBOOKINGS[i].START).format("dddd [at] h:mm a")
 							+'</b> has been cancelled.</span>';
 					}//end array loop
-				} else if (typeof bookingInfoObj.PRIORBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM == true) {
-					var arrLen=bookingInfoObj.PRIORBOOKINGS.length;
-					noticeMsg+='<br /><span class="warning">To make this booking, these other bookings must be cancelled:<b><br />';
+				} else if (typeof bookingInfoObj.CONFLICTINGBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM == true) {
+					var arrLen=bookingInfoObj.CONFLICTINGBOOKINGS.length;
+					noticeMsg+='<br /><span class="warning">To make this booking, a conflicting booking must be cancelled.<b><br />';
 					for (var i = 0; i < arrLen; i++) {
-							noticeMsg+=Resources[bookingInfoObj.PRIORBOOKINGS[i].RID].name
-							+'</b> booking for <b>'+moment(bookingInfoObj.PRIORBOOKINGS[i].START).format("dddd [at] h:mm a")+'</b>';
+							noticeMsg+=Resources[bookingInfoObj.CONFLICTINGBOOKINGS[i].RID].name
+							+'</b> booking for <b>'+moment(bookingInfoObj.CONFLICTINGBOOKINGS[i].START).format("dddd [at] h:mm a")+'</b>';
 					}//end for loop
 					window.tempjsEvent=jsEvent;
 					window.tempView=view;
 					noticeMsg+='</span><div class="confirmQuestion">Schedule the new booking?</div>';
 					<!--- On clicking confirmdeletion, I have to resubmit this whole thing again but with confirmdelete set. --->
-					noticeMsg+='<div class="confirmDeletion"><a href="javascript:void(0);" onclick="doDayClick(tempDate, tempjsEvent, tempView, true)">Yes - cancel other bookings</a>';
+					noticeMsg+='<div class="confirmDeletion"><a href="javascript:void(0);" onclick="doDayClick(tempDate, tempjsEvent, tempView, true)">Yes - cancel other booking</a>';
 					noticeMsg+='<a href="javascript:void(0);">No - Don&#146;t cancel anything</a></div>';
 				}//end else if
+
+
+
+
+
+
 				if (typeof bookingInfoObj.ERRORMSG != 'undefined' && bookingInfoObj.ERRORMSG.length > 0) {
 					noticeMsg+=bookingInfoObj.ERRORMSG;
-				}//end priorbookings if
+
+					//Handle the display of future events
+					if (typeof bookingInfoObj.FUTUREBOOKINGS != 'undefined') {
+						var arrLen=bookingInfoObj.FUTUREBOOKINGS.length;
+						noticeMsg+='<br /><br />The following are already booked:<br />';
+						for (var i = 0; i < arrLen; i++) {
+								if (i>0) {noticeMsg+="<br />";}
+								noticeMsg+=Resources[bookingInfoObj.FUTUREBOOKINGS[i].RID].name
+								+' <b>'+moment(bookingInfoObj.FUTUREBOOKINGS[i].START).format("dddd [at] h:mm a")+'</b>';
+						}//end for loop
+					}
+
+
+				}//end CONFLICTINGBOOKINGS if
 				
 				if (bookingInfoObj.ERROR) {
 					toastr.options.timeOut = 6000;
 					toastr.error(noticeMsg);
-				}else if (bookingInfoObj.PRIORBOOKINGS || bookingInfoObj.PASTDATE) {
+				}else if (bookingInfoObj.CONFLICTINGBOOKINGS || bookingInfoObj.PASTDATE) {
 					toastr.options.timeOut = 0;
 					toastr.warning(noticeMsg);
 				}else {
