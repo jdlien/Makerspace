@@ -33,6 +33,7 @@
 
 <cfif isDefined('form.newstart')>
 	<cfset exemptCards="21221012345678,2122111111111">
+
 	<cfset newstart=Replace(form.newstart, 'T', ' ')>
 	<cfset newend=Replace(form.newend, 'T', ' ')>
 	<cfset eventBegin=CreateDateTime(Year(newstart),Month(newstart),Day(newstart),Hour(newstart),Minute(newstart),00)>
@@ -56,6 +57,13 @@
 				WHERE r.RID='#form.rid#'
 			</cfquery>
 			<cfset ThisTypeID=ResourceList.TypeID>
+
+
+			<cfif ListFind(exemptCards, form.id) EQ 0>
+				<cfset notExempt=true />
+			<cfelse>
+				<cfset notExempt=false />
+			</cfif>
 
 			<!--- Initialize our error handling variables --->
 			<cfset data = StructNew()>
@@ -133,7 +141,7 @@
 
 			<!--- Check that the user hasn't already booked the max slots for this resource or type for this day --->
 			<!--- Count number of bookings for this resource already on this day --->
-			<cfif ListFind(exemptCards, form.id) EQ 0>
+			<cfif notExempt>
 				<cfquery name="BookingCount"  dbtype="ODBC" datasource="SecureSource">
 					SELECT COUNT(1) AS TypeSlotsBooked, 
 						(SELECT COUNT(1) FROM MakerspaceBookingTimes
@@ -150,18 +158,18 @@
 				<cfif isWeekend>
 					<cfif IsNumeric(ResourceList.TypeWeekendMaxBookings) AND BookingCount.TypeSlotsBooked GTE ResourceList.TypeWeekendMaxBookings>
 						<cfset data.error=true>
-						<cfset data.errorMsg&="You have already booked the weekend maximum #BookingCount.TypeSlotsBooked# time slots for the #ResourceList.TypeName# resource type.">
+						<cfset data.errorMsg&="You have already booked the weekend maximum #ResourceList.TypeWeekendMaxBookings# time slots for the #ResourceList.TypeName# resource type.">
 					<cfelseif IsNumeric(ResourceList.WeekendMaxBookings) AND BookingCount.ResSlotsBooked GTE ResourceList.WeekendMaxBookings>
 						<cfset data.error=true>
-						<cfset data.errorMsg&="You have already booked the weekend maximum #BookingCount.ResSlotsBooked# time slots for the #ResourceList.ResourceName# resource.">					
+						<cfset data.errorMsg&="You have already booked the weekend maximum #ResourceList.WeekendMaxBookings# time slots for the #ResourceList.ResourceName# resource.">					
 					</cfif>
 				<cfelse><!--- is a weekday --->
 					<cfif IsNumeric(ResourceList.TypeWeekdayMaxBookings) AND BookingCount.TypeSlotsBooked GTE ResourceList.TypeWeekdayMaxBookings>
 						<cfset data.error=true>
-						<cfset data.errorMsg&="You have already booked the weekday maximum #BookingCount.TypeSlotsBooked# time slots for the #ResourceList.TypeName# resource type.">					
+						<cfset data.errorMsg&="You have already booked the weekday maximum #ResourceList.TypeWeekdayMaxBookings# time slots for the #ResourceList.TypeName# resource type.">					
 					<cfelseif IsNumeric(ResourceList.WeekdayMaxBookings) AND BookingCount.ResSlotsBooked GTE ResourceList.WeekdayMaxBookings>
 						<cfset data.error=true>
-						<cfset data.errorMsg&="You have already booked the weekday maximum #BookingCount.ResSlotsBooked# time slots for the #ResourceList.ResourceName# resource.">					
+						<cfset data.errorMsg&="You have already booked the weekday maximum #ResourceList.WeekdayMaxBookings# time slots for the #ResourceList.ResourceName# resource.">					
 					</cfif>
 				</cfif>
 			</cfif><!--- check if exemptCard --->
@@ -178,7 +186,7 @@
 			<!--- If we are not booking a concurrently bookable resource, we do some checks
 					Here we need a list of other non-concurrent bookings for this user *at this time*
 			--->
-			<cfif ResourceList.Concurrent NEQ 1>
+			<cfif ResourceList.Concurrent NEQ 1 AND notExempt>
 				<!--- Check for other bookings at this time slot on a non-concurrent resource --->
 				<cfquery name="NonConcurrentBookings" datasource="ReadWriteSource" dbtype="ODBC">
 					SELECT * FROM MakerspaceBookingTimes ti
@@ -187,7 +195,7 @@
 						AND UserBarcode='#form.id#'
 						AND StartTime='#form.newstart#'
 				</cfquery>
-				<cfif NonConcurrentBookings.RecordCount>
+				<cfif notExempt AND NonConcurrentBookings.RecordCount>
 					<cfloop query="NonConcurrentBookings">
 						<cfset data.ConflictingBookings[currentRow]=StructNew()>
 						<cfset data.ConflictingBookings[currentRow].UserBarcode=UserBarcode>
@@ -202,6 +210,7 @@
 
 			<!--- This feature will only apply to non-concurrent conflicting bookings --->
 			<!--- If we found a concurrent booking that needs to be deleted, we require permission from the user --->
+			<cfif notExempt>
 			<cfif ResourceList.Concurrent NEQ 1 AND NonConcurrentBookings.Recordcount AND isDefined('form.confirmDelete') AND form.confirmDelete IS 'true'>
 				<cfquery name="CleanUpNonConcurrentBookings" datasource="ReadWriteSource" dbtype="ODBC">
 					DELETE MakerspaceBookingTimes 
@@ -212,12 +221,12 @@
 						AND (Concurrent = 0 OR Concurrent IS NULL))
 				</cfquery>			
 
-			<cfelseif ResourceList.Concurrent NEQ 1 AND NonConcurrentBookings.Recordcount AND ListFind(exemptCards, form.id) EQ 0>
+			<cfelseif ResourceList.Concurrent NEQ 1 AND NonConcurrentBookings.Recordcount>
 				<cfset data.requireConfirm=true>
 				<!--- this might be handy for resubmission --->
 				<cfset data.form=form>
 			</cfif><!--- if extra bookings and confirmed to delete --->
-
+			</cfif><!---notExempt--->
 
 			<!--- Count the number of future bookings for this resource --->
 			<cfquery name="FutureBookings" datasource="ReadWriteSource" dbtype="ODBC">
@@ -245,7 +254,7 @@
 			<!--- Compare Each of FutureBookings and FutureBookingsType against the FutureMax and TypeFutureMax --->
 			<cfif IsNumeric(ResourceList.FutureMaxBookings) 
 				AND FutureBookings.RecordCount GTE ResourceList.FutureMaxBookings
-				AND ListFind(exemptCards, form.id) EQ 0>
+				AND notExempt>
 				<!--- Return an error along with our list of conflicting bookings. --->
 					<cfset data.error=true>
 					<cfset data.errorMsg&="#ResourceList.ResourceName# only allows for #ResourceList.FutureMaxBookings# future bookings."/>
@@ -264,13 +273,13 @@
 			</cfif>
 			<cfif IsNumeric(ResourceList.TypeFutureMaxBookings)
 				AND FutureBookingsType.RecordCount GTE ResourceList.TypeFutureMaxBookings
-				AND ListFind(exemptCards, form.id) EQ 0
+				AND notExempt
 				AND NOT (isDefined('data.RequireConfirm') AND data.RequireConfirm IS true AND FutureBookings.RecordCount NEQ 1)>
 				<!--- Return an error along with our list of conflicting bookings. --->
 				<!--- Give the user a chance to resolve a single non-concurrency confclit --->
 					<cfset data.error=true>
 					<cfset data.errorMsg&="The #ResourceList.TypeName# type only allows for #ResourceList.TypeFutureMaxBookings# future bookings."/>
-					<cfif FutureBookingsType.RecordCount AND ListFind(exemptCards, form.id) EQ 0>
+					<cfif FutureBookingsType.RecordCount AND notExempt>
 						<cfset data.FutureBookings=ArrayNew(1)>
 						<cfloop query="FutureBookingsType">
 							<cfset data.FutureBookings[currentRow]=StructNew()>
@@ -287,8 +296,10 @@
 
 
 
-			<cfif ResourceList.Concurrent EQ 1 OR NonConcurrentBookings.Recordcount EQ 0 OR isDefined('form.confirmDelete') AND form.confirmDelete IS 'true'
-				OR ListFind(exemptCards, form.id)>
+			<cfif notExempt IS false 
+					OR ResourceList.Concurrent EQ 1 
+					OR NonConcurrentBookings.Recordcount EQ 0
+					OR isDefined('form.confirmDelete') AND form.confirmDelete IS 'true'>
 				<!--- if I want to be thorough, I could set an end time that's 55 minutes after the start --->
 				<cfquery name="InsertNewBooking" datasource="ReadWriteSource" dbtype="ODBC">
 					INSERT INTO MakerspaceBookingTimes (RID, <cfif isDefined('form.id')>UserBarcode, </cfif>
