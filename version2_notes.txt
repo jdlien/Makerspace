@@ -59,4 +59,15 @@ Change extrabookings query to return the number of future bookings of that resou
 
 Compare those two numbers with the limits.
 
-Now, when asking to cancel future bookings, the user will have to get a list of the bookings to be cancelled. 
+Now, when asking to cancel future bookings, the user will have to get a list of the bookings to be cancelled.
+
+
+
+BUGS
+
+Fix inability to return to full resource view after clicking on a single resource
+
+-Displayboard: Determine available bookings for displayboard taking into account partial blocked times
+-When switching between day/week views, selected resource isn't shown in the dropdown
+
+Once, it appeared that an invisible opentip was blocking the ability to click on the delete button.

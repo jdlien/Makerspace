@@ -1,3 +1,4 @@
+<cfset YouKnowIAm = REReplace(getauthuser(), '(?:.*[\\\/])?(.*)', '\1')>
 <cfsetting showdebugoutput="no">
 <cfsetting enablecfoutputonly="no">
 <!--- AddBooking.cfm
@@ -303,7 +304,7 @@
 				<!--- if I want to be thorough, I could set an end time that's 55 minutes after the start --->
 				<cfquery name="InsertNewBooking" datasource="ReadWriteSource" dbtype="ODBC">
 					INSERT INTO MakerspaceBookingTimes (RID, <cfif isDefined('form.id')>UserBarcode, </cfif>
-					StartTime, EndTime, Inserted
+					StartTime, EndTime, Inserted, InsertedBy
 					<cfif isDefined('form.firstname')>, FirstName</cfif>
 					<cfif isDefined('form.lastname')>, LastName</cfif>)
 					VALUES (
@@ -311,7 +312,8 @@
 						<cfif isDefined('form.id')>'#form.id#',</cfif>
 						'#form.newstart#',
 						'#form.newend#',
-						GETDATE()
+						GETDATE(),
+						'#YouKnowIAm#'
 						<cfif isDefined('form.firstname')>, '#form.firstname#'</cfif>
 						<cfif isDefined('form.lastname')>, '#form.lastname#'</cfif>
 					)
