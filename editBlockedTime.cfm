@@ -184,5 +184,5 @@
 		UPDATE vsd.vsd.MakerspaceBlockedTimes SET Description='#trim(form.NewDesc)#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
-	<cfoutput>#form.NewDesc#</cfoutput>
+	<cfoutput>#trim(form.NewDesc)#</cfoutput>
 </cfif>
