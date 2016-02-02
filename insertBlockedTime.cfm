@@ -18,7 +18,7 @@
 			'#EndTime#',
 			<cfif isNumeric(trim(form.dow))>'#form.dow#'<cfelse>NULL</cfif>,
 			'#continuous#',
-			'#form.description#',
+			'#trim(form.description)#',
 			'#YouKnowIAm#',
 			GETDATE(),
 			'#form.Branch#'

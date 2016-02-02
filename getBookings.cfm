@@ -26,6 +26,7 @@
 	WHERE ty.OfficeCode='#ThisLocation#'
 	<cfif isDefined('form.rid') AND form.rid NEQ "">AND t.RID='#form.rid#'</cfif>
 	<cfif isDefined('form.start')>AND StartTime > '#form.start#'</cfif>
+	<cfif isDefined('form.end')>AND EndTime < '#form.end#'</cfif>
 	<cfif isDefined('form.TypeID') AND len(form.TypeID)>AND (
 		<cfset i=0>
 		<cfloop list="#form.TypeID#" index="TheType">

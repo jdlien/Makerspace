@@ -77,14 +77,15 @@
 	[
 <cfset counter=0>
 <cfoutput query="BlockedTimes">
+	<cfset tDesc=trim(Description) />
 	<!--- Generate event for continuous blocked time (this is the simplest to do) --->
 	<cfif Continuous IS 1>
 		<cfif counter++ GT 0>,</cfif>
 		{
-		"title":"#Description#",
+		"title":"#tDesc#",
 		"start":"#StartTime#",
 		"end":"#EndTime#",
-		"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #Description#",
+		"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #tDesc#",
 		"className":"blockedTime<cfif len(TypeName)> type#TypeID#<cfelseif len(ResourceName)> Res#RID#</cfif>",
 		"color":"##000000"
 		}
@@ -102,10 +103,10 @@
 				<!--- don't add comma on first entry --->
 				<cfif counter++ GT 0>,</cfif>
 				{
-					"title":"#Description#",
+					"title":"#tDesc#",
 					"start":"#DateFormat(i, "YYYY-MM-DD")# #TimeFormat(StartTime, "HH:mm:00.0")#",
 					"end":"#DateFormat(i, "YYYY-MM-DD")# #TimeFormat(EndTime, "HH:mm:00.0")#",
-					"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #Description#",
+					"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #tDesc#",
 					"className":"blockedTime<cfif len(TypeName)> type#TypeID#<cfelseif len(ResourceName)> Res#RID#<cfelse> All</cfif>",
 					"color":"##000000"
 				}

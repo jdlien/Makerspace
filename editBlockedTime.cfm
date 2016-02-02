@@ -181,7 +181,7 @@
 <cfif isDefined('form.NewDesc')>
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfquery name="UpdateDescription" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerspaceBlockedTimes SET Description='#form.NewDesc#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerspaceBlockedTimes SET Description='#trim(form.NewDesc)#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
 	<cfoutput>#form.NewDesc#</cfoutput>

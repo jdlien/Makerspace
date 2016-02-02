@@ -107,8 +107,9 @@
 </cfquery>
 <p>During the following blocks of time, the specified resource(s) are unavailable for booking at <b><cfoutput>#ThisLocation#</cfoutput></b>.</p>
 <p>Click existing Info to edit and press enter. Changes are saved instantly.</p>
+<a name="addBlockedTime"></a>
 <table id="existingBlockedTimes" class="padded">
-	<tr class="heading">
+<tr class="heading">
 		<th><cfif url.sort eq "DayofWeek">Day of Week &#x25B2;<cfelse><a href="?sort=DayofWeek<cfif url.hidden eq "on">&hidden=on</cfif>">Day of Week</a></cfif></th>
 		<th>Start Time</th>
 		<th>End Time</th>
@@ -119,52 +120,7 @@
 		<th style="width:400px;">Description (Click to Edit)</th>
 		<th style="text-align:center;">Hide</th>
 		<th style="text-align:center;">Delete</th>
-	</tr>
-	
-	<cfoutput query="BlockList">
-	<cfif len(trim(DayOfWeek)) IS 0 AND Continuous NEQ 1>
-		<cfset DayOfWeekDesc="Every Day">
-	<cfelseif Continuous EQ 1>
-		<cfset DayOfWeekDesc="Continuous">
-	<cfelse>
-		<cfset DayOfWeekDesc=DayOfWeekAsString(DayOfWeek+1)>
-	</cfif>
-	
-	<cfquery name="BlockedResources" dbtype="ODBC" datasource="SecureSource">
-		SELECT * FROM MakerspaceBlockedTimeResources btr
-		LEFT JOIN MakerspaceBookingResources r on btr.RID=r.rid
-		LEFT JOIN MakerspaceBookingResourceTypes ty on btr.TypeID=ty.TypeID
-		WHERE BID=#BID#
-	</cfquery>
-	<cfset ResourceDesc="">
-	<cfset counter=0>
-	<cfloop query="BlockedResources">
-		<cfif counter NEQ 0><cfset ResourceDesc&=", "></cfif>
-		<cfset ResourceDesc&=BlockedResources.ResourceName>
-		<cfset ResourceDesc&=BlockedResources.TypeName>
-		<cfset counter++>
-	</cfloop>
-	<cfif ResourceDesc IS "">
-		<cfif len(ResourceName)><cfset ResourceDesc=ResourceName>
-		<cfelseif len(TypeName)><cfset ResourceDesc=TypeName>
-		<cfelse><cfset ResourceDesc="All Resources">
-		</cfif>
-	</cfif>
-	<tr id="row#BID#" class="existingBlock<cfif CurrentRow MOD 2> altRow</cfif><cfif Hidden IS 1> hiddenRow</cfif>" style="text-align:center;">
-		<td><div class="editableDayOfWeek" id="dow#BID#">#DayOfWeekDesc#</div></td>
-		<!--- I think I can use the same classes for both of the time and dates, respectively --->
-		<td class="timeCell"><div><span class="editableStartHour" id="startTime#BID#">#TimeFormat(StartTime, "HH")#</span><span>:</span><span class="editableStartMinute" id="startTime#BID#">#TimeFormat(StartTime, "mm")#</span></div></td>
-		<td class="timeCell"><div><span class="editableEndHour" id="startTime#BID#">#TimeFormat(EndTime, "HH")#</span><span>:</span><span class="editableEndMinute" id="startTime#BID#">#TimeFormat(EndTime, "mm")#</span></div></td>
-		<td class="dateField"><div class="editableStartDate" id="startDate#BID#">#DateFormat(StartTime, "YYYY-MMM-DD")#</div></td>
-		<td class="dateField"><div class="editableEndDate" id="endDate#BID#">#DateFormat(EndTime, "YYYY-MMM-DD")#</div></td>
-		<!--- <td><div class="editableBranch" id="Branch#BID#">#OfficeCode#</div></td> --->
-		<!--- Display resource name here --->
-		<td><div class="editableResource" id="Resource#BID#">#ResourceDesc#</div></td>
-		<td style="text-align:left;"><div class="editableDesc" id="description#BID#">#Description#</div></td>
-		<td style="text-align:center;"><a class="grayButton" id="hide#BID#" href="javascript:void(0);" onClick="hideItem('#BID#');"><cfif hidden IS 1>Unhide<cfelse>Hide</cfif></a></td>
-		<td style="text-align:center;"><a class="delete" href="javascript:void(0);" onClick="deleteItem('#BID#', '#TimeFormat(StartTime, "HH:mm")#-#TimeFormat(EndTime, "HH:mm")#');">Delete</a></td>
-	</tr>
-	</cfoutput>
+	</tr>	
 	<tr>
 		<td colspan="4"><b>Add Blocked Time</b></td>
 	</tr>
@@ -256,7 +212,68 @@
 		<td></td>
 		<td></td>
 	</tr>
+
+
+	<tr class="heading">
+		<th><cfif url.sort eq "DayofWeek">Day of Week &#x25B2;<cfelse><a href="?sort=DayofWeek<cfif url.hidden eq "on">&hidden=on</cfif>">Day of Week</a></cfif></th>
+		<th>Start Time</th>
+		<th>End Time</th>
+		<th><cfif url.sort eq "StartTime">Begin Date &#x25B2;<cfelse><a href="?sort=StartTime<cfif url.hidden eq "on">&hidden=on</cfif>">Begin Date</a></cfif></th>
+		<th><cfif url.sort eq "EndTime">End Date &#x25B2;<cfelse><a href="?sort=EndTime<cfif url.hidden eq "on">&hidden=on</cfif>">End Date</a></cfif></th>
+		<!--- <th>Branch</th> --->
+		<th style=""><cfif url.sort eq "ResourceName">Resource(s) &#x25B2;<cfelse><a href="?sort=ResourceName<cfif url.hidden eq "on">&hidden=on</cfif>">Resource(s)</a></cfif></th>
+		<th style="width:400px;">Description (Click to Edit)</th>
+		<th style="text-align:center;">Hide</th>
+		<th style="text-align:center;">Delete</th>
+	</tr>
+	
+	<cfoutput query="BlockList">
+	<cfif len(trim(DayOfWeek)) IS 0 AND Continuous NEQ 1>
+		<cfset DayOfWeekDesc="Every Day">
+	<cfelseif Continuous EQ 1>
+		<cfset DayOfWeekDesc="Continuous">
+	<cfelse>
+		<cfset DayOfWeekDesc=DayOfWeekAsString(DayOfWeek+1)>
+	</cfif>
+	
+	<cfquery name="BlockedResources" dbtype="ODBC" datasource="SecureSource">
+		SELECT * FROM MakerspaceBlockedTimeResources btr
+		LEFT JOIN MakerspaceBookingResources r on btr.RID=r.rid
+		LEFT JOIN MakerspaceBookingResourceTypes ty on btr.TypeID=ty.TypeID
+		WHERE BID=#BID#
+	</cfquery>
+	<cfset ResourceDesc="">
+	<cfset counter=0>
+	<cfloop query="BlockedResources">
+		<cfif counter NEQ 0><cfset ResourceDesc&=", "></cfif>
+		<cfset ResourceDesc&=BlockedResources.ResourceName>
+		<cfset ResourceDesc&=BlockedResources.TypeName>
+		<cfset counter++>
+	</cfloop>
+	<cfif ResourceDesc IS "">
+		<cfif len(ResourceName)><cfset ResourceDesc=ResourceName>
+		<cfelseif len(TypeName)><cfset ResourceDesc=TypeName>
+		<cfelse><cfset ResourceDesc="All Resources">
+		</cfif>
+	</cfif>
+	<tr id="row#BID#" class="existingBlock<cfif CurrentRow MOD 2> altRow</cfif><cfif Hidden IS 1> hiddenRow</cfif>" style="text-align:center;">
+		<td><div class="editableDayOfWeek" id="dow#BID#">#DayOfWeekDesc#</div></td>
+		<!--- I think I can use the same classes for both of the time and dates, respectively --->
+		<td class="timeCell"><div><span class="editableStartHour" id="startTime#BID#">#TimeFormat(StartTime, "HH")#</span><span>:</span><span class="editableStartMinute" id="startTime#BID#">#TimeFormat(StartTime, "mm")#</span></div></td>
+		<td class="timeCell"><div><span class="editableEndHour" id="startTime#BID#">#TimeFormat(EndTime, "HH")#</span><span>:</span><span class="editableEndMinute" id="startTime#BID#">#TimeFormat(EndTime, "mm")#</span></div></td>
+		<td class="dateField"><div class="editableStartDate" id="startDate#BID#">#DateFormat(StartTime, "YYYY-MMM-DD")#</div></td>
+		<td class="dateField"><div class="editableEndDate" id="endDate#BID#">#DateFormat(EndTime, "YYYY-MMM-DD")#</div></td>
+		<!--- <td><div class="editableBranch" id="Branch#BID#">#OfficeCode#</div></td> --->
+		<!--- Display resource name here --->
+		<td><div class="editableResource" id="Resource#BID#">#ResourceDesc#</div></td>
+		<td style="text-align:left;"><div class="editableDesc" id="description#BID#">#Description#</div></td>
+		<td style="text-align:center;"><a class="grayButton" id="hide#BID#" href="javascript:void(0);" onClick="hideItem('#BID#');"><cfif hidden IS 1>Unhide<cfelse>Hide</cfif></a></td>
+		<td style="text-align:center;"><a class="delete" href="javascript:void(0);" onClick="deleteItem('#BID#', '#TimeFormat(StartTime, "HH:mm")#-#TimeFormat(EndTime, "HH:mm")#');">Delete</a></td>
+	</tr>
+	</cfoutput>
+
 </table>
+<a href="#addBlockedTime" class="greenButton">Add New Blocked Time</a>
 
 <div style="height:60px;"></div>
 
