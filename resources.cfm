@@ -5,6 +5,17 @@
 <cfset PermissionsMaxApplication="MakerspaceBooking">
 <cfset PermissionsRequired_List="view,reso">
 <cfset enableColorPicker=true>
+
+<cfset adminButtons = ArrayNew(1)>
+
+<cfset adminButton = structNew()>
+<cfset adminButton.permType="reso">
+<cfset adminButton.link="blockedtimes.cfm">
+<cfset adminButton.label="Blocked Times">
+<cfset adminButton.title="Manage Periods of Unavailability">
+<cfset ArrayAppend(adminButtons, adminButton)>	
+
+
 <cfinclude template="/Includes/IntraHeader.cfm">
 <cfset ThisLocation=RealStateBuilding/>
 <cfif isDefined('url.branch')>

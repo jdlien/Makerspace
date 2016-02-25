@@ -5,6 +5,15 @@
 <cfset PermissionsMaxApplication="MakerspaceBooking">
 <cfset PermissionsRequired_List="view,reso">
 <cfset enableColorPicker=true>
+
+<cfset adminButtons = ArrayNew(1)>
+<cfset adminButton = structNew()>
+<cfset adminButton.permType="reso">
+<cfset adminButton.link="resources.cfm">
+<cfset adminButton.label="Resources">
+<cfset adminButton.title="Manage Consoles, PCs, etc.">
+<cfset ArrayAppend(adminButtons, adminButton)>	
+
 <cfinclude template="/Includes/IntraHeader.cfm">
 
 <cfset ThisLocation=RealStateBuilding/>
