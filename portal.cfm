@@ -23,7 +23,7 @@
 
 <cfinclude template="/AppsRoot/Includes/IntraHeader.cfm">
 <!--- Used for the current location of the user in Makerspace Booking System --->
-<cfset MBSPath="/dev/Makerspace" />
+<cfset MBSPath="#REReplace(cgi.script_name, "(.*)/.*", "\1")#" />
 <cfset ThisLocation=RealStateBuilding/>
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
