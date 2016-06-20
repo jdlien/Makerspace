@@ -78,6 +78,8 @@
 <cfset counter=0>
 <cfoutput query="BlockedTimes">
 	<cfset tDesc=trim(Description) />
+	<!--- Remove tabs and extraneous whitespace from the field (otherwise it can break rendering blocked times) --->
+	<cfset tDesc=reReplace(tDesc, "\s+"," ","ALL") />
 	<!--- Generate event for continuous blocked time (this is the simplest to do) --->
 	<cfif Continuous IS 1>
 		<cfif counter++ GT 0>,</cfif>
