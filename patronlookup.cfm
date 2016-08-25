@@ -21,7 +21,7 @@
 	<cfabort>
 </cfif>
 
-<cfhttp url="http://devweb4.epl.ca:8080/symws/rest/security/loginUser?clientID=VSD&login=WEBSERVICE&password=REGONLINE">
+<cfhttp url="http://web4.epl.ca:8080/symws/rest/security/loginUser?clientID=VSD&login=WEBSERVICE&password=REGONLINE">
 	<cfhttpparam type="header" name="Accept" value="application/xml" />
 </cfhttp>
 <cftry>
@@ -35,7 +35,7 @@
 	</cfif>
 
 	<!---Basic Patron Info - name, birthday, Status, Address --->
-	<cfhttp url="http://devweb4.epl.ca:8080/symws/rest/patron/lookupPatronInfo?clientID=VSD&sessionToken=#sessionToken#&userID=#id#&includePatronInfo=true&includePatronStatusInfo=true&includePatronAddressInfo=true">
+	<cfhttp url="http://web4.epl.ca:8080/symws/rest/patron/lookupPatronInfo?clientID=VSD&sessionToken=#sessionToken#&userID=#id#&includePatronInfo=true&includePatronStatusInfo=true&includePatronAddressInfo=true">
 		<cfhttpparam type="header" name="Accept" value="application/xml" />
 	</cfhttp>
 
