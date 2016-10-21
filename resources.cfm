@@ -77,7 +77,7 @@
 </cfquery>
 
 <cfquery name="Branches"  dbtype="ODBC" datasource="SecureSource">
-	SELECT * FROM Offices WHERE OfficeType='BRANCH' ORDER BY OfficeCode
+	SELECT * FROM Offices <!---WHERE OfficeType='BRANCH'---> ORDER BY OfficeCode
 </cfquery>
 
 
