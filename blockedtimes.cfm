@@ -439,7 +439,8 @@ $.editable.addInputType("multiselect", {
 			indicator : 'Saving...',
 			tooltip   : 'Change Begin Date...',
 			placeholder : '<span class="subtle">Begin Date</span>',
-			type : 'datepicker'
+			type : 'datepicker',
+			datepicker:{dateFormat: "yy-M-dd"}
 		});	
 		
 		$(".editableEndDate").editable('editBlockedTime.cfm', {
@@ -447,7 +448,8 @@ $.editable.addInputType("multiselect", {
 			indicator : 'Saving...',
 			tooltip   : 'Change End Date...',
 			placeholder : '<span class="subtle">End Date</span>',
-			type : 'datepicker'
+			type : 'datepicker',
+			datepicker:{dateFormat: "yy-M-dd"}
 		});
 
 		<cfoutput>

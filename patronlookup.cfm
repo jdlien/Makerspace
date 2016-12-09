@@ -96,7 +96,7 @@
 	<cfoutput>#SerializeJSON(data)#</cfoutput>
 
 	<cfcatch>
-			<cfset data.error.message="There was an error retreiving customer information.">
+			<cfset data.error.message="There was an error retrieving customer information.">
 		<cfoutput>#SerializeJSON(data)#</cfoutput>
 	</cfcatch>
 </cftry>
