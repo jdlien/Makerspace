@@ -1,6 +1,6 @@
 <cfset enableToastr=true>
 <cfset RemoveSidebar="yes">
-<cfset PermissionsMaxApplication="MakerspaceBooking">
+<cfset ApplicationID="MakerspaceBooking">
 <cfset pagetitle="Makerspace Booking System">
 <cfset enableFullCalendar24="yes">
 

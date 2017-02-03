@@ -2,7 +2,7 @@
 <cfset pagetitle = "Makerspace Resources Manager">
 <cfset ParentPage="Makerspace Resource Booking">
 <cfset ParentLink="/DLI/Makerspace/">
-<cfset PermissionsMaxApplication="MakerspaceBooking">
+<cfset ApplicationID="MakerspaceBooking">
 <cfset PermissionsRequired_List="view,reso">
 <cfset enableColorPicker=true>
 
