@@ -619,7 +619,7 @@ function setTimeline(view, element) {
 	}
 
 	var curTime = moment();
-	curTimeUTC=curTime.clone().add('h',-6);
+	curTimeUTC=curTime.clone().add(-6,'h');
 	if (view.start <= curTimeUTC && view.end >= curTimeUTC) {
 		timeline.show();
 		timeline2.show();
@@ -1134,7 +1134,7 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 		$('#calendar').fullCalendar('gotoDate', date);
 		$('#calendar').fullCalendar('changeView', 'agendaDay');
 	} else { /* Else check and see if we should add a booking */
-		var newEvent={id:'newBooking', title:'Your Booking', start:date.add('minutes',5).format(), end:date.add('minutes',55).format()};
+		var newEvent={id:'newBooking', title:'Your Booking', start:date.add(5,'minutes').format(), end:date.add(55,'minutes').format()};
 		/* Check that everything is cool before booking the time slot. */
 		//console.log('rid: '+rid);
 		if (allowedToBook(newEvent, rid) && !isOverlapping(newEvent, rid)) {
@@ -1297,7 +1297,7 @@ function allowedToBook(event, rid){
 		toastr.error("You can't book a time that has already elapsed.");
 		return false;
 	}*/
-	else if(event.end > moment().add('day',15).format()) {
+	else if(event.end > moment().add(15,'day').format()) {
 		toastr.error("You can't book a time more than two weeks from now.");
 		return false;
 	}
