@@ -2,7 +2,7 @@
 <cfset RemoveSidebar="yes">
 <cfset ApplicationID="MakerspaceBooking">
 <cfset pagetitle="Makerspace Booking System">
-<cfset enableFullCalendar24="yes">
+<cfset enableFullCalendar32="yes">
 
 
 <!--- List structure of permissions, links, and descriptions for which to get admin links --->
@@ -767,11 +767,27 @@ $(document).ready(function(){
 	var first=true;
 	$('#calendar').fullCalendar({
 		header: {left:'prev,today,next', center:'title', right:'agendaDay,agendaWeek'},
-		titleFormat: {month:'MMMM YYYY', week: "MMMM D YYYY", day: 'dddd MMMM Do YYYY'},
-		columnFormat: {week: 'dddd MMM D', day: ''},
+		//titleFormat: {month:'MMMM YYYY', week: "MMMM D YYYY", day: 'dddd MMMM Do YYYY'},
+		views: {
+			month: {
+				titleFormat: 'MMMM YYYY'
+			},
+			week: {
+				titleFormat: 'MMMM D YYYY',
+				columnFormat: 'dddd MMM D'
+			},
+			day: {
+				titleFormat: 'dddd MMMM Do YYYY',
+				columnFormat: ''
+			},
+			agenda: {
+				timeFormat: 'h:mm t'
+			}
+		},
+		//columnFormat: {week: 'dddd MMM D', day: ''},
 		contentHeight:"auto",
 		defaultView:'agendaDay',
-		timeFormat: {agenda:'h:mm t'},
+		//timeFormat: {agenda:'h:mm t'},
 		slotDuration:'01:00:00',
 		minTime: '09:00:00',
 		maxTime: '21:00:00',
