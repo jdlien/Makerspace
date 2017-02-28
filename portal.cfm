@@ -1297,8 +1297,8 @@ function allowedToBook(event, rid){
 		toastr.error("You can't book a time that has already elapsed.");
 		return false;
 	}*/
-	else if(event.end > moment().add(15,'day').format()) {
-		toastr.error("You can't book a time more than two weeks from now.");
+	else if(event.end > moment().add(30,'day').format()) {
+		toastr.error("You can't book a time more than 30 days from now.");
 		return false;
 	}
 	return true;
