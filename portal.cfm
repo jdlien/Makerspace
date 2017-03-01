@@ -384,6 +384,11 @@
 		left:0px;
 		z-index:30;
 	}
+
+	label.helpIcon {
+		width:19px;
+		height:19px;
+	}
 </style>
 
 
@@ -417,9 +422,9 @@
 			<label class="" for="id">Card #: </label><input type="text" name="id" id="id" style="width:135px;" /><input type="submit" id="userSelectionSubmit" value="Check" style="display:none;">
 		</div>
 		<input type="submit" value="&#8629;" style="padding-left:0;padding-right:0;" />
-		<span id="onlyShow" class="hidden"><label for="hideOtherBookings" style="margin-left:12px;margin-right:2px;">Highlight:</label><input type="checkbox" id="hideOtherBookings" name="hideOtherBookings" style="vertical-align:middle;"/><label id="highlightHelp" for="hideOtherBookings" style="margin-left:2px;"><img src="/Resources/Images/help_icon-32.png" alt="Help" style="vertical-align:middle;width:16px;height:16px;border:none;"></label></span>
+		<span id="onlyShow" class="hidden"><label for="hideOtherBookings" style="margin-left:12px;margin-right:2px;">Highlight:</label><input type="checkbox" id="hideOtherBookings" name="hideOtherBookings" style="vertical-align:middle;"/><label id="highlightHelp" for="hideOtherBookings" style="margin-left:2px;" class="helpIcon"></label></span>
 		
-		<span id="altCard" class=""><label for="alternateCardCheckbox" style="margin-left:12px;margin-right:2px;">Other Card:</label><input type="checkbox" id="alternateCardCheckbox" name="alternateCardCheckbox" style="vertical-align:middle;"/><label id="altCardHelp" for="alternateCardCheckbox" style="margin-left:2px;"><img src="/Resources/Images/help_icon-32.png" alt="Help" style="vertical-align:middle;width:16px;height:16px;border:none;"></label></span>
+		<span id="altCard" class=""><label for="alternateCardCheckbox" style="margin-left:12px;margin-right:2px;">Other Card:</label><input type="checkbox" id="alternateCardCheckbox" name="alternateCardCheckbox" style="vertical-align:middle;"/><label id="altCardHelp" for="alternateCardCheckbox" style="margin-left:2px;" class="helpIcon"></label></span>
 		
 
 	<span id="errorid" class="error" style="display:none;">&nbsp;Enter a card number</span>
