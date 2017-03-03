@@ -4,7 +4,6 @@
 <cfset ParentLink="/DLI/Makerspace/">
 <cfset ApplicationID="MakerspaceBooking">
 <cfset PermissionsRequired_List="view,reso">
-<cfset enableColorPicker=true>
 
 <cfset adminButtons = ArrayNew(1)>
 
@@ -66,6 +65,10 @@
 	}
 	
 </style>
+
+
+<link rel="stylesheet" media="screen" type="text/css" href="/javascript/colorpicker/css/colorpicker.css" />
+<script src="/javascript/colorpicker/js/colorpicker.js"></script>
 
 <cfquery name="ResourceList" datasource="SecureSource" dbtype="ODBC">
 	select * from MakerspaceBookingResources r 

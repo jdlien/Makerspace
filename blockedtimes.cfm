@@ -4,7 +4,6 @@
 <cfset ParentLink="/DLI/Makerspace/">
 <cfset ApplicationID="MakerspaceBooking">
 <cfset PermissionsRequired_List="view,reso">
-<cfset enableColorPicker=true>
 
 <cfset adminButtons = ArrayNew(1)>
 <cfset adminButton = structNew()>
