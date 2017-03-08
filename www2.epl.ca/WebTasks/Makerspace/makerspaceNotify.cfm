@@ -14,9 +14,10 @@ that way made days in advance --->
 	AND LEN(Email) > 5 --with a non-blank email address
 	ORDER BY StartTime
 </cfquery>
-
+<cfset mailCount=0 />
 <cfoutput>
 <cfloop query="BookingsNotify">
+<cfif isValid("email", email)>
 <cfmail from='"EPL Makerspace" <makerspace@epl.ca>' to='"#FirstName# #LastName#"<#Email#>' bcc="jlien@epl.ca" subject="Your EPL Makerspace Booking" type="html">
 <p>Dear #FirstName#:</p>
 
@@ -31,6 +32,9 @@ on #DateFormat(StartTime, "Mmmm d")#.</p>
 Edmonton Public Library</p>
 </cfmail>
 
+<cfset mailCount++ />
+</cfif><!---isValid email--->
+
 <cfquery name="UpdateBookingNotified" dbtype="ODBC" datasource="ReadWriteSource">
 	UPDATE vsd.MakerspaceBookingTimes SET Notified=1 WHERE TID=#BookingsNotify.TID#
 </cfquery>
@@ -38,5 +42,5 @@ Edmonton Public Library</p>
 
 </cfloop>
 
-#BookingsNotify.RecordCount# Email<cfif BookingsNotify.RecordCount NEQ 1>s have<cfelse> has</cfif> been sent to Makerspace Customers.
+#mailCount# Email<cfif mailCount NEQ 1>s have<cfelse> has</cfif> been sent to Makerspace Customers.
 </cfoutput>

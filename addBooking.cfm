@@ -308,7 +308,7 @@
 					StartTime, EndTime, Inserted, InsertedBy
 					<cfif isDefined('form.firstname')>, FirstName</cfif>
 					<cfif isDefined('form.lastname')>, LastName</cfif>
-					<cfif isDefined('form.email') AND len(form.email) GT 5>, Email</cfif>)
+					<cfif isDefined('form.email') AND isValid("email", form.email)>, Email</cfif>)
 					VALUES (
 						'#form.rid#',
 						<cfif isDefined('form.id')>'#form.id#',</cfif>
@@ -318,7 +318,7 @@
 						'#YouKnowIAm#'
 						<cfif isDefined('form.firstname')>, '#form.firstname#'</cfif>
 						<cfif isDefined('form.lastname')>, '#form.lastname#'</cfif>
-						<cfif isDefined('form.email') AND len(form.email) GT 5>, '#form.email#'</cfif>
+						<cfif isDefined('form.email') AND isValid("email", form.email)>, '#form.email#'</cfif>
 					)
 					SELECT SCOPE_IDENTITY() AS NewBookingID
 				</cfquery>
