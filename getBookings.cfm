@@ -1,6 +1,7 @@
 <cfsetting showdebugoutput="no">
 <cfparam name="form.isStaff" default="true">
 <cfparam name="form.hideOther" default="false">
+<cfheader name="Content-Type" value="application/json">
 
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />

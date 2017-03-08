@@ -487,9 +487,8 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 	if (cardNumber.length) {
 		var url = $('#userSelectionForm').attr( 'action' );
 		var formdata = $('#userSelectionForm').serialize();
-		$.post(url, formdata)
-		.done(function(data){
-			dataObj = JSON.parse(data);
+		$.post(url, formdata).done(function(data){
+			dataObj = data;
 			$("#userStatus").html('');
 			//Display our errors, if any
 			if (typeof dataObj.ERROR === 'object') {
@@ -503,8 +502,7 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 					$("#userStatus").append('<span class="blockWarn"><b>'+dataObj.CUSTOMER.FULLNAME+'</b> is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
 				}else {
 					$("#userStatus").append('<span class="success"><b>'+dataObj.CUSTOMER.FULLNAME+'</b> is valid.</span>&nbsp; Click a time to book it.');
-				}			//This was annoying people
-				//$('#id').prop('readonly', true);
+				}
 				$('#altCard').hide();
 				$('#onlyShow').show();
 				
@@ -1152,10 +1150,11 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 				'status':dataObj.CUSTOMER.STATUS,
 				'firstname':dataObj.CUSTOMER.FIRST,
 				'lastname':dataObj.CUSTOMER.LAST,
+				'email':dataObj.CUSTOMER.EMAIL,
 				'confirmDelete':confirmDelete
 			})
 			.done(function(data){
-				bookingInfoObj=$.parseJSON(data);
+				bookingInfoObj=data;
 				var noticeMsg="";
 
 				if (typeof bookingInfoObj.NEWBOOKING != 'undefined') {

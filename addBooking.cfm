@@ -25,6 +25,7 @@
 		-What are the limits for this type of day for this resource and type. Take the smallest.
 		-How many are currently booked for this user for this day?
 --->
+<cfheader name="Content-Type" value="application/json">
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
@@ -306,7 +307,8 @@
 					INSERT INTO MakerspaceBookingTimes (RID, <cfif isDefined('form.id')>UserBarcode, </cfif>
 					StartTime, EndTime, Inserted, InsertedBy
 					<cfif isDefined('form.firstname')>, FirstName</cfif>
-					<cfif isDefined('form.lastname')>, LastName</cfif>)
+					<cfif isDefined('form.lastname')>, LastName</cfif>
+					<cfif isDefined('form.email') AND len(form.email) GT 5>, Email</cfif>)
 					VALUES (
 						'#form.rid#',
 						<cfif isDefined('form.id')>'#form.id#',</cfif>
@@ -316,6 +318,7 @@
 						'#YouKnowIAm#'
 						<cfif isDefined('form.firstname')>, '#form.firstname#'</cfif>
 						<cfif isDefined('form.lastname')>, '#form.lastname#'</cfif>
+						<cfif isDefined('form.email') AND len(form.email) GT 5>, '#form.email#'</cfif>
 					)
 					SELECT SCOPE_IDENTITY() AS NewBookingID
 				</cfquery>
