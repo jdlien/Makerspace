@@ -20,5 +20,7 @@
 	<cfset data.Customer.First="EXEMPT" />
 	<cfset data.Customer.Last="PLACEHOLDER" />
 	<cfset data.Customer.FullName="EXEMPT PLACEHOLDER" />
+	<!--- Remove this line after testing --->
+	<!--- <cfset data.Customer.Email="jlien@epl.ca" /> --->
 </cfif>
 <cfoutput>#SerializeJSON(data)#</cfoutput>
