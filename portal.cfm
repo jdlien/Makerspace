@@ -4,9 +4,25 @@
 <cfset pagetitle="Makerspace Booking System">
 <cfset enableFullCalendar32="yes">
 
+<cfinclude template="/Includes/INTYouKnowVariables.cfm" />
+
+<cfparam name="ThisLocation" default="#RealStateBuilding#" />
+
+<cfif isDefined('url.branch')>
+	<cfset ThisLocation=url.branch />
+</cfif>
 
 <!--- List structure of permissions, links, and descriptions for which to get admin links --->
 <cfset adminButtons = ArrayNew(1)>
+
+<cfif ThisLocation NEQ "ESQ">
+	<cfset adminButton = structNew()>
+	<cfset adminButton.link="portal.cfm?branch=ESQ">
+	<cfset adminButton.label="ESQ Branch">
+	<cfset adminButton.title="ESQ Branch Bookings">
+	<cfset ArrayAppend(adminButtons, adminButton)>	
+</cfif>
+
 <cfset adminButton = structNew()>
 <cfset adminButton.permType="reso">
 <cfset adminButton.link="resources.cfm">
@@ -17,6 +33,9 @@
 <cfset adminButton = structNew()>
 <cfset adminButton.permType="reso">
 <cfset adminButton.link="blockedtimes.cfm">
+<cfif isDefined('url.branch')>
+	<cfset adminButton.link="blockedtimes.cfm?branch=#url.branch#">
+</cfif>
 <cfset adminButton.label="Blocked Times">
 <cfset adminButton.title="Manage Periods of Unavailability">
 <cfset ArrayAppend(adminButtons, adminButton)>	
@@ -24,10 +43,7 @@
 <cfinclude template="/AppsRoot/Includes/IntraHeader.cfm">
 <!--- Used for the current location of the user in Makerspace Booking System --->
 <cfset MBSPath="#REReplace(cgi.script_name, "(.*)/.*", "\1")#" />
-<cfset ThisLocation=RealStateBuilding/>
-<cfif isDefined('url.branch')>
-	<cfset ThisLocation=url.branch />
-</cfif>
+
 
 
 <cfquery name="ResourceList" datasource="SecureSource" dbtype="ODBC">

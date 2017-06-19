@@ -43,4 +43,4 @@
 		</cfquery>
 	</cfloop><!---list form.rid --->
 </cfif><!---if form submitted to this page with required data--->
-<cflocation addtoken="no" url="blockedtimes.cfm">
+<cflocation addtoken="no" url="blockedtimes.cfm?branch=#form.branch#">

@@ -1,7 +1,16 @@
-<cfset RemoveSidebar="yes">
+<cfinclude template="/Includes/INTYouKnowVariables.cfm" />
+
+<cfparam name="ThisLocation" default="#RealStateBuilding#" />
+
+<cfif isDefined('url.branch')>
+	<cfset ThisLocation=url.branch />
+</cfif>
+
+
+
 <cfset pagetitle = "Makerspace Blocked Times Manager">
 <cfset ParentPage="Makerspace Resource Booking">
-<cfset ParentLink="/DLI/Makerspace/">
+<cfset ParentLink="portal.cfm?branch=#ThisLocation#">
 <cfset ApplicationID="MakerspaceBooking">
 <cfset PermissionsRequired_List="view,reso">
 
@@ -14,11 +23,6 @@
 <cfset ArrayAppend(adminButtons, adminButton)>	
 
 <cfinclude template="/Includes/IntraHeader.cfm">
-
-<cfset ThisLocation=RealStateBuilding/>
-<cfif isDefined('url.branch')>
-	<cfset ThisLocation=url.branch />
-</cfif>
 
 <style type="text/css">
 	.linkField {
