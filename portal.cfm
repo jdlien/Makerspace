@@ -299,14 +299,11 @@
 	}
 
 	.resCols {
-		/*height:491px;*/
-		background-color:gray;
-		align-items:stretch;
 	}
 
 	.typeCols .DayTypeColumn {
 		/* This will actually be determined by the number of resources in the type */
-		flex:1;
+		position:relative;
 	}
 
 	.DayResourceColumn .fc-time-grid-event.fc-v-event.fc-event,
@@ -321,9 +318,6 @@
 		margin:0px 1px;
 	}
 
-	.DayTypeColumn .fc-time-grid-event.fc-v-event.fc-event {
-		position:relative;
-	}
 
 <!--- Seems like an old idea that didn't bear fruit
 	.clickableColumn {

@@ -22,4 +22,6 @@ The save changes button will be disabled until a *valid* change has been made.
 	- time does not coincide with other events OR blocked times from the same category.
 
 	If all these things are valid, then I can enable the save changes button. On the action page, I will perform these checks again.
-	
+
+
+If a time is clicked, but there's already a booking in that hour-slot, create a new booking that is the remainder of the hour.
