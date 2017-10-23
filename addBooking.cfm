@@ -83,63 +83,18 @@
 				</cfif>
 			</cfif>
 			
-			<!--- Prevent booking this system if it's already booked by anyone--->
-			<cfquery name="DoubleBookings" datasource="ReadWriteSource" dbtype="ODBC">
-				SELECT * FROM MakerspaceBookingTimes ti
-				WHERE (RID='#form.rid#'
-					AND StartTime >='#form.newstart#' AND EndTime <= '#form.newend#')
-			</cfquery>
-			<cfif DoubleBookings.RecordCount>
-				<cfset data.error=true>
-				<cfset data.errorMsg&="There is already a booking for this resource at this time">
-				<cfoutput>#SerializeJSON(data)#</cfoutput>
-				<cfabort>			
-			</cfif>
-
+			<!--- Prevent booking if this user is blocked and this resource doesn't allow blocked users to book it --->
 			<cfif ResourceList.AllowBlocked NEQ 1 AND form.status IS 'BLOCKED'>
 				<cfset data.error=true>
 				<cfset data.errorMsg&="This resource may not be booked with a blocked card.">
 				<cfoutput>#SerializeJSON(data)#</cfoutput>
 				<cfabort>			
 			</cfif>
-			
-			<!--- Check that this event's end time isn't before any blocked times start --->
-			<cfquery name="BlockedTimes" datasource="SecureSource" dbtype="ODBC">
-				SELECT t.BID, ISNULL(t.RID, btr.RID) AS RID, ISNULL(t.TypeID, btr.TypeID) AS TypeID, StartTime, EndTime,
-				DayofWeek, Continuous, t.Description, t.ModifiedBy,
-				t.Modified, r.ResourceName, ty.TypeName
-				FROM MakerspaceBlockedTimes t
-				LEFT JOIN MakerspaceBlockedTimeResources btr on btr.BID=t.BID
-				LEFT JOIN MakerspaceBookingResources r on t.RID=r.rid OR btr.RID=r.rid
-				LEFT JOIN MakerspaceBookingResourceTypes ty on t.TypeID=ty.TypeID OR btr.TypeID=ty.TypeID
-				WHERE t.OfficeCode='#ThisLocation#'
-				AND (
-					(ISNULL(t.RID, btr.RID)='#form.rid#' OR ISNULL(t.TypeID, btr.TypeID)='#ThisTypeID#') 
-					OR (ISNULL(t.RID, btr.RID) IS NULL AND ISNULL(t.TypeID, btr.TypeID) IS NULL)
-				)
-				AND t.startTime < '#form.newend#' AND t.EndTime > '#form.newstart#'
-			</cfquery>
-			<!--- Now I need to loop through the blocked time events
-			and check that their applicable times don't collide with the new event --->			
-			<cfoutput query="BlockedTimes">
-				<!--- continuous blocked time (this is the simplest to do) --->
-				<cfif Continuous IS 1>
-						<cfset data.error=true>
-						<cfset data.errorMsg&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
-				<cfelse>
-					<!--- set up date objects to Compare event times with blocked times --->
-					<cfset blockEnd=CreateDateTime(Year(newstart),Month(newstart),Day(newstart),Hour(endTime),Minute(endTime),00)>
-					<cfset blockBegin=CreateDateTime(Year(newend),Month(newend),Day(newend),Hour(startTime),Minute(startTime),00)>
-					<!--- If blockbegin is before the end of the new event OR the block's end is before the event's beginning
-					then the block overlaps with the new event
-					OR the day of week is the same as our event --->
-					<cfif (DayOfWeek(eventBegin)-1 IS DayofWeek OR DayofWeek IS "")
-					AND (DateCompare(blockBegin,eventEnd) LT 0 AND DateCompare(blockEnd,eventBegin) GT 0)>
-						<cfset data.error=true>
-						<cfset data.errorMsg&="You may not book this resource at this time.<br />#BlockedTimes.Description#">						
-					</cfif>
-				</cfif><!---if Continuous--->
-			</cfoutput><!---BlockedTimes--->
+
+			<!--- This include checks that there are no booking or blocked time conflicts.
+			It has been broken into an include so that editEvent.cfm can also use it to check times --->
+			<cfinclude template="addBookingValidityCheck.cfm" />
+
 
 			<!--- Check that the user hasn't already booked the max slots for this resource or type for this day --->
 			<!--- Count number of bookings for this resource already on this day --->

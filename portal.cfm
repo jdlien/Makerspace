@@ -143,7 +143,7 @@
 	
 	.timeline {
 		position: absolute;
-		left: 50px;
+		/*left: 50px;*/
 		border: none;
 		border-bottom: 0px solid red;
 		background-image:url('/resources/images/alpha-black-20.png');
@@ -177,6 +177,7 @@
 		height:1px;
 		color:red;
 		z-index:99;
+		margin-left:2px;
 	}
 
 	.grayButton {
@@ -253,6 +254,11 @@
 		color:#D88A00;
 	}
 	
+	/* Flexbox is our friend */
+	.fc-agendaDay-view .fc-day-header {
+		display:flex;
+	}
+
 	.DayResourceLabel {
 		position:relative;
 		z-index:4;
@@ -266,6 +272,7 @@
 		white-space:nowrap;
 		background-image:url('/resources/images/alpha-80.png');
 		color:black;
+		flex:1;
 	}
 	
 	.DayResourceLabel:hover {
@@ -273,7 +280,52 @@
 		text-decoration:none;
 	}	
 	
-	
+	.fc-ltr .fc-time-grid .fc-event-container {
+		margin:0;
+		padding-left:2px;
+	}
+
+	.resCols .DayResourceColumn {
+		flex:1;
+		position:relative;
+	}
+
+	.typeCols, .resCols {
+		position:absolute;
+		left:0;
+		right:0;
+		display:flex;
+		padding-left:2px;
+	}
+
+	.resCols {
+		/*height:491px;*/
+		background-color:gray;
+		align-items:stretch;
+	}
+
+	.typeCols .DayTypeColumn {
+		/* This will actually be determined by the number of resources in the type */
+		flex:1;
+	}
+
+	.DayResourceColumn .fc-time-grid-event.fc-v-event.fc-event,
+	.DayTypeColumn .fc-time-grid-event.fc-v-event.fc-event {
+		left:0 !important;
+		right:0px !important;
+		/*width:100%;*/
+		margin:0px 1px !important;
+	}
+
+	.blockedTime.All {
+		margin:0px 1px;
+	}
+
+	.DayTypeColumn .fc-time-grid-event.fc-v-event.fc-event {
+		position:relative;
+	}
+
+<!--- Seems like an old idea that didn't bear fruit
 	.clickableColumn {
 		height:100%;
 		position:absolute;
@@ -285,7 +337,7 @@
 		-moz-border-radius: 3px;
 		border-radius: 3px;		
 	}
-	
+--->	
 	.clearResourceButton {
 		color:#999;
 		font-weight:bold;
@@ -381,7 +433,7 @@
 		margin-right:1px;
 	}
 
-	.eventDeleteButton img {
+	.eventEditButton img {
 		height:20px;
 		width:20px;
 		position:absolute;
@@ -685,8 +737,59 @@ function evenWidth() {
 }
 
 
-function labelColumns() {
+function addDayResourceColumns() {
+	// $('.DayResourceColumn').remove();
+	$('.typeCols').remove();
+	$('.resCols').remove();
+	$('.fc-event-container:not(".fc-helper-container")').append('<div class="typeCols"></div>');
+	$('.fc-event-container:not(".fc-helper-container")').append('<div class="resCols"></div>');
 
+
+	//Redo this as a loop of our Resources[] array. Only include columns for resources in types in the typeid hidden field
+	var i, types, count=0;
+	//will use the array of types passed to this function as arguments
+	//If no arguments were passed, default to the typeID hidden form field
+	if (arguments.length == 0) {
+		if ($('#typeID').val().length > 0) {
+			var arguments=$('#typeID').val().split(',');
+		} else {
+		//If the field is blank, we want arguments to be all types.
+		var arguments=[<cfoutput query="TypeList"><cfif CurrentRow GT 1>,</cfif>#TypeID#</cfoutput>];
+		}
+	}
+
+	//loop through all types passed as arguments
+	for(i=0; i<arguments.length;i++) {
+		
+		// Create columns for types that are used as blocked times
+		//sub loop through all resources to look for matches. Increment counter if found.
+		for( var j=0; j < Resources.length; j++) {
+			if (typeof Resources[j] === "object") {
+				if (Resources[j].typeID == arguments[i]) {
+					var typeid = Resources[j].typeID;
+					if ($('#DayTypeColumn'+typeid).length > 0) {
+						// If the type already exists, increment the flex: value by one
+						var theFlex = $('#DayTypeColumn'+typeid).css('flex-grow');
+						theFlex=parseInt(theFlex)+1;
+						$('#DayTypeColumn'+typeid).css('flex-grow', theFlex);
+
+					} else {
+						// else create the new column
+						$('.typeCols').append('<div id="DayTypeColumn'+typeid+'" class="DayTypeColumn" style="flex-grow:1;"></div>')
+					}
+					// Add invisible columns into fc-event-container. Note that there is also a fc-helper-container with this class
+					// I only want to to do this if the column needs to be here at all...
+					$('.resCols').append('<div id="DayResourceColumn'+j+'" class="DayResourceColumn"></div>');
+				}
+			}
+		}
+	}
+
+	
+}//end addDayResourceColumns()
+
+
+function labelColumns() {
 	//Clear the header in day view
 	$('.fc-day-header.fc-widget-header:first').html('').css('padding-left','2px');
 	
@@ -702,13 +805,14 @@ function labelColumns() {
 		var arguments=[<cfoutput query="TypeList"><cfif CurrentRow GT 1>,</cfif>#TypeID#</cfoutput>];
 		}
 	}
+
 	//loop through all types passed as arguments
 	for(i=0; i<arguments.length;i++) {
 		//sub loop through all resources to look for matches. Increment counter if found.
 		for( var j=0; j < Resources.length; j++) {
 			if (typeof Resources[j] === "object") {
 				if (Resources[j].typeID == arguments[i]) {
-					$('.fc-day-header.fc-widget-header').append('<a href="javascript:void(0);" id="DayResourceLabel'+j+'" class="DayResourceLabel" style="width:'+evenWidth()+'px;background-color:'+Resources[j].color+';border-color:'+Resources[j].color+';">'+Resources[j].name+'</a>');	
+					$('.fc-day-header.fc-widget-header').append('<a href="javascript:void(0);" id="DayResourceLabel'+j+'" class="DayResourceLabel" style="background-color:'+Resources[j].color+';border-color:'+Resources[j].color+';">'+Resources[j].name+'</a>');
 				}
 			}
 		}
@@ -817,12 +921,16 @@ $(document).ready(function(){
 		eventDurationEditable:false,
 		defaultTimedEventDuration: '00:55:00',
 		eventAfterRender: function(event, element, view) {
+			// Add an id based on the event### class. There might be a much better way to do this.
+			var anEvent = $(".event"+event.tid);
+			anEvent.attr('id', 'event'+event.tid);
+
 			//Renders HTML in the event title (ie for notes image)
 			element.find('.fc-title').prepend(event.noteIcon);
 			//Here, if the view is day, I adjust the positioning to make columns
 			//There will be a number of columns. Basically I need to figure out which column index each event goes into.
 			//I need to fix this to position the bookings/blocked times correctly with the selected types
-			if (view.name=="agendaDay" && $('#rid').val()=='') {		
+			if (view.name=="agendaDay" && $('#rid').val()=='') {
 				//if this is a resType, we make it wider as per our restype#col object
 				//Use the same left offset as the FirstRID RID
 				//console.log(event.description);
@@ -832,25 +940,37 @@ $(document).ready(function(){
 				if (typeClassIdx >= 0) {
 					//console.log(eval(event.className[typeClassIdx]+"Col"));
 					numCols=eval(event.className[typeClassIdx]+"Col").columns;
-					$(".blockedTime."+event.className[typeClassIdx]).css('width',evenWidth()*numCols+((numCols-1)*4)-3);
-					//console.log('setting .blockedTime.'+event.className[1]+' to '+evenWidth()+numCols);
+					var thisClass = event.className[typeClassIdx];
+					var thisType = thisClass.replace(/type/i, "");
+					// console.log(thisClass);
+					var anEvent = $(".blockedTime."+thisClass);
+					// console.log('relocating .blockedTime.'+thisClass+' to #DayTypeColumn'+thisType);
+					anEvent.detach();
+					$('#DayTypeColumn'+thisType).append(anEvent);
 					//new offset value comes from the Resources[x] object.
-					//Use first RID for the type, get offset from Resoruces array.
-					var offset=Resources[eval(event.className[typeClassIdx]+"Col").firstRID].offset; 
+					//Use first RID for the type, get offset from Resources array.
+					var offset=Resources[eval(event.className[typeClassIdx]+"Col").firstRID].offset;
 				} else if (typeof event.className[1] != 'undefined' && event.className[1] != 'All') {
-					$(".resourcebooking, .blockedTime."+event.className[1]).css('width',evenWidth());
+					// This applies to events that are not for a whole class and not for All events
+					//$(".resourcebooking, .blockedTime."+event.className[1]).css('width',evenWidth());
+
+					//Instead of manipulating the width, move this event into the right column.
+
 					//need to calculate an offset value based on the classname of a booking event
 					//Figure out the RID for this event. Grep it? Remove the Res?
 					var thisRID=event.className[1].replace(/Res/i, "");
+					var anEvent = $(".resourcebooking.Res"+thisRID+", .blockedTime.Res"+thisRID);
+
+					anEvent.detach();
+					$('#DayResourceColumn'+thisRID).append(anEvent);
+
+
 					var offset=Resources[thisRID].offset;
-				} else { //If no resource is associated it applies to all columns
-					$(".blockedTime.All").css('width',$(calHeader).width()-3);
-					$(".blockedTime.All").css('left',0);
 				}
 				
 				//           Left time col    col position for res    'margin'
-				position = (evenWidth()*offset) + (offset*4) - evenWidth() -3;
-				element.css('left',position);
+				// position = (evenWidth()*offset) + (offset*4) - evenWidth() -3;
+				// element.css('left',position);
 				labelColumns();
 				$('#resourceSelection').remove();
 			} else if (view.name=="agendaWeek" && $('#resourceSelection').length==0) {
@@ -879,10 +999,34 @@ $(document).ready(function(){
 			element.opentip(event.description, {style:'eventInfo'});
 		},
 		viewRender: function(view, element) {
+
+			<!--- This must not be the only way to disable this functionality. Server-side check required --->
+			<cfif permissions.delete eq 1>
+			// This is the replacement for eventClick handling build into fullCalendar. I have to create my own event handler
+			// because of how I moved the "event" elements into my own structure for formatting.
+			$('.fc-event-container').on('click', '.resourcebooking', function(){
+				
+				//Remove any existing delete buttons from other events
+				$('.eventEditButton').remove();
+				// $('.eventNoteButton').remove();
+				//this would be cleaner if I could use the id
+				var tid = $(this).attr('id').replace('event', '');
+				var title = $(this).find('.fc-title').html();
+				// console.log(title);
+				var $editButton='<a class="eventEditButton" href="javascript:void(0)" onclick="editEvent(\''+tid+'\',\''+title+'\');"><img src="/Resources/Images/gear.svg" /></a>';
+				// var $noteButton='<a class="eventNoteButton" href="javascript:void(0)" title="Add/Edit Note" onclick="createNote(\''+tid+'\',\''+title+'\');"><img src="/Resources/Images/editPencilCircle_64.png" /></a>';
+				 $(this).append($editButton).children('.eventEditButton').hide().fadeIn(100);
+				// $(this).append($noteButton).children('.eventNoteButton').hide().fadeIn(100);
+
+
+			});
+			</cfif>
 			
 			/* Show the header row when viewing all resources in day view */
 			if (view.name=="agendaDay" && $('#rid').val()=='') {
 				labelColumns();
+				// This isn't enough - it doesn't update when you change the categories.
+				addDayResourceColumns();
 
 				//Second attempt to render type labels. (Perhaps this should be a function since I'm now doing this twice... or remove the first instance)
 
@@ -902,6 +1046,7 @@ $(document).ready(function(){
 							$('.checkType').prop('checked', true);
 							$('#typeID').val('');
 							handleTypeID();
+							addDayResourceColumns();
 						} else $('#checkAll').prop('checked', true)
 					});
 					$('.checkType').change(function() {
@@ -919,6 +1064,7 @@ $(document).ready(function(){
 
 						$('#typeID').val(checkedTypes);
 						handleTypeID(checkedTypes);
+						addDayResourceColumns();
 					});
 
 				}//if #typeSelection.length==0
@@ -938,20 +1084,21 @@ $(document).ready(function(){
 			} catch(err) {}
 		},
 		dayClick: function(date, jsEvent, view){doDayClick(date, jsEvent, view)},
+		<!---
 		<cfif permissions.delete eq 1><!--- This must not be the only way to disable this functionality. Server-side check required --->
 		eventClick: function(calEvent, jsEvent, view) {
 			// Add the delete button if it doesn't already exist
-			if (typeof calEvent.tid == 'string' && $(this).children('.eventDeleteButton').length == 0) {
+			if (typeof calEvent.tid == 'string' && $(this).children('.eventEditButton').length == 0) {
 				//Remove any existing delete buttons
-				$('.eventDeleteButton').remove();
+				$('.eventEditButton').remove();
 				$('.eventNoteButton').remove();
-				var $deleteButton='<a class="eventDeleteButton" href="javascript:void(0)" onclick="deleteEvent(\''+calEvent.tid+'\',\''+calEvent.title+'\');"><img src="/Resources/Images/x_icon_64.png" /></a>';
+				var $editButton='<a class="eventEditButton" href="javascript:void(0)" onclick="editEvent(\''+calEvent.tid+'\',\''+calEvent.title+'\');"><img src="/Resources/Images/gear.svg" /></a>';
 				var $noteButton='<a class="eventNoteButton" href="javascript:void(0)" title="Add/Edit Note" onclick="createNote(\''+calEvent.tid+'\',\''+calEvent.title+'\');"><img src="/Resources/Images/editPencilCircle_64.png" /></a>';
-				$(this).append($deleteButton).children('.eventDeleteButton').hide().fadeIn(100);
+				$(this).append($editButton).children('.eventEditButton').hide().fadeIn(100);
 				$(this).append($noteButton).children('.eventNoteButton').hide().fadeIn(100);
 			}
 		},
-		</cfif>
+		</cfif> --->
 		eventSources: [
 			{
 				url: '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>',
@@ -974,7 +1121,10 @@ $(document).ready(function(){
 		
 	});//fullCalendar
 	
-	
+
+
+
+
 	/* I can use this for the card number validation as well */
 	function handleRID(newRID) {
 		$('#errorrid').hide();
@@ -1118,7 +1268,9 @@ function getEvents(thisTid){
 
 
 
-function deleteEvent(tid, title) {
+function editEvent(tid, title) {
+	loadPopOverContent('editEvent.cfm', '425px',{'tid':tid});
+	/*
 	if (confirm('Delete '+title+'?')) {
 		$.post('deleteBooking.cfm', {"id":tid});
 		//console.log('RemoveEvents '+tid);
@@ -1126,22 +1278,30 @@ function deleteEvent(tid, title) {
 		//$('.event'+tid).fadeOut(200);
 		//Can I remove the event from here?
 	}
+	*/
 }
 </cfif>
 
 function createNote(tid) {
 	//Show popup allowing display selection for this ad.
-	loadPopOverContent('editNote.cfm', '300px',
-				{
-					'tid':tid
-				});	
+	loadPopOverContent('editNote.cfm', '300px',{'tid':tid});	
 
 }
 
 
+
+
 function doDayClick(date, jsEvent, view, confirmDelete) {
+	/* Okay, I'm thinking that I can get the x offset here, so I need to compare that with the current position of the resource columns
+	and based on that I can figure out which column was clicked. No extra elements required, no screwing with the height.
+
+
+	*/
 	//If in day view and no Resource selected, determine it through position of click
-	if (view.name=="agendaDay" && $('#rid').val()=='') {var rid=resourceColumn(jsEvent.offsetX);}
+	if (view.name=="agendaDay" && $('#rid').val()=='') {
+		var rid=resourceColumn(jsEvent.offsetX);
+		//console.log(resourceColumn(jsEvent.offsetX));
+	}
 	else {var rid=$('#rid').val();}
 	
 	if (confirmDelete != true){
@@ -1262,19 +1422,20 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 }//end function doDayClick()
 
 
-/* Determines which resource column has been clicked based on X position */
+/* Determines which resource column has been clicked based on X position.*/
 function resourceColumn(xPos) {
-	// evenWidth=$(calHeader).width()/resCount()-4;
-	
-	for (var i=0; i < Resources.length; i++) {
-		if (typeof Resources[i] === "object") {
-		//Left time col    col position for res    'margin'
-			var thisOffset = (evenWidth()*Resources[i].offset) + (Resources[i].offset*4) - (evenWidth());
-			if (xPos>=thisOffset && xPos <=thisOffset+evenWidth()) {
-				return i;
-			}
-		}//end if Resources[i] is an object
-	}
+	var thisRid;
+	//Loop through resource columns
+	$.each($('.DayResourceColumn'), function() {
+		var leftPos = $(this).position().left;
+		var colWidth = $(this).width();
+		if ( xPos >= leftPos && xPos <= leftPos+colWidth) {
+			thisRid = $(this).attr('id').replace('DayResourceColumn', '');
+		}
+	});
+	return thisRid;
+
+
 }
 
 

@@ -1,0 +1,25 @@
+- When booking a time that has mostly already elapsed, start the booking at the current time.
+
+- Remove the "note" button"
+
+- Perhaps the gear button needs to be more obviously a button
+
+- When changing a time check:
+	- The new time doesn't overlap an existing booking/blocked time
+	- the new time is at least 15 minutes
+	- The start time is BEFORE the end time
+	- 
+
+
+Edit popup
+----------
+
+If time or note have been edited, disable the delete button.
+
+The save changes button will be disabled until a *valid* change has been made.
+	- Notes should be okay to have any change
+	- Start time must be before end time
+	- time does not coincide with other events OR blocked times from the same category.
+
+	If all these things are valid, then I can enable the save changes button. On the action page, I will perform these checks again.
+	
