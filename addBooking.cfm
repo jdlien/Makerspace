@@ -283,6 +283,7 @@
 				<cfset data.NewBooking.rid=form.rid>
 				<cfset data.NewBooking.start=form.newstart>
 				<cfset data.NewBooking.end=form.newend>
+				<cfset data.NewBooking.card=form.id>
 
 			</cfif><!---Either no extra bookings or confirmation--->
 		<cfelse>

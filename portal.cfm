@@ -1335,6 +1335,10 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 					noticeMsg+=" today"}
 					else noticeMsg+=" on "+moment(bookingInfoObj.NEWBOOKING.START).format("dddd, MMMM Do");
 					noticeMsg+=".";
+					if (bookingInfoObj.NEWBOOKING.CARD == '21221012345678') {
+						noticeMsg+="<br><b>This booking requires a note.</b>";
+						editEvent(bookingInfoObj.NEWBOOKING.ID);
+					}
 				}
 				//Handles confirmation dialog for booking past events
 				if (typeof bookingInfoObj.PASTDATE != 'undefined' && bookingInfoObj.REQUIRECONFIRM != true) {
@@ -1344,6 +1348,11 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 					noticeMsg+=" today"}
 					else noticeMsg+=" on "+moment(bookingInfoObj.NEWBOOKING.START).format("dddd, MMMM Do");
 					noticeMsg+=".";
+					//console.log(bookingInfoObj.NEWBOOKING.CARD);
+					if (bookingInfoObj.NEWBOOKING.CARD == '21221012345678') {
+						noticeMsg+="<br><b>This booking requires a note.</b>";
+						editEvent(bookingInfoObj.NEWBOOKING.ID);
+					}
 				} else if (typeof bookingInfoObj.PASTDATE != 'undefined' && bookingInfoObj.REQUIRECONFIRM == true) {
 					noticeMsg+='<br /><span class="warning">This time is in the past and cannot be booked.<b><br />';
 					window.tempjsEvent=jsEvent;
