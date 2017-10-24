@@ -176,9 +176,10 @@
 
 	});
 
-	$('#note').change(function(){
+	$('#note').on('input', function(){
 		//Disable delete event button if the note changes
 		$('#delBtn').prop('disabled', true);
+		$('#submitBtn').prop('disabled', false);
 	});
 
 	</script>

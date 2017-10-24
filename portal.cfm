@@ -1007,7 +1007,7 @@ $(document).ready(function(){
 				var tid = $(this).attr('id').replace('event', '');
 				var title = $(this).find('.fc-title').html();
 				// console.log(title);
-				var $editButton='<a class="eventEditButton" href="javascript:void(0)" onclick="editEvent(\''+tid+'\',\''+title+'\');"><img src="/Resources/Images/gear.svg" /></a>';
+				var $editButton='<a class="eventEditButton" href="javascript:void(0)" onclick="editEvent(\''+tid+'\');"><img src="/Resources/Images/gear.svg" /></a>';
 				// var $noteButton='<a class="eventNoteButton" href="javascript:void(0)" title="Add/Edit Note" onclick="createNote(\''+tid+'\',\''+title+'\');"><img src="/Resources/Images/editPencilCircle_64.png" /></a>';
 				 $(this).append($editButton).children('.eventEditButton').hide().fadeIn(100);
 				// $(this).append($noteButton).children('.eventNoteButton').hide().fadeIn(100);
@@ -1261,7 +1261,7 @@ function getEvents(thisTid){
 }
 
 
-
+//Title doesn't do anything currently. I'm leaving it there for reverse compatibility
 function editEvent(tid, title) {
 	loadPopOverContent('editEvent.cfm', '425px',{'tid':tid});
 	/*
