@@ -2,7 +2,7 @@
 <cfset RemoveSidebar="yes">
 <cfset ApplicationID="MakerspaceBooking">
 <cfset pagetitle="Makerspace Booking System">
-<cfset enableFullCalendar32="yes">
+<cfset enableFullCalendar="yes">
 
 <cfinclude template="/Includes/INTYouKnowVariables.cfm" />
 
@@ -44,6 +44,8 @@
 <!--- Used for the current location of the user in Makerspace Booking System --->
 <cfset MBSPath="#REReplace(cgi.script_name, "(.*)/.*", "\1")#" />
 
+<!--- Stylesheet is now external --->
+<link rel="stylesheet" type="text/css" href="makerspace.css" />
 
 
 <cfquery name="ResourceList" datasource="SecureSource" dbtype="ODBC">
@@ -80,378 +82,6 @@
 
 <script src='/Javascript/jquery.inputmask.bundle.min.js' type="text/javascript"></script>
 
-<style type="text/css">
-
-	.fc-widget-content {
-		height:40px !important;
-		/*Overrides .fc-time-grid .fc-slats td { height: 1.5em*/
-	}
-
-
-	.fc-time-grid-container {
-		/*height:none !important;*/
-		overflow:hidden;
-	}
-
-	.fc-time-grid-event {
-		/*overflow:visible !important;*/
-	}
-
-	.notice {
-		text-align:center;
-	}
-	
-	.typeCheckLabel {
-		margin-left:10px;
-		font-weight:normal;
-	}
-
-	.typeCheckLabel input {
-		padding: 0;
-		vertical-align: middle;
-		position: relative;
-		top: -1px;
-		*overflow: hidden;
-	}
-
-	#userSelection label {
-		font-weight:bold;
-	}
-	
-	.bold {
-		font-weight:bold;
-	}
-	
-
-	label.spaced {
-		width:200px;
-		float:left;
-		
-	}
-	
-	.yourBooking .fc-event-title {
-		font-weight:bold;
-	}
-	
-	.resourcebooking {
-		/*max-width:200px;*/
-	}
-	
-	.warning {
-		color:#990000;
-	}
-	
-	.timeline {
-		position: absolute;
-		/*left: 50px;*/
-		border: none;
-		border-bottom: 0px solid red;
-		background-image:url('/resources/images/alpha-black-20.png');
-		height:2000px;
-		width: 100%;
-		margin: 0;
-		padding: 0;
-	}
-	
-	.timeline hr {
-		width:100%;
-		padding:0;
-		margin:0;
-		position:absolute;
-		bottom:0px;
-		border:0;
-		border-bottom:1px dashed red;
-		height:1px;
-		color:red;
-		z-index:99;
-	}
-	
-	.timeline2 {
-		width:100%;
-		padding:0;
-		margin:0;
-		position:absolute;
-		bottom:0px;
-		border:0;
-		border-bottom:1px dashed red;
-		height:1px;
-		color:red;
-		z-index:99;
-		margin-left:2px;
-	}
-
-	.grayButton {
-		margin:3px 3px;
-		margin-bottom:15px;
-	}
-	
-	#userStatus {
-		float:left;
-		clear:left;
-		min-height:25px;
-	}
-	
-	.opentip {
-		z-index:99;
-	}
-
-	.confirmQuestion {
-		font-weight:bold;
-		text-align:center;
-		margin:0 auto;
-		margin-top:16px;
-	}
-
-	.confirmDeletion a {
-		display:block;
-		color:black;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		border-radius: 5px;
-		margin:6px auto;
-		text-align:center;
-		width:90%;
-		border-top: solid 1px #EEEEEE;
-		border-right: solid 1px #BBBBBB;
-		border-bottom: solid 1px #BBBBBB;
-		border-left: solid 1px #EEEEEE;
-		background-color:#DDDDDD;
-	}
-	
-	.confirmDeletion a:hover {
-		color:black;
-		background-color:#EEEEEE;
-	}
-
-	
-/*
-	.confirmDeletion {
-		color:black;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		border-radius: 5px;
-		margin:6px;
-	}
-	
-	.cancelBooking {
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		border-radius: 5px;
-		margin:6px;
-	}
-	
-	.confirmDeletion:hover, .cancelBooking:hover {
-		color: #222222;
-		text-decoration: none;
-		background-position: 0 -15px;
-		-webkit-transition: background-position 0.1s linear;
-		   -moz-transition: background-position 0.1s linear;
-			 -o-transition: background-position 0.1s linear;
-				transition: background-position 0.1s linear;
-	}
-*/	
-	.blockWarn {
-		color:#D88A00;
-	}
-	
-	/* Flexbox is our friend */
-	.fc-agendaDay-view .fc-day-header {
-		display:flex;
-	}
-
-	.DayResourceLabel {
-		position:relative;
-		z-index:4;
-		float:left;
-		margin:0 1px;
-		border:1px solid #AAAAAA;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;
-		overflow:hidden;
-		white-space:nowrap;
-		background-image:url('/resources/images/alpha-80.png');
-		color:black;
-		flex:1;
-	}
-	
-	.DayResourceLabel:hover {
-		background-image:url('/resources/images/alpha-60.png');
-		text-decoration:none;
-	}	
-	
-	.fc-ltr .fc-time-grid .fc-event-container {
-		margin:0;
-		padding-left:2px;
-	}
-
-	.resCols .DayResourceColumn {
-		flex:1;
-		position:relative;
-	}
-
-	.typeCols, .resCols {
-		position:absolute;
-		left:0;
-		right:0;
-		display:flex;
-		padding-left:2px;
-	}
-
-	.resCols {
-	}
-
-	.typeCols .DayTypeColumn {
-		/* This will actually be determined by the number of resources in the type */
-		position:relative;
-	}
-
-	.DayResourceColumn .fc-time-grid-event.fc-v-event.fc-event,
-	.DayTypeColumn .fc-time-grid-event.fc-v-event.fc-event {
-		left:0 !important;
-		right:0px !important;
-		/*width:100%;*/
-		margin:0px 1px !important;
-	}
-
-	.blockedTime.All {
-		margin:0px 1px;
-	}
-
-
-<!--- Seems like an old idea that didn't bear fruit
-	.clickableColumn {
-		height:100%;
-		position:absolute;
-		border-left:1px solid #EEEEEE;
-		border-right:1px solid #EEEEEE;
-		margin:0 2px;
-		z-index:3;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;		
-	}
---->	
-	.clearResourceButton {
-		color:#999;
-		font-weight:bold;
-		width:18px;
-		height:18px;
-		visibility:hidden;
-		display:inline-block;;
-		text-align:center;
-		font-size:17px;
-		margin-right:6px;
-		margin-left:6px;
-		vertical-align: middle;
-	}
-
-	.clearResourceButton:visited {
-		color:#444444;
-	}
-	
-	.clearResourceButton:hover {
-		text-decoration:none;
-		color:#D60000;
-	}
-
-	.clearResourceButton svg #closeBtn {
-		stroke:black;
-		stroke-width:2;
-		fill:#ddd;
-	}
-
-	.clearResourceButton svg #closeBtn:hover {
-		stroke:red;
-		fill:#eee;
-	}
-
-	#resourceSelection {
-		padding-top:4px;
-		padding-right:10px;
-		margin:0 10px 15px 0;
-		display:inline;
-	}
-
-	#resourceSelection * {
-		text-align:left;
-	}
-	
-	#typeSelection {
-		padding-top:4px;
-		padding-right:10px;
-		margin:0 10px 15px 0;
-		display:inline;
-	}
-
-	#typeSelection * {
-		text-align:left;
-	}
-	
-	#ridDD {
-		margin-top:3px;
-		vertical-align:bottom;
-		width:375px;
-	}
-	
-	#typeDD {
-		margin-top:3px;
-		vertical-align:bottom;
-		width:375px;
-	}
-	
-	.fc-right span {
-		text-align:right; /* This causes the positions to get switched :( */
-	}
-	
-	.fc-left {
-		width: 180px;
-		text-align: left;
-		}
-		
-	.fc-center {
-		text-align: left;
-		}
-		
-	.fc-right {
-		text-align: right;
-		}
-	
-	.noteIcon {
-		width:12px;
-		height:11px;
-		background-image:url('/Resources/images/stickynoteimage-23x22.png');
-		background-size:11px 11px;
-		background-repeat:no-repeat;
-		float:left;
-		margin-right:1px;
-	}
-
-	.eventEditButton img {
-		height:20px;
-		width:20px;
-		position:absolute;
-		border:none;
-		top:0px;
-		right:0px;
-		z-index:30;
-	}
-
-	.eventNoteButton img {
-		height:20px;
-		width:20px;
-		position:absolute;
-		border:none;
-		bottom:0px;
-		left:0px;
-		z-index:30;
-	}
-
-	label.helpIcon {
-		width:19px;
-		height:19px;
-	}
-</style>
 
 
 <cfquery name="PriorUsers" dbtype="ODBC" datasource="SecureSource">
@@ -901,6 +531,7 @@ $(document).ready(function(){
 				timeFormat: 'h:mm t'
 			}
 		},
+		<cfif isDefined('url.date') AND isDate(url.date)>defaultDate:'<cfoutput>#DateFormat(url.date, 'YYYY-MM-DD')#</cfoutput>',</cfif>
 		//columnFormat: {week: 'dddd MMM D', day: ''},
 		contentHeight:"auto",
 		defaultView:'agendaDay',
@@ -1015,6 +646,17 @@ $(document).ready(function(){
 
 			});
 			</cfif>
+
+			var bDate = $('#calendar').fullCalendar('getDate');
+			// Now I have the date. Update URL with this date if it's not today
+			<cfoutput>
+			if (moment(today).format('L') != bDate.format('L')) {
+				//Add the date to the URL
+				window.history.pushState("", "Apps: Makerspace Booking System", "?<cfif isDefined('url.branch')>branch=#url.branch#&</cfif>date="+bDate.format('L'));
+			} else {
+				window.history.pushState("", "Apps: Makerspace Booking System", "?<cfif isDefined('url.branch')>branch=#url.branch#</cfif>");
+			}
+			</cfoutput>
 			
 			/* Show the header row when viewing all resources in day view */
 			if (view.name=="agendaDay" && $('#rid').val()=='') {
@@ -1076,7 +718,7 @@ $(document).ready(function(){
 			try {
 				setTimeline(view, element);
 			} catch(err) {}
-		},
+		}, //End viewRender
 		dayClick: function(date, jsEvent, view){doDayClick(date, jsEvent, view)},
 		<!---
 		<cfif permissions.delete eq 1><!--- This must not be the only way to disable this functionality. Server-side check required --->

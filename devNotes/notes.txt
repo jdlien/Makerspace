@@ -25,3 +25,8 @@ The save changes button will be disabled until a *valid* change has been made.
 
 
 If a time is clicked, but there's already a booking in that hour-slot, create a new booking that is the remainder of the hour.
+
+
+
+- Can I make it load a particular date by specifying it in the URL?
+- When the date is changed, adjust the URL appropriately

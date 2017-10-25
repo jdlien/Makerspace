@@ -1,7 +1,12 @@
-<cfsetting showdebugoutput="no">
+<cfsetting showdebugoutput="false">
 <cfheader name="Content-Type" value="application/json">
 <cfparam name="form.isStaff" default="true">
 <cfparam name="form.hideOther" default="false">
+
+<!--- Fix the datetime format --->
+<cfif isDefined('form.start')><cfset form.start = Replace(form.start, "T", " ")></cfif>
+<cfif isDefined('form.end')><cfset form.end = Replace(form.end, "T", " ")></cfif>
+
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
@@ -73,8 +78,9 @@
 	<cfif isDefined('form.start')>AND t.EndTime > '#form.start#'</cfif>
 	<cfif isDefined('form.end')>AND t.startTime < '#form.end#'</cfif>
 </cfquery>
-<!--- I wanted coldfusion to generate JSON from an structure, but it wasn't working very well --->
-	[
+<!--- I wanted coldfusion to generate JSON from an structure, but it wasn't working very well.
+Start JSON Array here --->
+[
 <cfset counter=0>
 <cfoutput query="BlockedTimes">
 	<cfset tDesc=trim(Description) />
@@ -116,4 +122,5 @@
 		</cfloop>
 	</cfif><!---if Continuous--->
 </cfoutput>
-	]
+<!--- Close JSON Array --->
+]
