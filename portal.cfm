@@ -770,38 +770,7 @@ $(document).ready(function(){
 			if (newRID == '') $('.clearResourceButton').css('visibility', 'hidden');
 			else $('.clearResourceButton').css('visibility', 'visible');
 		}
-		/*Remove events and only show events for the newly selected resource */
-		$('#calendar').fullCalendar('removeEvents');
-		$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>');
-		$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>');
-		$('#calendar').fullCalendar('addEventSource', {
-			url: '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>',
-			type: 'POST',
-			data: {
-				id:$('#id').val(),
-				rid:$('#rid').val(),
-				typeID:$('#typeID').val(),
-				hideOther:$('#hideOtherBookings').prop('checked')
-			}
-		});
-		$('#calendar').fullCalendar('addEventSource', {
-			url: '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>',
-			type: 'POST',
-			data: {rid:$('#rid').val(),typeID:$('#typeID').val()}
-		});
-		/* This should only be required in day view */
-		if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val() !='') {
-			$('.fc-day-header.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
-			$('.clearResourceButton').css('visibility', 'visible');
-			$('.clearResourceButton').on('click', function(){
-				$('#rid').val('');
-				//$('#rid').trigger("chosen:updated");
-				$('#rid').change();
-			});
-		}
-		else if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val()=='') {
-			labelColumns();
-		}
+		updateFullCalendar();
 	}
 	
 
@@ -817,41 +786,7 @@ $(document).ready(function(){
 		if (typeof newTypeID !='undefined') {
 			$('#typeID').val(newTypeID);
 		}
-		/*Remove events and only show events for the newly selected resource */
-		$('#calendar').fullCalendar('removeEvents');
-		$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>');
-		$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>');
-		$('#calendar').fullCalendar('addEventSource', {
-			url: '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>',
-			type: 'POST',
-			data: {
-				id:$('#id').val(),
-				rid:$('#rid').val(),
-				typeID:$('#typeID').val(),
-				hideOther:$('#hideOtherBookings').prop('checked')
-			}
-		});
-		$('#calendar').fullCalendar('addEventSource', {
-			url: '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>',
-			type: 'POST',
-			data: {
-				rid:$('#rid').val(),
-				typeID:$('#typeID').val()
-			}
-		});
-		/* This should only be required in day view */
-		if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val() !='') {
-			$('.fc-day-header.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
-			$('.clearResourceButton').css('visibility', 'visible');
-			$('.clearResourceButton').on('click', function(){
-				$('#rid').val('');
-				//$('#rid').trigger("chosen:updated");
-				$('#rid').change();
-			});
-		}
-		else if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val()=='') {
-			labelColumns();
-		}
+		updateFullCalendar();
 	}
 
 	$('#typeID').on('change', function(){
@@ -861,29 +796,87 @@ $(document).ready(function(){
 	/* Toggle showing only this user's bookings - note that this will allow them to book other time slots... */
 	$('#hideOtherBookings').on('change', function(){
 		$('#errorrid').hide();
-		/*Remove events and only show events for the newly selected resource */
-		$('#calendar').fullCalendar('removeEvents');
-		$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>');
-		$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>')
-		$('#calendar').fullCalendar('addEventSource', {
-				url: '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>',
-				type: 'POST',
-				data: {
-					id:$('#id').val(),
-					rid:$('#rid').val(),
-					typeID:$('#typeID').val(),
-					hideOther:$('#hideOtherBookings').prop('checked')
-				}
-			});
-		$('#calendar').fullCalendar('addEventSource', {
-				url: '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>',
-				type: 'POST',
-				data: {rid:$('#rid').val(),typeID:$('#typeID').val()}
-		});
+		updateFullCalendar();
 
 	});
 	
 });//document.ready
+
+
+// Check if this data needs to be updated every 5 seconds. If so, update.
+var updateSeq = 0;
+
+//Simply updates the 'updateSeq' variable to the current value to prevent a useless update.
+function setUpdateSequence() {
+	$.get('updateCheck.cfm?branch=<cfoutput>#ThisLocation#</cfoutput>').done(function(data){
+			updateSeq = data;
+	});
+}	
+
+//Set the initial update sequence, otherwise a useless update is done shortly after page load.
+setUpdateSequence();
+
+
+
+
+setInterval(function() {
+	$.get('updateCheck.cfm?branch=<cfoutput>#ThisLocation#</cfoutput>').done(function(data){
+		// console.log(updateSeq);
+		// console.log(data);
+		if (parseInt(data) > parseInt(updateSeq)) {
+			//We need to update
+			updateSeq = data;
+			//console.log('Changes detected. Updating...');
+			updateFullCalendar();
+
+		}
+	});
+}, 5000);
+
+
+
+function updateFullCalendar() {
+
+	/*Remove events and only show events for the newly selected resource */
+	$('#calendar').fullCalendar('removeEvents');
+	$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>');
+	$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>');
+	$('#calendar').fullCalendar('addEventSource', {
+		url: '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>',
+		type: 'POST',
+		data: {
+			id:$('#id').val(),
+			rid:$('#rid').val(),
+			typeID:$('#typeID').val(),
+			hideOther:$('#hideOtherBookings').prop('checked')
+		}
+	});
+	$('#calendar').fullCalendar('addEventSource', {
+		url: '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>',
+		type: 'POST',
+		data: {rid:$('#rid').val(),typeID:$('#typeID').val()}
+	});
+
+	/* This should only be required in day view */
+	if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val() !='') {
+		$('.fc-day-header.fc-widget-header').html(Resources[$('#rid').val()].name+$clearResourceButton);
+		$('.clearResourceButton').css('visibility', 'visible');
+		$('.clearResourceButton').on('click', function(){
+			$('#rid').val('');
+			//$('#rid').trigger("chosen:updated");
+			$('#rid').change();
+		});
+	}
+	else if ($('#calendar').fullCalendar('getView').name=="agendaDay" && $('#rid').val()=='') {
+		labelColumns();
+	}
+
+	// Update the sequence number so we don't needlessly do another update
+	setUpdateSequence();
+
+
+}//end updateFullCalendar()
+
 
 <cfif permissions.delete eq 1>
 
@@ -1152,28 +1145,10 @@ $('#prevUsers').change(function() {
 	$("#userSelectionForm").submit();
 
 	$('#errorrid').hide();
-	/*Remove events and only show events for the newly selected resource */
-	/*$('#calendar').fullCalendar('removeEvents');*/
-	$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>');
-	$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>');
-	$('#calendar').fullCalendar('addEventSource', {
-			url: '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>',
-			type: 'POST',
-			data: {
-				id:$('#id').val(),
-				rid:$('#rid').val(),
-				typeID:$('#typeID').val(),
-				hideOther:$('#hideOtherBookings').prop('checked')
-			}
-		});
-	$('#calendar').fullCalendar('addEventSource', {
-			url: '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>',
-			type: 'POST',
-			data: {rid:$('#rid').val(),typeID:$('#typeID').val()}
-	});
+
+	updateFullCalendar();
+
 });
-
-
 
 
 </script>
