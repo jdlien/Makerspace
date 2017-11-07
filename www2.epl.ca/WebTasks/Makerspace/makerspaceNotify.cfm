@@ -4,7 +4,7 @@ that way made days in advance --->
 
 <!--- CHANGE THE 300 to 30 when testing is complete --->
 <cfquery name="BookingsNotify" dbtype="ODBC" datasource="SecureSource">
-	SELECT ty.TypeID as TID, UserBarCode, t.FirstName, t.LastName, t.Email, t.StartTime, t.EndTime, t.Inserted, t.Notified, t.RID,
+	SELECT TID, ty.TypeID as TypeID, UserBarCode, t.FirstName, t.LastName, t.Email, t.StartTime, t.EndTime, t.Inserted, t.Notified, t.RID,
 	r.ResourceName, r.Description, ty.OfficeCode, o.OfficeName, o.CommonName, o.OfficeAddress, o.Phone1
 	FROM vsd.MakerspaceBookingTimes t
 	JOIN vsd.MakerspaceBookingResources r ON t.RID=r.RID
@@ -39,7 +39,7 @@ that way made days in advance --->
 		<cfset fromEmail = '"DO NOT REPLY" <noreply@epl.ca>' />
 	</cfif>
 <!--- <cfmail from='#fromEmail#' to="jlien@epl.ca" subject="Your EPL Makerspace Booking" type="html"> --->
-<cfmail from='#fromEmail#' to='"#FirstName# #LastName#"<#Email#>' bcc="jlien@epl.ca" subject="Your EPL Makerspace Booking" type="html">
+<cfmail from='#fromEmail#' to='"#FirstName# #LastName#"<#Email#>' subject="Your EPL Makerspace Booking" type="html">
 <p>Dear #FirstName#:</p>
 
 <p>This is a notification of your upcoming booking at the <cfif OfficeCode IS "ESQ">Edmonton Public Library Makerspace<cfelse>#OfficeName# Branch</cfif>,  #OfficeAddress#.<br />
