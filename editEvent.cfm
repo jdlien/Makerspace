@@ -54,7 +54,7 @@
 		SET
 		StartTime='#EventDate&" "&form.starthour&":"&form.startminute#',
 		ENDTime='#EventDate&" "&form.endhour&":"&form.endminute#'
-		<cfif isDefined('form.note') AND len(trim(form.note))>,Note='#PreserveSingleQuotes(form.note)#'</cfif>
+		<cfif isDefined('form.note') AND len(trim(form.note))>,Note='#form.note#'</cfif>
 		WHERE TID='#form.tid#'
 	</cfquery>
 
@@ -83,7 +83,7 @@
 		</div>
 	
 
-		<label for="note">Note <input name="note" id="note" value="#Event.Note#" /></label>
+		<label for="note">Note <input name="note" id="note" value="#HTMLEditFormat(Event.Note)#" /></label>
 
 		<label class="formSubmit">
 			<input type="submit" value="Save Changes" id="submitBtn" disabled>

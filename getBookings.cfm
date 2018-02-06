@@ -3,6 +3,12 @@
 <cfparam name="form.hideOther" default="false">
 <cfheader name="Content-Type" value="application/json">
 
+<cfscript>
+string function escapedq(string s) {
+	return replace(s, '"', '\"', "all");
+}
+</cfscript>
+
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
@@ -53,14 +59,14 @@
 		<cfset titleDesc=#ResourceName#>
 	</cfif>
 	{
-	"title":"#titleDesc#",
+	"title":"#escapedq(titleDesc)#",
 	"start":"#StartTime#",
 	"end":"#EndTime#",
 	<cfif len(form.id) AND form.id IS UserBarcode>
 		"borderColor":"black",
 	</cfif>
 	<cfif form.isStaff IS 'true'>
-		"description":"<b>#ResourceName#</b><cfif len(Description)> - #Description#</cfif><br /><b>#FirstName# #LastName#</b><br /> #REReplace(UserBarcode, "(\d{5})(\d{5})(\d{4})", "\1 \2 \3")#<cfif len(Note)><br /><b>Note: </b>#Note#</cfif>",
+		"description":"<b>#escapedq(ResourceName)#</b><cfif len(Description)> - #escapedq(Description)#</cfif><br /><b>#escapedq(FirstName)# #escapedq(LastName)#</b><br /> #REReplace(UserBarcode, "(\d{5})(\d{5})(\d{4})", "\1 \2 \3")#<cfif len(Note)><br /><b>Note: </b>#escapedq(Note)#</cfif>",
 		"tid":"#TID#",
 	</cfif>
 	"rid":"#RID#",
