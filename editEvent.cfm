@@ -169,7 +169,8 @@
 				$('#submitBtn').prop('disabled', true);
 				//Display a toast message
 				toastr.error(data.ERRORMSG);
-			} else {
+			} else if (timeDiff >= 15){
+				//This can only disable if the times are valid...
 				$('#submitBtn').prop('disabled', false);
 			}
 		});

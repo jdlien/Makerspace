@@ -1,4 +1,5 @@
 <cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
+<!--- <cfinclude template="/Includes/IntraHeader.cfm"> --->
 <cfset ApplicationID="MakerspaceBooking">
 <cfset PermissionsRequired_List="view,delete">
 <cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">

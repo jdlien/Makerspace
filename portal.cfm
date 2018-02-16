@@ -1080,7 +1080,13 @@ function resourceColumn(xPos) {
 /* Checks for overlapping events. */
 function isOverlapping(event, rid){
 	var array = $('#calendar').fullCalendar('clientEvents');
+	// JDL 2018-02-15
+	// console.log(array);
+	// console.log(event);
 	for(i in array){
+		// console.log(array[i].start);
+		// console.log(array[i].end);
+		// I don't get the point of this... array[i] doesn't have an id
 		if(array[i].id != event.id){
 			//careful that these are in the same format
 			if(!(array[i].start.format() >= event.end || array[i].end.format() <= event.start) && array[i].rid==rid){
