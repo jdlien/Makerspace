@@ -19,6 +19,15 @@
 <!--- <cfdump var="#form#"> --->
 </cfif>
 
+<!--- Prevent booking this resource if the length is shorter than ten minutes --->
+<cfset bookingDurMins = DateDiff("n", form.newStart, form.newEnd) />
+<cfif bookingDurMins LT 15>
+	<cfset data.error=true>
+	<cfset data.errorMsg&="End time must be at least 15 minutes after the start time.<br /><br />Ensure that your end time is not before the start time.">
+	<cfoutput>#SerializeJSON(data)#</cfoutput>
+	<cfabort>
+</cfif>
+
 <!--- Prevent booking this system if it's already booked by anyone--->
 
 <!---
