@@ -135,6 +135,18 @@
 		// }		
 	});
 
+
+	function getTimeDiff() {
+		var today = new Date('<cfoutput>#EventDate# GMT-0700</cfoutput>');
+		var startTime = new Date((today.getYear()+1900)+'/'+(today.getMonth()+1)+'/'+today.getDate()+' '+$('#startHour').val()+':'+$('#startMinute').val()+':00');
+		var endTime = new Date((today.getYear()+1900)+'/'+(today.getMonth()+1)+'/'+today.getDate()+' '+$('#endHour').val()+':'+$('#endMinute').val()+':00');
+
+		//now we can do if (startTime < endTime) {}
+		var timeDiff = (endTime - startTime)/1000/60;
+
+		return timeDiff;
+	}
+
 	// Ensure times are valid.
 	$('.hour, .minute').change(function(){
 		//Disable delete event button if the times change
@@ -144,6 +156,7 @@
 		// I think the easiest solution here is to construct an actual time and then compare them.
 		// I'm not going to account for DST changes or other weirdness since that shouldn't affect us
 		// Create a date with the event date, accounting for our time zone when it's not DST. The exact time will be adjusted anyways
+
 		var today = new Date('<cfoutput>#EventDate# GMT-0700</cfoutput>');
 		var startTime = new Date((today.getYear()+1900)+'/'+(today.getMonth()+1)+'/'+today.getDate()+' '+$('#startHour').val()+':'+$('#startMinute').val()+':00');
 		var endTime = new Date((today.getYear()+1900)+'/'+(today.getMonth()+1)+'/'+today.getDate()+' '+$('#endHour').val()+':'+$('#endMinute').val()+':00');
@@ -151,8 +164,7 @@
 		var tzOffset = startTime.getTimezoneOffset() * 60 * 1000;
 		var isoStart = new Date(startTime-tzOffset).toISOString().slice(0, 19).replace('T', ' ');
 		var isoEnd = new Date(endTime-tzOffset).toISOString().slice(0, 19).replace('T', ' ');
-		//now we can do if (startTime < endTime) {}
-		var timeDiff = (endTime - startTime)/1000/60;
+		var timeDiff = getTimeDiff();
 		//If the timeDiff is less than 15 minutes, we won't allow that. So that's my first check.
 		if (timeDiff < 15) {
 			valid = false;
@@ -179,7 +191,7 @@
 
 	$('#note').on('input', function(){
 		//Disable delete event button if the note changes but only if the time is within bounds
-		if (timeDiff < 15) {
+		if (getTimeDiff() >= 15) {
 			$('#delBtn').prop('disabled', true);
 			$('#submitBtn').prop('disabled', false);
 		}
