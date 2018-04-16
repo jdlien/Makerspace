@@ -24,6 +24,11 @@
 </cfif>
 
 <cfset adminButton = structNew()>
+<cfset adminButton.link="stats.cfm">
+<cfset adminButton.label="Stats">
+<cfset ArrayAppend(adminButtons, adminButton)>
+
+<cfset adminButton = structNew()>
 <cfset adminButton.permType="reso">
 <cfset adminButton.link="resources.cfm">
 <cfset adminButton.label="Resources">
