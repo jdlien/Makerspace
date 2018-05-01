@@ -931,8 +931,14 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 
 
 	*/
+
 	//If in day view and no Resource selected, determine it through position of click
 	if (view.name=="agendaDay" && $('#rid').val()=='') {
+		// If for some reason jsEvent isn't defined, just return and do nothing.
+		if (!jsEvent) {
+			//console.log('No jsEvent');
+			return;
+		}
 		var rid=resourceColumn(jsEvent.offsetX);
 		//console.log(resourceColumn(jsEvent.offsetX));
 	}
