@@ -98,7 +98,7 @@
 	JOIN MakerspaceBookingResourceTypes t ON r.TypeID=t.TypeID	
 	WHERE UserBarCode!='21221012345678'
 	AND t.OfficeCode='#ThisLocation#'
-	AND EndTime > DATEADD(day,-20,GETDATE())
+	AND EndTime > DATEADD(day,-60,GETDATE())
 	Order By CustSort, FirstName, LastName
 </cfquery>
 
