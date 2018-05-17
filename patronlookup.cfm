@@ -16,10 +16,10 @@
 <cfset data=PatronInfo.PatronInfo(id) />
 <!--- Set special info on placeholder account --->
 <cfif id IS "21221012345678">
-	<cfset data.Customer.Name="STAFF NOTES" />
-	<cfset data.Customer.First="STAFF" />
-	<cfset data.Customer.Last="NOTES" />
-	<cfset data.Customer.FullName="STAFF NOTES" />
+	<cfset data.CUSTOMER.NAME="STAFF NOTES" />
+	<cfset data.CUSTOMER.FIRST="STAFF" />
+	<cfset data.CUSTOMER.LAST="NOTES" />
+	<cfset data.CUSTOMER.FULLNAME="STAFF NOTES" />
 	<!--- Remove this line after testing --->
 	<!--- <cfset data.Customer.Email="jlien@epl.ca" /> --->
 </cfif>

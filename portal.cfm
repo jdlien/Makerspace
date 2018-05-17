@@ -195,10 +195,10 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 				$('#validatedCard').val('false');
 			} else {//else no errors from dataObj
 				$('#validatedCard').val('true');
-				if (dataObj.customer.Status == 'BLOCKED') {
-					$("#userStatus").append('<span class="blockWarn"><b>'+dataObj.customer.FullName+'</b> is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
+				if (dataObj.CUSTOMER.STATUS == 'BLOCKED') {
+					$("#userStatus").append('<span class="blockWarn"><b>'+dataObj.CUSTOMER.FULLNAME+'</b> is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
 				}else {
-					$("#userStatus").append('<span class="success"><b>'+dataObj.customer.FullName+'</b> is valid.</span>&nbsp; Click a time to book it.');
+					$("#userStatus").append('<span class="success"><b>'+dataObj.CUSTOMER.FULLNAME+'</b> is valid.</span>&nbsp; Click a time to book it.');
 				}
 				$('#altCard').hide();
 				$('#onlyShow').show();
@@ -963,10 +963,10 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 				'rid':rid,
 				'newstart':newEvent.start,
 				'newend':newEvent.end,
-				'status':dataObj.customer.Status,
-				'firstname':dataObj.customer.First,
-				'lastname':dataObj.customer.Last,
-				'email':dataObj.customer.EMail,
+				'status':dataObj.CUSTOMER.STATUS,
+				'firstname':dataObj.CUSTOMER.FIRST,
+				'lastname':dataObj.CUSTOMER.LAST,
+				'email':dataObj.CUSTOMER.EMAIL,
 				'confirmDelete':confirmDelete
 			})
 			.done(function(data){
