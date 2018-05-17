@@ -7,7 +7,7 @@
 <cfif isDefined('form.id')><cfset url.id=form.id></cfif>
 <!--- return an error if we didn't get a valid card number --->
 <cfif NOT isDefined('url.id')>
-	<cfset data.error.message="No card number specified">
+	<cfset data.ERROR.MESSAGE="No card number specified">
 	<cfoutput>#SerializeJSON(data)#</cfoutput>
 	<cfabort />
 </cfif>
@@ -21,6 +21,6 @@
 	<cfset data.CUSTOMER.LAST="NOTES" />
 	<cfset data.CUSTOMER.FULLNAME="STAFF NOTES" />
 	<!--- Remove this line after testing --->
-	<!--- <cfset data.Customer.Email="jlien@epl.ca" /> --->
+	<!--- <cfset data.CUSTOMER.EMAIL="jlien@epl.ca" /> --->
 </cfif>
 <cfoutput>#SerializeJSON(data)#</cfoutput>

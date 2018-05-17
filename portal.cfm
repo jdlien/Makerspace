@@ -186,6 +186,7 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 		var formdata = $('#userSelectionForm').serialize();
 		$.post(url, formdata).done(function(data){
 			dataObj = data;
+			// console.log(dataObj);
 			$("#userStatus").html('');
 			//Display our errors, if any
 			if (typeof dataObj.ERROR === 'object') {
