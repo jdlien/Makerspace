@@ -2,8 +2,8 @@
 <!--- If this is being called independently (for editEvent.cfm), create the data struct --->
 <cfif isDefined('form.tid')>
 	<cfset data = structNew() />
-	<cfset data.error=false>
-	<cfset data.errorMsg="">
+	<cfset data.ERROR=false>
+	<cfset data.ERRORMSG="">
 
 	<cfquery name="ResInfo" dbtype="ODBC" datasource="SecureSource">
 		SELECT OfficeCode, r.TypeID FROM vsd.MakerspaceBookingResources r
@@ -22,8 +22,8 @@
 <!--- Prevent booking this resource if the length is shorter than ten minutes --->
 <cfset bookingDurMins = DateDiff("n", eventBegin, eventEnd) />
 <cfif bookingDurMins LT 15>
-	<cfset data.error=true>
-	<cfset data.errorMsg&="End time must be at least 15 minutes after the start time.<br /><br />Ensure that your end time is not before the start time.">
+	<cfset data.ERROR=true>
+	<cfset data.ERRORMSG&="End time must be at least 15 minutes after the start time.<br /><br />Ensure that your end time is not before the start time.">
 	<cfoutput>#SerializeJSON(data)#</cfoutput>
 	<cfabort>
 </cfif>
@@ -60,8 +60,8 @@
 </cfquery>
 
 <cfif DoubleBookings.RecordCount>
-	<cfset data.error=true>
-	<cfset data.errorMsg&="There is already a booking for this resource at this time">
+	<cfset data.ERROR=true>
+	<cfset data.ERRORMSG&="There is already a booking for this resource at this time">
 	<cfoutput>#SerializeJSON(data)#</cfoutput>
 	<cfabort>
 </cfif>
@@ -100,8 +100,8 @@ and check that their applicable times don't collide with the new event --->
 <cfoutput query="BlockedTimes">
 	<!--- continuous blocked time (this is the simplest to do) --->
 	<cfif Continuous IS 1>
-			<cfset data.error=true>
-			<cfset data.errorMsg&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
+			<cfset data.ERROR=true>
+			<cfset data.ERRORMSG&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
 	<cfelse>
 		<!--- set up date objects to Compare event times with blocked times --->
 		<cfset blockEnd=CreateDateTime(Year(newstart),Month(newstart),Day(newstart),Hour(endTime),Minute(endTime),00)>
@@ -125,8 +125,8 @@ and check that their applicable times don't collide with the new event --->
 			(DateCompare(blockBegin,eventEnd) LT 0 AND DateCompare(blockEnd,eventEnd) GTE 0)
 
 		)>
-			<cfset data.error=true>
-			<cfset data.errorMsg&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
+			<cfset data.ERROR=true>
+			<cfset data.ERRORMSG&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
 			<cfoutput>#SerializeJSON(data)#</cfoutput>
 			<cfabort>					
 		</cfif>
