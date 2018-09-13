@@ -552,6 +552,7 @@ $(document).ready(function(){
 		eventDurationEditable:false,
 		defaultTimedEventDuration: '00:55:00',
 		eventAfterRender: function(event, element, view) {
+			console.log('afterRender');
 			// Add an id based on the event### class. There might be a much better way to do this.
 			var anEvent = $(".event"+event.tid);
 			anEvent.attr('id', 'event'+event.tid);
@@ -1117,7 +1118,7 @@ function isOverlapping(event, rid){
 */
 function allowedToBook(event, rid){
 	if ($('#rid').val() !='') {rid=$('#rid').val()};
-	if ( $('#id').val().length < 10 || $('#validatedCard').val() != 'true') {
+	if ( $('#id').val().length < 7 || $('#validatedCard').val() != 'true') {
 		$('#errorid').show(200);
 		toastr.error('You must enter a card number to book a resource.');
 		return false;

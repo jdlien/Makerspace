@@ -16,6 +16,7 @@ that way made days in advance --->
 	AND DATEDIFF(hour, Inserted, StartTime) >= 16 --Only events starting more than a day after they were scheduled
 	AND (Notified !=1 OR Notified IS NULL) -- Where the email hasn't been sent yet
 	AND LEN(t.Email) > 5 --with a non-blank email address
+	AND UserBarcode != '21221012345678'
 	ORDER BY t.RID, StartTime
 </cfquery>
 <cfset mailCount=0 />
