@@ -1,0 +1,122 @@
+addBooking.done actions
+
+1. Resource booked for time
+	- If card is 012345678, <br><b>This booking requires a note.</b>
+	* editEvent()
+
+2. Event is in the past, already confirmed
+	-Res marked as used for date
+
+3. Event in the past, require confirm
+	- Event in the past, Record this resource as already used?</div>';
+					'<div class="confirmDeletion"><a href="javascript:void(0);" onclick="doDayClick(tempDate, tempjsEvent, tempView, true)">Yes</a>';
+					'<a href="javascript:void(0);">No</a></div>';
+	-set window.tempjsEvent=jsEvent; window.tempView=view;
+
+4. Conflictingbookings, already confirmed
+	- <br /><span class="warning">The <b> resource booking for date has been cancelled
+
+6. Conflictingbookings, require confirm
+	- <br /><span class="warning">To make this booking, a conflicting booking must be cancelled.<b><br />
+	- show confirmation dialog
+
+7. There's an error
+	- The following are already booked:<br />
+
+
+
+
+What is in common:
+
+- Show resource name of current booking
+- Date/time of current booking (or today)
+- Ask for confirmation if the booking shouldn't be booked
+
+
+
+
+<b>"+Resources[bookingInfoObj.NEWBOOKING.RID].name+"</b> booked<br />for <b>"
+						+moment(bookingInfoObj.NEWBOOKING.START).format("h:mm a")
+						+"</b>";// to "+moment(bookingInfoObj.NEWBOOKING.END).format("h:mm a");
+					if (moment(bookingInfoObj.NEWBOOKING.START).format("dddd, MMMM Do") == moment().format("dddd, MMMM Do")) {
+					noticeMsg+=" today"}
+					else noticeMsg+=" on "+moment(bookingInfoObj.NEWBOOKING.START).format("dddd, MMMM Do");
+					noticeMsg+=".";
+
+To make this booking a conflict
+
+
+-list all future bookings
+
+
+
+
+
+Test Plan for Makerspace Booking System New Bookings
+====================================================
+
+Adding Bookings
+---------------
+
+When adding new bookings for patrons, a number of conditions are checked and a message will be displayed showing either
+- A successful booking with the time and resource name
+- A failure because of a hard constraint
+- A confirmation because a booking was requested under conditions where it wouldn't typically be allowed.
+
+The latest update makes many of the limits on bookings able to be bypassed by confirming that you want a booking to be made regardless of the conditions that would normally not allow a booking. A significant portion of the code relating to this and generating the text in the status "toasts" has been rewritten and should be extensively tested.
+
+The following conditions should be tested, and the expected behaviour is given.
+
+1. Resource booked for a time with no card selected.
+	- Error stating that a card number must be chosen before booking
+
+2. Resource booked with the STAFF NOTES account.
+	- Booking is successful regardless of how many other bookings this account have or what other resources are booked at that time.
+	- Bookings in the past ask for confirmation.
+	- Successful bookings are made, along with a message "This booking requires a note.".
+	- The Booking Edit dialog pops up
+
+3. Resource made with regular customer card when no other bookings have been made (or no other constraints are present)
+	- Booking is successful. A green toast shows the resource and booking time/date.
+		Board Room 1 booked
+		for 3:05 PM today.
+
+4. Booking a time which has fully elapsed.
+	- A warning will show stating that the time is in the past. Clicking yes successfully creates the booking. Clicking No dismisses the toast.
+
+5. A booking is made for a regular customer for a non-concurrently bookable resource when another such resource is already booked for that time.
+	- Prompted to cancel the conflicting booking:
+		To make this booking, a conflicting booking must be cancelled.
+			Board Room 1 at 3:05 PM
+			Schedule the new booking?
+	- Clicking Yes, cancel deletes the conflicting booking and books the new one.
+	- Clicking No just dismisses the toast.
+
+6. Booking is made when a customer has already booked the weekday maximum for that resource.
+	- Prompted that the user has already used the maximum allowed bookings and can book resource anyway.
+		User has already booked the weekday maximum 2 time slots for the Board Room 1 resource.
+		Would you like to book this resource anyway?
+	- Clicking "Yes" books the resource.
+	- Clicking "No" dismisses the toast.
+
+7. Booking is made when a customer has already booked the weekend maximum for that resource.
+	- Prompted that the user has already used the maximum allowed bookings and can book resource anyway.
+		User has already booked the weekend maximum 2 time slots for the Board Room 1 resource.
+		Would you like to book this resource anyway?
+	- Clicking "Yes" books the resource.
+	- Clicking "No" dismisses the toast.
+
+7. Booking is made when a customer has already booked the future maximum for that resource.
+	- Prompted that the user has already used the maximum allowed future bookings along with a list of those bookings and can book resource anyway.
+		Board Room 1 only allows for 3 future bookings.
+
+		The following are already booked:
+		Board Room 1 at 3:05 PM today
+		Board Room 1 at 3:05 PM Thu, Oct 18
+		Board Room 1 at 4:05 PM Thu, Oct 18
+	- Clicking "Yes" books the resource.
+	- Clicking "No" dismisses the toast.
+
+8. Booking should not be able to be made that overlap with a blocked time or an existing booking. Perhaps a bug can be revealed by making bookings or blocked times that don't take up an entire hour period.
+	- If somehow one is able to bypass the front-end interface and request a booking for a time that is already in use, an error should show and a booking should NOT be able to be made.
+

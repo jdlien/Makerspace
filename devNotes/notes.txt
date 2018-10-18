@@ -30,3 +30,11 @@ If a time is clicked, but there's already a booking in that hour-slot, create a 
 
 - Can I make it load a particular date by specifying it in the URL?
 - When the date is changed, adjust the URL appropriately
+
+
+
+
+2018-10-05
+==========
+DONE - Create different permissions for blocked times and reso
+Instead of limits being strictly enforced, show a warning like with adding events that have elapsed.

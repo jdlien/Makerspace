@@ -12,7 +12,7 @@
 <cfset ParentPage="Makerspace Resource Booking">
 <cfset ParentLink="portal.cfm?branch=#ThisLocation#">
 <cfset ApplicationID="MakerspaceBooking">
-<cfset PermissionsRequired_List="view,reso">
+<cfset PermissionsRequired_List="view,block">
 
 <cfset adminButtons = ArrayNew(1)>
 <cfset adminButton = structNew()>

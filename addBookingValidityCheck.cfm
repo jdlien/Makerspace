@@ -24,6 +24,7 @@
 <cfif bookingDurMins LT 15>
 	<cfset data.ERROR=true>
 	<cfset data.ERRORMSG&="End time must be at least 15 minutes after the start time.<br /><br />Ensure that your end time is not before the start time.">
+	<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
 	<cfoutput>#SerializeJSON(data)#</cfoutput>
 	<cfabort>
 </cfif>
@@ -62,6 +63,7 @@
 <cfif DoubleBookings.RecordCount>
 	<cfset data.ERROR=true>
 	<cfset data.ERRORMSG&="There is already a booking for this resource at this time">
+	<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
 	<cfoutput>#SerializeJSON(data)#</cfoutput>
 	<cfabort>
 </cfif>
@@ -102,6 +104,7 @@ and check that their applicable times don't collide with the new event --->
 	<cfif Continuous IS 1>
 			<cfset data.ERROR=true>
 			<cfset data.ERRORMSG&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
+			<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
 	<cfelse>
 		<!--- set up date objects to Compare event times with blocked times --->
 		<cfset blockEnd=CreateDateTime(Year(newstart),Month(newstart),Day(newstart),Hour(endTime),Minute(endTime),00)>
@@ -127,6 +130,7 @@ and check that their applicable times don't collide with the new event --->
 		)>
 			<cfset data.ERROR=true>
 			<cfset data.ERRORMSG&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
+			<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
 			<cfoutput>#SerializeJSON(data)#</cfoutput>
 			<cfabort>					
 		</cfif>

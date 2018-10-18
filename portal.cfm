@@ -36,7 +36,7 @@
 <cfset ArrayAppend(adminButtons, adminButton)>	
 
 <cfset adminButton = structNew()>
-<cfset adminButton.permType="reso">
+<cfset adminButton.permType="block">
 <cfset adminButton.link="blockedtimes.cfm">
 <cfif isDefined('url.branch')>
 	<cfset adminButton.link="blockedtimes.cfm?branch=#url.branch#">
@@ -315,6 +315,7 @@ function setTimeline(view, element) {
 	if (timeline.length == 0) { //if timeline isn't there, add it
 		timeline = jQuery('<div class="timeline"><hr /></div>').addClass("timeline");
 		parentDiv.prepend(timeline);
+		$('.timeline2').remove();
 		timeline2 = jQuery('<hr />').addClass("timeline2");
 		$('.fc-time-grid-container').prepend(timeline2);
 	}
@@ -972,102 +973,24 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 				'confirmDelete':confirmDelete
 			})
 			.done(function(data){
-				bookingInfoObj=data;
-				var noticeMsg="";
-
-				if (typeof bookingInfoObj.NEWBOOKING != 'undefined') {
-					noticeMsg="<b>"+Resources[bookingInfoObj.NEWBOOKING.RID].name+"</b> booked<br />for <b>"
-						+moment(bookingInfoObj.NEWBOOKING.START).format("h:mm a")
-						+"</b>";// to "+moment(bookingInfoObj.NEWBOOKING.END).format("h:mm a");
-					if (moment(bookingInfoObj.NEWBOOKING.START).format("dddd, MMMM Do") == moment().format("dddd, MMMM Do")) {
-					noticeMsg+=" today"}
-					else noticeMsg+=" on "+moment(bookingInfoObj.NEWBOOKING.START).format("dddd, MMMM Do");
-					noticeMsg+=".";
-					if (bookingInfoObj.NEWBOOKING.CARD == '21221012345678') {
-						noticeMsg+="<br><b>This booking requires a note.</b>";
-						editEvent(bookingInfoObj.NEWBOOKING.ID);
-					}
+				window.tempjsEvent=jsEvent;
+				window.tempView=view;
+				if (typeof data.NEWBOOKING != 'undefined' && data.NEWBOOKING.CARD == '21221012345678') {
+					editEvent(data.NEWBOOKING.ID);
 				}
-				//Handles confirmation dialog for booking past events
-				if (typeof bookingInfoObj.PASTDATE != 'undefined' && bookingInfoObj.REQUIRECONFIRM != true) {
-					noticeMsg="<b>"+Resources[bookingInfoObj.NEWBOOKING.RID].name+"</b> marked as used<br />on <b>"
-						+moment(bookingInfoObj.NEWBOOKING.START).format("h:mm a")+"</b>";
-					if (moment(bookingInfoObj.NEWBOOKING.START).format("dddd, MMMM Do") == moment().format("dddd, MMMM Do")) {
-					noticeMsg+=" today"}
-					else noticeMsg+=" on "+moment(bookingInfoObj.NEWBOOKING.START).format("dddd, MMMM Do");
-					noticeMsg+=".";
-					//console.log(bookingInfoObj.NEWBOOKING.CARD);
-					if (bookingInfoObj.NEWBOOKING.CARD == '21221012345678') {
-						noticeMsg+="<br><b>This booking requires a note.</b>";
-						editEvent(bookingInfoObj.NEWBOOKING.ID);
-					}
-				} else if (typeof bookingInfoObj.PASTDATE != 'undefined' && bookingInfoObj.REQUIRECONFIRM == true) {
-					noticeMsg+='<br /><span class="warning">This time is in the past and cannot be booked.<b><br />';
-					window.tempjsEvent=jsEvent;
-					window.tempView=view;
-					noticeMsg+='</span><div class="confirmQuestion">Record this resource as already used?</div>';
-					<!--- On clicking confirmdeletion, I have to resubmit this whole thing again but with confirmdelete set. --->
-					noticeMsg+='<div class="confirmDeletion"><a href="javascript:void(0);" onclick="doDayClick(tempDate, tempjsEvent, tempView, true)">Yes</a>';
-					noticeMsg+='<a href="javascript:void(0);">No</a></div>';
-				}//end else if
-
-				if (typeof bookingInfoObj.CONFLICTINGBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM != true) {
-					var arrLen=bookingInfoObj.CONFLICTINGBOOKINGS.length;
-					for (var i = 0; i < arrLen; i++) {
-						noticeMsg+='<br /><span class="warning">Your <b>'
-							+Resources[bookingInfoObj.CONFLICTINGBOOKINGS[i].RID].name
-							+'</b> booking for <b>'+moment(bookingInfoObj.CONFLICTINGBOOKINGS[i].START).format("dddd [at] h:mm a")
-							+'</b> has been cancelled.</span>';
-					}//end array loop
-				} else if (typeof bookingInfoObj.CONFLICTINGBOOKINGS != 'undefined' && bookingInfoObj.REQUIRECONFIRM == true) {
-					var arrLen=bookingInfoObj.CONFLICTINGBOOKINGS.length;
-					noticeMsg+='<br /><span class="warning">To make this booking, a conflicting booking must be cancelled.<b><br />';
-					for (var i = 0; i < arrLen; i++) {
-							noticeMsg+=Resources[bookingInfoObj.CONFLICTINGBOOKINGS[i].RID].name
-							+'</b> booking for <b>'+moment(bookingInfoObj.CONFLICTINGBOOKINGS[i].START).format("dddd [at] h:mm a")+'</b>';
-					}//end for loop
-					window.tempjsEvent=jsEvent;
-					window.tempView=view;
-					noticeMsg+='</span><div class="confirmQuestion">Schedule the new booking?</div>';
-					<!--- On clicking confirmdeletion, I have to resubmit this whole thing again but with confirmdelete set. --->
-					noticeMsg+='<div class="confirmDeletion"><a href="javascript:void(0);" onclick="doDayClick(tempDate, tempjsEvent, tempView, true)">Yes - cancel other booking</a>';
-					noticeMsg+='<a href="javascript:void(0);">No - Don&#146;t cancel anything</a></div>';
-				}//end else if
-
-
-
-
-
-
-				if (typeof bookingInfoObj.ERRORMSG != 'undefined' && bookingInfoObj.ERRORMSG.length > 0) {
-					noticeMsg+=bookingInfoObj.ERRORMSG;
-
-					//Handle the display of future events
-					if (typeof bookingInfoObj.FUTUREBOOKINGS != 'undefined') {
-						var arrLen=bookingInfoObj.FUTUREBOOKINGS.length;
-						noticeMsg+='<br /><br />The following are already booked:<br />';
-						for (var i = 0; i < arrLen; i++) {
-								if (i>0) {noticeMsg+="<br />";}
-								noticeMsg+=Resources[bookingInfoObj.FUTUREBOOKINGS[i].RID].name
-								+' <b>'+moment(bookingInfoObj.FUTUREBOOKINGS[i].START).format("dddd [at] h:mm a")+'</b>';
-						}//end for loop
-					}
-
-
-				}//end CONFLICTINGBOOKINGS if
 				
-				if (bookingInfoObj.ERROR) {
+				if (data.ERROR) {
 					toastr.options.timeOut = 6000;
 					toastr.error(noticeMsg);
-				}else if (bookingInfoObj.CONFLICTINGBOOKINGS || bookingInfoObj.PASTDATE) {
+				}else if (data.CONFLICTINGBOOKINGS || data.REQUIRECONFIRM) {
 					toastr.options.timeOut = 0;
-					toastr.warning(noticeMsg);
+					toastr.warning(data.MSG);
 				}else {
 					toastr.options.timeOut = 6000;
-					toastr.success(noticeMsg);
+					toastr.success(data.MSG);
 				}
 				$('#calendar').fullCalendar('refetchEvents');
-			});	
+			});//end .done
 		}//end if allowedToBook
 	}//end if date hour == 0
 }//end function doDayClick()

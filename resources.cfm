@@ -8,7 +8,7 @@
 <cfset adminButtons = ArrayNew(1)>
 
 <cfset adminButton = structNew()>
-<cfset adminButton.permType="reso">
+<cfset adminButton.permType="block">
 <cfset adminButton.link="blockedtimes.cfm">
 <cfset adminButton.label="Blocked Times">
 <cfset adminButton.title="Manage Periods of Unavailability">

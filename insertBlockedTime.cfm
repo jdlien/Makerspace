@@ -1,7 +1,7 @@
 <!--- YouKnowIAm identifies the currently authenticatd user on Staffweb --->
 <cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
 <cfset ApplicationID="MakerspaceBooking">
-<cfset PermissionsRequired_List="view,reso">
+<cfset PermissionsRequired_List="view,block">
 <cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
 <cfparam name="form.RID" default="">
 <!---<cfdump var="#form#">--->
