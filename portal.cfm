@@ -140,7 +140,7 @@
 SELECT * FROM MakerspaceBookingResourceTypes WHERE ShowByDefault=1 AND OfficeCode='#ThisLocation#'
 </cfquery>
 <input type="hidden" id="typeID" name="typeID" value="<cfoutput query="DefaultTypes"><cfif currentRow NEQ 1>,</cfif>#TypeID#</cfoutput>" />
-<span id="errorrid" class="error" style="display:none;float:right;text-align:right;clear:right;margin-right:40px;">You must select a resource before booking a time.</span>	
+<span id="errorrid" class="error" style="display:none;float:right;text-align:right;clear:right;margin-right:40px;">You must select a resource before booking a time.</span>
 
 <div style="clear:both;margin-top:8px;"></div>
 
@@ -551,9 +551,9 @@ $(document).ready(function(){
 		selectable:true, //I don't want the dragging to work, though
 		selectHelper:false,
 		eventDurationEditable:false,
-		defaultTimedEventDuration: '00:55:00',
+		defaultTimedEventDuration: '00:54:00',
 		eventAfterRender: function(event, element, view) {
-			console.log('afterRender');
+			//console.log('afterRender');
 			// Add an id based on the event### class. There might be a much better way to do this.
 			var anEvent = $(".event"+event.tid);
 			anEvent.attr('id', 'event'+event.tid);
@@ -929,18 +929,29 @@ function createNote(tid) {
 
 
 function doDayClick(date, jsEvent, view, confirmDelete) {
-	/* Okay, I'm thinking that I can get the x offset here, so I need to compare that with the current position of the resource columns
-	and based on that I can figure out which column was clicked. No extra elements required, no screwing with the height.
-
-
+	/* Okay, I'm thinking that I can get the x offset here, so I need to compare that with
+	the current position of the resource columns
+	and based on that I can figure out which column was clicked.
+	No extra elements required, no screwing with the height.
 	*/
-
 	//If in day view and no Resource selected, determine it through position of click
 	if (view.name=="agendaDay" && $('#rid').val()=='') {
 		// If for some reason jsEvent isn't defined, just return and do nothing.
 		if (!jsEvent) {
 			//console.log('No jsEvent');
 			return;
+		}
+
+		//Firefox has a glitch that sometimes results in offsetX being zero, which is impossible.
+		//The least it can be should be 1. If we see zero, we will use the values stored in this temp variable
+		if (typeof jsEvent.offsetX !== 'undefined' && jsEvent.offsetX != 0) {
+			window.tempOffsetX = jsEvent.offsetX;
+		}
+
+		//console.log(jsEvent.offsetX);
+		if (jsEvent.offsetX == 0 && typeof window.tempOffsetX !== 'undefined') {
+			//console.log(window.tempOffsetX);
+			jsEvent.offsetX = window.tempOffsetX;
 		}
 		var rid=resourceColumn(jsEvent.offsetX);
 		//console.log(resourceColumn(jsEvent.offsetX));
@@ -956,10 +967,10 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 		$('#calendar').fullCalendar('gotoDate', date);
 		$('#calendar').fullCalendar('changeView', 'agendaDay');
 	} else { /* Else check and see if we should add a booking */
-		var newEvent={id:'newBooking', title:'Your Booking', start:date.add(5,'minutes').format(), end:date.add(55,'minutes').format()};
+		var newEvent={id:'newBooking', title:'Your Booking', start:date.add(5,'minutes').format(), end:date.add(54,'minutes').format()};
 		/* Check that everything is cool before booking the time slot. */
 		//console.log('rid: '+rid);
-		if (allowedToBook(newEvent, rid) && !isOverlapping(newEvent, rid)) {
+		if (allowedToBook(newEvent, rid)) {
 			$('#calendar').fullCalendar('removeEvents', 'newBooking');
 			$.post('addBooking.cfm?branch=<cfoutput>#ThisLocation#</cfoutput>', {
 				'id':$('#id').val(),
@@ -981,7 +992,7 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 				
 				if (data.ERROR) {
 					toastr.options.timeOut = 6000;
-					toastr.error(noticeMsg);
+					toastr.error(data.ERRORMSG);
 				}else if (data.CONFLICTINGBOOKINGS || data.REQUIRECONFIRM) {
 					toastr.options.timeOut = 0;
 					toastr.warning(data.MSG);
@@ -1013,7 +1024,7 @@ function resourceColumn(xPos) {
 }
 
 
-/* Checks for overlapping events. */
+/* Checks for overlapping events. We probably won't use this going forward but it had saved an ajax call. */
 function isOverlapping(event, rid){
 	var array = $('#calendar').fullCalendar('clientEvents');
 	// JDL 2018-02-15
@@ -1040,6 +1051,7 @@ function isOverlapping(event, rid){
 	-etc?
 */
 function allowedToBook(event, rid){
+	// console.log('allowedToBook - rid: '+rid);
 	if ($('#rid').val() !='') {rid=$('#rid').val()};
 	if ( $('#id').val().length < 7 || $('#validatedCard').val() != 'true') {
 		$('#errorid').show(200);

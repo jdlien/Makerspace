@@ -20,6 +20,7 @@
 		<cfloop from="0" to="55" index="i" step="5">
 			<option value="#i#" <cfif i IS thisMinute>selected</cfif>>#NumberFormat(i, "09")#</option>
 		</cfloop>
+		<option value="59" <cfif 59 IS thisMinute>selected</cfif>>59</option>
 	</select> <span id="#prefix#Meridiem" class="meridiem"><cfif thisHour GTE 12>PM<cfelse>AM</cfif></span>
 
 	</cfoutput>

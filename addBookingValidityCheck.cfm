@@ -2,8 +2,9 @@
 <!--- If this is being called independently (for editEvent.cfm), create the data struct --->
 <cfif isDefined('form.tid')>
 	<cfset data = structNew() />
-	<cfset data.ERROR=false>
-	<cfset data.ERRORMSG="">
+	<cfset data.ERROR=false />
+	<cfset data.ERRORMSG="" />
+	<cfset data.MSG="" />
 
 	<cfquery name="ResInfo" dbtype="ODBC" datasource="SecureSource">
 		SELECT OfficeCode, r.TypeID FROM vsd.MakerspaceBookingResources r
@@ -60,12 +61,29 @@
 	)
 </cfquery>
 
+<!--- <cfdump var="#DoubleBookings#"> --->
+
 <cfif DoubleBookings.RecordCount>
-	<cfset data.ERROR=true>
-	<cfset data.ERRORMSG&="There is already a booking for this resource at this time">
-	<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
-	<cfoutput>#SerializeJSON(data)#</cfoutput>
-	<cfabort>
+
+	<!--- Now if there was a booking, we check to see if it ended more than fifteen minutes before the end of the hour --->
+	<cfset priorBookingMinute = TimeFormat(DoubleBookings.EndTime, "mm") />
+	<cfif priorBookingMinute LTE 45>
+
+		<!--- Adjust the start time to be when the "overlapping" booking ends --->
+		<!--- <cfdump var="#newStart#"> --->
+		<!--- This may not be the most elegant solution on earth,
+			but if I assume a consistent format, a regex should effectively alter the starttime --->
+		<cfset form.newStart = REReplace(form.newStart, "(.*)(\d\d):(\d\d):(\d\d)$", "\1\2:#priorBookingMinute#:\4") />
+		<cfset newstart=Replace(form.newstart, 'T', ' ')>
+		<cfset eventBegin=CreateDateTime(Year(newstart),Month(newstart),Day(newstart),Hour(newstart),Minute(newstart),00)>
+
+	<cfelse>
+		<cfset data.ERROR=true>
+		<cfset data.ERRORMSG&="There is already a booking for this resource at this time">
+		<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
+		<cfoutput>#SerializeJSON(data)#</cfoutput>
+		<cfabort>
+	</cfif>
 </cfif>
 
 

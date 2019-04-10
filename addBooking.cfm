@@ -1,6 +1,8 @@
 <cfset YouKnowIAm = REReplace(getauthuser(), '(?:.*[\\\/])?(.*)', '\1')>
 <cfsetting showdebugoutput="no">
 <cfsetting enablecfoutputonly="no">
+<cfheader name="Content-Type" value="application/json">
+
 <!--- AddBooking.cfm
 	Inserts a new booking for a makerspace resource into the DB.
 	Returns JSON of events for this resource.
@@ -25,7 +27,6 @@
 		-What are the limits for this type of day for this resource and type. Take the smallest.
 		-How many are currently booked for this user for this day?
 --->
-<cfheader name="Content-Type" value="application/json">
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
@@ -35,6 +36,7 @@
 
 <cfif isDefined('form.newstart')>
 	<cfset exemptCards="21221012345678,2122111111111">
+
 
 	<cfset newstart=Replace(form.newstart, 'T', ' ')>
 	<cfset newend=Replace(form.newend, 'T', ' ')>
@@ -99,8 +101,6 @@
 			<!--- This include checks that there are no booking or blocked time conflicts.
 			It has been broken into an include so that editEvent.cfm can also use it to check times --->
 			<cfinclude template="addBookingValidityCheck.cfm" />
-
-
 
 			<!--- If we are not booking a concurrently bookable resource, we do some checks
 					Here we need a list of other non-concurrent bookings for this user *at this time*
