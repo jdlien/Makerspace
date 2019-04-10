@@ -66,17 +66,21 @@
 <cfif DoubleBookings.RecordCount>
 
 	<!--- Now if there was a booking, we check to see if it ended more than fifteen minutes before the end of the hour --->
-	<cfset priorBookingMinute = TimeFormat(DoubleBookings.EndTime, "mm") />
-	<cfif priorBookingMinute LTE 45>
+	<cfset priorBookingEndMinute = TimeFormat(DoubleBookings.EndTime, "mm") />
+	<cfset priorBookingStartMinute = TimeFormat(DoubleBookings.StartTime, "mm") />
+	<cfif priorBookingEndMinute LTE 45>
 
 		<!--- Adjust the start time to be when the "overlapping" booking ends --->
 		<!--- <cfdump var="#newStart#"> --->
 		<!--- This may not be the most elegant solution on earth,
 			but if I assume a consistent format, a regex should effectively alter the starttime --->
-		<cfset form.newStart = REReplace(form.newStart, "(.*)(\d\d):(\d\d):(\d\d)$", "\1\2:#priorBookingMinute#:\4") />
+		<cfset form.newStart = REReplace(form.newStart, "(.*)(\d\d):(\d\d):(\d\d)$", "\1\2:#priorBookingEndMinute#:\4") />
 		<cfset newstart=Replace(form.newstart, 'T', ' ')>
 		<cfset eventBegin=CreateDateTime(Year(newstart),Month(newstart),Day(newstart),Hour(newstart),Minute(newstart),00)>
-
+	<cfelseif priorBookingStartMinute GTE 15>
+		<cfset form.newEnd = REReplace(form.newEnd, "(.*)(\d\d):(\d\d):(\d\d)$", "\1\2:#priorBookingStartMinute#:\4") />
+		<cfset newend=Replace(form.newstart, 'T', ' ')>
+		<cfset eventEnd=CreateDateTime(Year(newend),Month(newend),Day(newend),Hour(newend),Minute(newend),00)>
 	<cfelse>
 		<cfset data.ERROR=true>
 		<cfset data.ERRORMSG&="There is already a booking for this resource at this time">
