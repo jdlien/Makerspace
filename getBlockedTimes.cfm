@@ -93,7 +93,7 @@ Start JSON Array here --->
 		"title":"#tDesc#",
 		"start":"#StartTime#",
 		"end":"#EndTime#",
-		"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #tDesc#",
+		"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #JSStringFormat(tDesc)#",
 		"className":"blockedTime<cfif len(TypeName)> type#TypeID#<cfelseif len(ResourceName)> Res#RID#</cfif>",
 		"color":"##000000"
 		}
@@ -111,10 +111,10 @@ Start JSON Array here --->
 				<!--- don't add comma on first entry --->
 				<cfif counter++ GT 0>,</cfif>
 				{
-					"title":"#tDesc#",
+					"title":"#JSStringFormat(tDesc)#",
 					"start":"#DateFormat(i, "YYYY-MM-DD")# #TimeFormat(StartTime, "HH:mm:00.0")#",
 					"end":"#DateFormat(i, "YYYY-MM-DD")# #TimeFormat(EndTime, "HH:mm:00.0")#",
-					"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #tDesc#",
+					"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #JSStringFormat(tDesc)#",
 					"className":"blockedTime<cfif len(TypeName)> type#TypeID#<cfelseif len(ResourceName)> Res#RID#<cfelse> All</cfif>",
 					"color":"##000000"
 				}
