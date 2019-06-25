@@ -3,6 +3,11 @@
 <cfparam name="form.isStaff" default="true">
 <cfparam name="form.hideOther" default="false">
 
+<cffunction name="escDQ" description="Escapes Double Quotes" output="yes" returntype="string">
+	<cfargument required="yes" name="str" type="string" />
+	<cfreturn Replace(str, '"', '\"', 'ALL') />
+</cffunction>
+
 <!--- Fix the datetime format --->
 <cfif isDefined('form.start')><cfset form.start = Replace(form.start, "T", " ")></cfif>
 <cfif isDefined('form.end')><cfset form.end = Replace(form.end, "T", " ")></cfif>
@@ -93,7 +98,7 @@ Start JSON Array here --->
 		"title":"#tDesc#",
 		"start":"#StartTime#",
 		"end":"#EndTime#",
-		"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #JSStringFormat(tDesc)#",
+		"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #escDQ(tDesc)#",
 		"className":"blockedTime<cfif len(TypeName)> type#TypeID#<cfelseif len(ResourceName)> Res#RID#</cfif>",
 		"color":"##000000"
 		}
@@ -111,10 +116,10 @@ Start JSON Array here --->
 				<!--- don't add comma on first entry --->
 				<cfif counter++ GT 0>,</cfif>
 				{
-					"title":"#JSStringFormat(tDesc)#",
+					"title":"#escDQ(tDesc)#",
 					"start":"#DateFormat(i, "YYYY-MM-DD")# #TimeFormat(StartTime, "HH:mm:00.0")#",
 					"end":"#DateFormat(i, "YYYY-MM-DD")# #TimeFormat(EndTime, "HH:mm:00.0")#",
-					"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #JSStringFormat(tDesc)#",
+					"description":"<cfif len(ResourceName)>#ResourceName#<cfelseif len(TypeName)>#TypeName#</cfif> Unavailable: #escDQ(tDesc)#",
 					"className":"blockedTime<cfif len(TypeName)> type#TypeID#<cfelseif len(ResourceName)> Res#RID#<cfelse> All</cfif>",
 					"color":"##000000"
 				}
