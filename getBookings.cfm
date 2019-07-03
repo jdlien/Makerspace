@@ -12,7 +12,7 @@ string function escapedq(string s) {
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
-	<cfinclude template="/AppsRoot/Includes/INTRealState.cfm">
+	<cfinclude template="/AppsRoot/Includes/IPOffices.cfm">
 	<cfset ThisLocation=RealStateBuilding/>
 </cfif>
 
