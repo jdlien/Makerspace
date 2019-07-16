@@ -121,12 +121,14 @@
 
 <!--- Now I need to loop through the blocked time events
 and check that their applicable times don't collide with the new event --->			
-<cfoutput query="BlockedTimes">
+<cfloop query="BlockedTimes">
 	<!--- continuous blocked time (this is the simplest to do) --->
 	<cfif Continuous IS 1>
 			<cfset data.ERROR=true>
 			<cfset data.ERRORMSG&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
 			<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
+			<cfoutput>#SerializeJSON(data)#</cfoutput>
+			<cfabort>			
 	<cfelse>
 		<!--- set up date objects to Compare event times with blocked times --->
 		<cfset blockEnd=CreateDateTime(Year(newstart),Month(newstart),Day(newstart),Hour(endTime),Minute(endTime),00)>
@@ -150,14 +152,33 @@ and check that their applicable times don't collide with the new event --->
 			(DateCompare(blockBegin,eventEnd) LT 0 AND DateCompare(blockEnd,eventEnd) GTE 0)
 
 		)>
-			<cfset data.ERROR=true>
-			<cfset data.ERRORMSG&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
-			<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
-			<cfoutput>#SerializeJSON(data)#</cfoutput>
-			<cfabort>					
+			<cfset blockedTimeEndHour = TimeFormat(blockEnd, "HH") />
+			<cfset blockedTimeEndMinute = TimeFormat(blockEnd, "mm") />
+			<cfset blockedTimeStartHour = TimeFormat(blockBegin, "HH") />
+			<cfset blockedTimeStartMinute = TimeFormat(BlockBegin, "mm") />
+			<cfif blockedTimeEndHour EQ TimeFormat(newStart, "HH") AND blockedTimeEndMinute LTE 45>
+				<!--- Adjust the start time to be when the "overlapping" blocked time ends --->
+				<!--- <cfdump var="#newStart#"> --->
+				<!--- This may not be the most elegant solution on earth,
+					but if I assume a consistent format, a regex should effectively alter the starttime --->
+				<cfset form.newStart = REReplace(form.newStart, "(.*)(\d\d):(\d\d):(\d\d)$", "\1\2:#blockedTimeEndMinute#:\4") />
+				<cfset newstart=Replace(form.newstart, 'T', ' ')>
+				<cfset eventBegin=CreateDateTime(Year(newstart),Month(newstart),Day(newstart),Hour(newstart),Minute(newstart),00)>
+			<cfelseif blockedTimeStartHour EQ TimeFormat(newend, "HH") AND blockedTimeStartMinute GTE 15>
+				<cfset form.newEnd = REReplace(form.newEnd, "(.*)(\d\d):(\d\d):(\d\d)$", "\1\2:#blockedTimeStartMinute#:\4") />
+				<cfset newend=Replace(form.newstart, 'T', ' ')>
+				<cfset eventEnd=CreateDateTime(Year(newend),Month(newend),Day(newend),Hour(newend),Minute(newend),00)>
+			<cfelse>
+				<!--- <cfset data = StructNew() /> --->
+				<cfset data.ERROR=true>
+				<cfset data.ERRORMSG&="You may not book this resource at this time.<br />#BlockedTimes.Description#">
+				<cfset data.MSG&='<span class="error">'&data.ERRORMSG&'</span>' />
+				<cfoutput>#SerializeJSON(data)#</cfoutput>
+				<cfabort />
+			</cfif>				
 		</cfif>
 	</cfif><!---if Continuous/else--->
-</cfoutput><!---BlockedTimes--->
+</cfloop><!---BlockedTimes--->
 
 <!--- If we're using editEvent, at this point we can output the data structure with no error --->
 <cfif isDefined('form.tid')>
