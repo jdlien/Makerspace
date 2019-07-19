@@ -2,7 +2,6 @@
 <cfset RemoveSidebar="yes">
 <cfset ApplicationID="MakerspaceBooking">
 <cfset pagetitle="Makerspace Booking System">
-<cfset enableFullCalendar="yes">
 
 <cfinclude template="/Includes/INTYouKnowVariables.cfm" />
 
@@ -48,6 +47,12 @@
 <cfinclude template="/AppsRoot/Includes/IntraHeader.cfm">
 <!--- Used for the current location of the user in Makerspace Booking System --->
 <cfset MBSPath="#REReplace(cgi.script_name, "(.*)/.*", "\1")#" />
+
+
+<!--- Add fullCalendar plugin for the calendar view. --->
+<link rel='stylesheet' href='/javascript/fullcalendar-3.6.2/fullcalendar.min.css' />
+<script src='/javascript/fullcalendar-3.6.2/fullcalendar.min.js'></script>	
+
 
 <!--- Stylesheet is now external --->
 <link rel="stylesheet" type="text/css" href="makerspace.css" />
