@@ -986,6 +986,7 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 				'firstname':dataObj.CUSTOMER.FIRST,
 				'lastname':dataObj.CUSTOMER.LAST,
 				'email':dataObj.CUSTOMER.EMAIL,
+				'age':dataObj.CUSTOMER.AGE,
 				'confirmDelete':confirmDelete
 			})
 			.done(function(data){
