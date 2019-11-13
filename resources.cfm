@@ -56,8 +56,8 @@
 		margin-left:1px;
 		margin-right:1px;
 		text-align:center;
-		background-color:white;
-		color:black;
+		/*background-color:white;*/
+		/*color:black;*/
 	}
 	
 	.visibleButtons button {
