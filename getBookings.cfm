@@ -66,7 +66,7 @@ string function escapedq(string s) {
 		"borderColor":"black",
 	</cfif>
 	<cfif form.isStaff IS 'true'>
-		"description":"<b>#escapedq(ResourceName)#</b><cfif len(Description)> - #escapedq(Description)#</cfif><br /><b>#escapedq(FirstName)# #escapedq(LastName)#</b><br /> #REReplace(UserBarcode, "(\d{5})(\d{5})(\d{4})", "\1 \2 \3")#<cfif len(Note)><br /><b>Note: </b>#escapedq(Note)#</cfif>",
+		"description":"<b>#escapedq(ResourceName)#</b><cfif len(Description)> - #escapedq(Description)#</cfif><br /><b>#escapedq(FirstName)# #escapedq(LastName)#</b><br /> #REReplace(trim(UserBarcode), "(\d{5})(\d{5})(\d{4})", "\1 \2 \3")#<cfif len(Note)><br /><b>Note: </b>#escapedq(Note)#</cfif>",
 		"tid":"#TID#",
 	</cfif>
 	"rid":"#RID#",

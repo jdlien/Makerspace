@@ -52,7 +52,7 @@
 	
 	<cfif isDefined('form.id')>
 		<!--- Clean out any spaces from the user input --->
-		<cfset form.id=Replace(form.id,' ', '', 'ALL')>
+		<cfset form.id=Replace(trim(form.id),' ', '', 'ALL')>
 		<cfif len(form.id GTE 6)>
 			<!--- Get information about the current booking's resource --->
 			<cfquery name="ResourceInfo" datasource="SecureSource" dbtype="ODBC">
