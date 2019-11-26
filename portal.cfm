@@ -109,6 +109,7 @@
 
 <div id="userSelection">
 	<form name="userSelectionForm" id="userSelectionForm" action="patronlookup.cfm">
+	<input type="hidden" name="userkey" id="userkey" value="" />
 	<cfif isStaff>
 		<div style="float:left;margin-right:20px;">
 			<label class="" for="prevUsers">Prior users: </label>
@@ -170,6 +171,17 @@ Opentip.styles.eventInfo = {
   fixed:true,
   tipJoint: "top"
 };
+
+Opentip.styles.clickInfo = {
+  background: "rgba(252, 255, 176, 0.9)",
+  borderColor: "rgba(247, 235, 150, 0.7)",
+  target: true,
+  stem: true,
+  fixed:true,
+  showOn: "click",
+  hideOn: "click",
+  tipJoint: "top"
+};
 		
 /* Get the width of the contents of the Makerspace Booking Calendar where events go */
 var calHeader='.fc-day-header.fc-widget-header';
@@ -201,6 +213,7 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 				$('#validatedCard').val('false');
 			} else {//else no errors from dataObj
 				$('#validatedCard').val('true');
+				$('#userkey').val(dataObj.CUSTOMER.USERKEY);
 				if (dataObj.CUSTOMER.STATUS == 'BLOCKED') {
 					$("#userStatus").append('<span class="blockWarn"><b>'+dataObj.CUSTOMER.FULLNAME+'</b> is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
 				}else {
@@ -209,6 +222,20 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 				$('#altCard').hide();
 				$('#onlyShow').show();
 				
+				/*
+				// Append Certification Information
+				var certPopupText = ""
+				certPopupText += '<table class="certifications"><caption>Certifications</caption>';
+				$.each(data.CERTIFICATIONS, function(key, certInfo) {
+					var allowed = '<span class="error">No</span>';
+					if (certInfo.CustomerAllowed) allowed = '<span class="success">Yes</span>';
+					certPopupText += '<tr><td>'+certInfo.CertiName+'</td><td>'+allowed+'</td></tr>';
+				});
+				certPopupText += '</table>';
+
+				$("#userStatus").append('&nbsp;<a id="patronCertsPopup" href="javascript:void(0);">Certifications <span class="helpIcon"></span></a>');
+				$('#patronCertsPopup').opentip(certPopupText, {style:'clickInfo'});
+				*/
 
 			}
 		});
@@ -978,6 +1005,7 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 		if (allowedToBook(newEvent, rid)) {
 			$('#calendar').fullCalendar('removeEvents', 'newBooking');
 			$.post('addBooking.cfm?branch=<cfoutput>#ThisLocation#</cfoutput>', {
+				'userkey':$('#userkey').val(),
 				'id':$('#id').val(),
 				'rid':rid,
 				'newstart':newEvent.start,

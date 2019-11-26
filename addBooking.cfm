@@ -299,7 +299,7 @@
 					OR isDefined('form.CONFIRMDELETE') AND form.CONFIRMDELETE IS 'true'>
 				<!--- if I want to be thorough, I could set an end time that's 55 minutes after the start --->
 				<cfquery name="InsertNewBooking" datasource="ReadWriteSource" dbtype="ODBC">
-					INSERT INTO MakerspaceBookingTimes (RID, <cfif isDefined('form.id')>UserBarcode, </cfif>
+					INSERT INTO MakerspaceBookingTimes (RID, <cfif isDefined('form.userkey')>UserKey, </cfif><cfif isDefined('form.id')>UserBarcode, </cfif>
 					StartTime, EndTime, Inserted, InsertedBy
 					<cfif isDefined('form.firstname')>, FirstName</cfif>
 					<cfif isDefined('form.lastname')>, LastName</cfif>
@@ -307,6 +307,7 @@
 					<cfif isDefined('form.age') AND isNumeric(form.age)>, Age</cfif>)
 					VALUES (
 						'#form.rid#',
+						<cfif isDefined('form.userkey')>#form.userkey#, </cfif>
 						<cfif isDefined('form.id')>'#form.id#',</cfif>
 						'#form.newstart#',
 						'#form.newend#',

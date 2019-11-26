@@ -1,339 +1,353 @@
 /* makerspace.css - the stylesheet for the Makerspace Booking Application */
-	.fc-widget-content {
-		height:40px !important;
-		/*Overrides .fc-time-grid .fc-slats td { height: 1.5em*/
-	}
+.fc-widget-content {
+	height:40px !important;
+	/*Overrides .fc-time-grid .fc-slats td { height: 1.5em*/
+}
 
 
-	.fc-time-grid-container {
-		/*height:none !important;*/
-		overflow:hidden;
-	}
+.fc-time-grid-container {
+	/*height:none !important;*/
+	overflow:hidden;
+}
 
-	.fc-time-grid-event {
-		/*overflow:visible !important;*/
-	}
+.fc-time-grid-event {
+	/*overflow:visible !important;*/
+}
 
-	.notice {
-		text-align:center;
+.notice {
+	text-align:center;
+}
+
+.typeCheckLabel {
+	margin-left:10px;
+	font-weight:normal;
+}
+
+.typeCheckLabel input {
+	padding: 0;
+	vertical-align: middle;
+	position: relative;
+	top: -1px;
+	*overflow: hidden;
+}
+
+#userSelection label {
+	font-weight:bold;
+}
+
+.bold {
+	font-weight:bold;
+}
+
+
+label.spaced {
+	width:200px;
+	float:left;
+	
+}
+
+.yourBooking .fc-event-title {
+	font-weight:bold;
+}
+
+.resourcebooking {
+	/*max-width:200px;*/
+}
+
+.warning {
+	font-weight:bold;
+	color:#990000;
+}
+
+.timeline {
+	position: absolute;
+	/*left: 50px;*/
+	border: none;
+	border-bottom: 0px solid red;
+	background-image:url('/resources/images/alpha-black-20.png');
+	height:2000px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.timeline hr {
+	width:100%;
+	padding:0;
+	margin:0;
+	position:absolute;
+	bottom:0px;
+	border:0;
+	border-bottom:1px solid red;
+	height:1px;
+	color:red;
+	z-index:99;
+}
+
+.timeline2 {
+	width:100%;
+	padding:0;
+	margin:0;
+	position:absolute;
+	bottom:0px;
+	border:0;
+	border-bottom:1px solid red;
+	height:1px;
+	color:red;
+	opacity:0.35;
+	z-index:99;
+	margin-left:0px;
+}
+
+.grayButton {
+	margin:3px 3px;
+	margin-bottom:15px;
+}
+
+#userStatus {
+	float:left;
+	clear:left;
+	min-height:25px;
+}
+
+.opentip {
+	z-index:99;
+}
+
+.confirmQuestion {
+	font-weight:bold;
+	text-align:center;
+	margin:0 auto;
+	margin-top:16px;
+	padding:6px 4px;
+	background-color:rgba(0,0,0,0.6);
+	border-radius:4px;
+}
+
+.confirmDeletion a {
+	display:block;
+	color:black;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin:6px auto;
+	text-align:center;
+	width:90%;
+	border-top: solid 1px #EEEEEE;
+	border-right: solid 1px #BBBBBB;
+	border-bottom: solid 1px #BBBBBB;
+	border-left: solid 1px #EEEEEE;
+	background-color:#DDDDDD;
+}
+
+.confirmQuestion .confirmDeletion {
+	margin-top:12px;
+}
+
+.confirmDeletion a:hover {
+	color:black;
+	background-color:#EEEEEE;
+}
+
+.blockWarn {
+	color:#D88A00;
+}
+
+/* Flexbox is our friend */
+.fc-agendaDay-view .fc-day-header {
+	display:flex;
+}
+
+.DayResourceLabel {
+	position:relative;
+	z-index:4;
+	float:left;
+	margin:0 1px;
+	border:1px solid #AAAAAA;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	overflow:hidden;
+	white-space:nowrap;
+	background-image:url('/resources/images/alpha-80.png');
+	color:black;
+	flex:1;
+}
+
+.DayResourceLabel:hover {
+	background-image:url('/resources/images/alpha-60.png');
+	text-decoration:none;
+}	
+
+.fc-ltr .fc-time-grid .fc-event-container {
+	margin:0;
+	padding-left:2px;
+}
+
+.resCols .DayResourceColumn {
+	flex:1;
+	position:relative;
+}
+
+.typeCols, .resCols {
+	position:absolute;
+	left:0;
+	right:0;
+	display:flex;
+	padding-left:2px;
+}
+
+.resCols {
+}
+
+.typeCols .DayTypeColumn {
+	/* This will actually be determined by the number of resources in the type */
+	position:relative;
+}
+
+.DayResourceColumn .fc-time-grid-event.fc-v-event.fc-event,
+.DayTypeColumn .fc-time-grid-event.fc-v-event.fc-event {
+	left:0 !important;
+	right:0px !important;
+	/*width:100%;*/
+	margin:0px 1px !important;
+}
+
+.blockedTime.All {
+	margin:0px 1px;
+}
+
+
+.clearResourceButton {
+	color:#999;
+	font-weight:bold;
+	width:18px;
+	height:18px;
+	visibility:hidden;
+	display:inline-block;;
+	text-align:center;
+	font-size:17px;
+	margin-right:6px;
+	margin-left:6px;
+	vertical-align: middle;
+}
+
+.clearResourceButton:visited {
+	color:#444444;
+}
+
+.clearResourceButton:hover {
+	text-decoration:none;
+	color:#D60000;
+}
+
+.clearResourceButton svg #closeBtn {
+	stroke:black;
+	stroke-width:2;
+	fill:#ddd;
+}
+
+.clearResourceButton svg #closeBtn:hover {
+	stroke:red;
+	fill:#eee;
+}
+
+#resourceSelection {
+	padding-top:4px;
+	padding-right:10px;
+	margin:0 10px 15px 0;
+	display:inline;
+}
+
+#resourceSelection * {
+	text-align:left;
+}
+
+#typeSelection {
+	padding-top:4px;
+	padding-right:10px;
+	margin:0 10px 15px 0;
+	display:inline;
+}
+
+#typeSelection * {
+	text-align:left;
+}
+
+#ridDD {
+	margin-top:3px;
+	vertical-align:bottom;
+	width:375px;
+}
+
+#typeDD {
+	margin-top:3px;
+	vertical-align:bottom;
+	width:375px;
+}
+
+.fc-right span {
+	text-align:right; /* This causes the positions to get switched :( */
+}
+
+.fc-left {
+	width: 180px;
+	text-align: left;
 	}
 	
-	.typeCheckLabel {
-		margin-left:10px;
-		font-weight:normal;
-	}
-
-	.typeCheckLabel input {
-		padding: 0;
-		vertical-align: middle;
-		position: relative;
-		top: -1px;
-		*overflow: hidden;
-	}
-
-	#userSelection label {
-		font-weight:bold;
+.fc-center {
+	text-align: left;
 	}
 	
-	.bold {
-		font-weight:bold;
-	}
-	
-
-	label.spaced {
-		width:200px;
-		float:left;
-		
-	}
-	
-	.yourBooking .fc-event-title {
-		font-weight:bold;
-	}
-	
-	.resourcebooking {
-		/*max-width:200px;*/
-	}
-	
-	.warning {
-		font-weight:bold;
-		color:#990000;
-	}
-	
-	.timeline {
-		position: absolute;
-		/*left: 50px;*/
-		border: none;
-		border-bottom: 0px solid red;
-		background-image:url('/resources/images/alpha-black-20.png');
-		height:2000px;
-		width: 100%;
-		margin: 0;
-		padding: 0;
-	}
-	
-	.timeline hr {
-		width:100%;
-		padding:0;
-		margin:0;
-		position:absolute;
-		bottom:0px;
-		border:0;
-		border-bottom:1px solid red;
-		height:1px;
-		color:red;
-		z-index:99;
-	}
-	
-	.timeline2 {
-		width:100%;
-		padding:0;
-		margin:0;
-		position:absolute;
-		bottom:0px;
-		border:0;
-		border-bottom:1px solid red;
-		height:1px;
-		color:red;
-		opacity:0.35;
-		z-index:99;
-		margin-left:0px;
+.fc-right {
+	text-align: right;
 	}
 
-	.grayButton {
-		margin:3px 3px;
-		margin-bottom:15px;
-	}
-	
-	#userStatus {
-		float:left;
-		clear:left;
-		min-height:25px;
-	}
-	
-	.opentip {
-		z-index:99;
-	}
+.noteIcon {
+	width:12px;
+	height:11px;
+	background-image:url('/Resources/images/stickynoteimage-23x22.png');
+	background-size:11px 11px;
+	background-repeat:no-repeat;
+	float:left;
+	margin-right:1px;
+}
 
-	.confirmQuestion {
-		font-weight:bold;
-		text-align:center;
-		margin:0 auto;
-		margin-top:16px;
-		padding:6px 4px;
-		background-color:rgba(0,0,0,0.6);
-		border-radius:4px;
-	}
+.eventEditButton img {
+	height:20px;
+	width:20px;
+	position:absolute;
+	border:none;
+	top:0px;
+	right:0px;
+	z-index:30;
+}
 
-	.confirmDeletion a {
-		display:block;
-		color:black;
-		-webkit-border-radius: 5px;
-		-moz-border-radius: 5px;
-		border-radius: 5px;
-		margin:6px auto;
-		text-align:center;
-		width:90%;
-		border-top: solid 1px #EEEEEE;
-		border-right: solid 1px #BBBBBB;
-		border-bottom: solid 1px #BBBBBB;
-		border-left: solid 1px #EEEEEE;
-		background-color:#DDDDDD;
-	}
+.eventNoteButton img {
+	height:20px;
+	width:20px;
+	position:absolute;
+	border:none;
+	bottom:0px;
+	left:0px;
+	z-index:30;
+}
 
-	.confirmQuestion .confirmDeletion {
-		margin-top:12px;
-	}
-	
-	.confirmDeletion a:hover {
-		color:black;
-		background-color:#EEEEEE;
-	}
-
-	.blockWarn {
-		color:#D88A00;
-	}
-	
-	/* Flexbox is our friend */
-	.fc-agendaDay-view .fc-day-header {
-		display:flex;
-	}
-
-	.DayResourceLabel {
-		position:relative;
-		z-index:4;
-		float:left;
-		margin:0 1px;
-		border:1px solid #AAAAAA;
-		-webkit-border-radius: 3px;
-		-moz-border-radius: 3px;
-		border-radius: 3px;
-		overflow:hidden;
-		white-space:nowrap;
-		background-image:url('/resources/images/alpha-80.png');
-		color:black;
-		flex:1;
-	}
-	
-	.DayResourceLabel:hover {
-		background-image:url('/resources/images/alpha-60.png');
-		text-decoration:none;
-	}	
-	
-	.fc-ltr .fc-time-grid .fc-event-container {
-		margin:0;
-		padding-left:2px;
-	}
-
-	.resCols .DayResourceColumn {
-		flex:1;
-		position:relative;
-	}
-
-	.typeCols, .resCols {
-		position:absolute;
-		left:0;
-		right:0;
-		display:flex;
-		padding-left:2px;
-	}
-
-	.resCols {
-	}
-
-	.typeCols .DayTypeColumn {
-		/* This will actually be determined by the number of resources in the type */
-		position:relative;
-	}
-
-	.DayResourceColumn .fc-time-grid-event.fc-v-event.fc-event,
-	.DayTypeColumn .fc-time-grid-event.fc-v-event.fc-event {
-		left:0 !important;
-		right:0px !important;
-		/*width:100%;*/
-		margin:0px 1px !important;
-	}
-
-	.blockedTime.All {
-		margin:0px 1px;
-	}
+label.helpIcon {
+	width:19px;
+	height:19px;
+}
 
 
-	.clearResourceButton {
-		color:#999;
-		font-weight:bold;
-		width:18px;
-		height:18px;
-		visibility:hidden;
-		display:inline-block;;
-		text-align:center;
-		font-size:17px;
-		margin-right:6px;
-		margin-left:6px;
-		vertical-align: middle;
-	}
+table.certifications caption {
+	font-weight:bold;
+}
 
-	.clearResourceButton:visited {
-		color:#444444;
-	}
-	
-	.clearResourceButton:hover {
-		text-decoration:none;
-		color:#D60000;
-	}
+table.certifications td+td {
+	padding-left:6px;
+	text-align: center;
+}
 
-	.clearResourceButton svg #closeBtn {
-		stroke:black;
-		stroke-width:2;
-		fill:#ddd;
-	}
-
-	.clearResourceButton svg #closeBtn:hover {
-		stroke:red;
-		fill:#eee;
-	}
-
-	#resourceSelection {
-		padding-top:4px;
-		padding-right:10px;
-		margin:0 10px 15px 0;
-		display:inline;
-	}
-
-	#resourceSelection * {
-		text-align:left;
-	}
-	
-	#typeSelection {
-		padding-top:4px;
-		padding-right:10px;
-		margin:0 10px 15px 0;
-		display:inline;
-	}
-
-	#typeSelection * {
-		text-align:left;
-	}
-	
-	#ridDD {
-		margin-top:3px;
-		vertical-align:bottom;
-		width:375px;
-	}
-	
-	#typeDD {
-		margin-top:3px;
-		vertical-align:bottom;
-		width:375px;
-	}
-	
-	.fc-right span {
-		text-align:right; /* This causes the positions to get switched :( */
-	}
-	
-	.fc-left {
-		width: 180px;
-		text-align: left;
-		}
-		
-	.fc-center {
-		text-align: left;
-		}
-		
-	.fc-right {
-		text-align: right;
-		}
-	
-	.noteIcon {
-		width:12px;
-		height:11px;
-		background-image:url('/Resources/images/stickynoteimage-23x22.png');
-		background-size:11px 11px;
-		background-repeat:no-repeat;
-		float:left;
-		margin-right:1px;
-	}
-
-	.eventEditButton img {
-		height:20px;
-		width:20px;
-		position:absolute;
-		border:none;
-		top:0px;
-		right:0px;
-		z-index:30;
-	}
-
-	.eventNoteButton img {
-		height:20px;
-		width:20px;
-		position:absolute;
-		border:none;
-		bottom:0px;
-		left:0px;
-		z-index:30;
-	}
-
-	label.helpIcon {
-		width:19px;
-		height:19px;
-	}
+#patronCertsPopup {
+	font-size:13px;
+}

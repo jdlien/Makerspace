@@ -4,6 +4,8 @@
 <cfheader name="Content-Type" value="application/json" />
 <cfobject component="PatronInfo" name="PatronInfo" />
 
+<cfinclude template="/AppsRoot/Includes/functions/QueryToStruct.cfm" />
+
 <cfif isDefined('form.id')><cfset url.id=form.id></cfif>
 <!--- return an error if we didn't get a valid card number --->
 <cfif NOT isDefined('url.id')>
@@ -14,6 +16,24 @@
 <cfparam name="id" default="#url.id#" />
 <cfset id=REReplace(id, '\s', '', 'All') />
 <cfset data=PatronInfo.PatronInfo(id) />
+<!--- Add certification info to this array --->
+<cfset data.CERTIFICATIONS = ArrayNew(1) />
+
+<cfquery name="PatronCertifications" dbtype="ODBC" datasource="SecureSource">
+SELECT MC.MCID, MCCID, CertiName, CertiDesc, CustomerAllowed
+ FROM vsd.MakerCerts MC LEFT OUTER JOIN
+    (
+     Select MCCID, LibraryCard, MCID, 'Yes' as CustomerAllowed
+       from vsd.MakerCertsCustomers
+      where UserKey = '#data.CUSTOMER.USERKEY#'
+    ) MCC
+  ON MCC.MCID = MC.MCID
+where Shadowed != 'Yes'
+Order by CertiName
+</cfquery>
+
+<cfset data.Certifications = QueryToStruct(Query=PatronCertifications, ForceArray=true) />
+
 <!--- Set special info on placeholder account --->
 <cfif id IS "21221012345678">
 	<cfset data.CUSTOMER.NAME="STAFF NOTES" />
@@ -23,4 +43,5 @@
 	<!--- Remove this line after testing --->
 	<!--- <cfset data.CUSTOMER.EMAIL="jlien@epl.ca" /> --->
 </cfif>
+
 <cfoutput>#SerializeJSON(data)#</cfoutput>
