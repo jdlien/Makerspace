@@ -231,7 +231,7 @@
 			<button type="button" onClick="decNum('#TypeID#', 'TypeFutureMaxBookings');">-</button
 			><input type="text" pattern="[0-9]*" maxlength="2" min="0" name="#TypeID#TypeFutureMaxBookings" id="#TypeID#TypeFutureMaxBookings" size="2" value="#TypeFutureMaxBookings#" readonly/><button type="button" onClick="incNum('#TypeID#', 'TypeFutureMaxBookings')">+</button>
 		</td>
-		<td style="text-align:center;"><a class="delete" href="javascript:void(0);" onClick="deleteType('#TypeID#', '#TypeName#');">Delete</a></td>
+		<td style="text-align:center;"><cfif TypeResources.RecordCount EQ 0><a class="delete" href="javascript:void(0);" onClick="deleteType('#TypeID#', '#TypeName#');">Delete</a></cfif></td>
 	</tr>
 	</cfoutput>
 	<tr>
