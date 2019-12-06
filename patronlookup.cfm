@@ -32,7 +32,17 @@ where Shadowed != 'Yes'
 Order by CertiName
 </cfquery>
 
+<cfquery name="MasterCourse" dbtype="ODBC" datasource="SecureSource">
+	SELECT * FROM vsd.MakerCertsMainCourse
+	WHERE UserKey = '#data.CUSTOMER.USERKEY#'
+</cfquery>
+
 <cfset data.Certifications = QueryToStruct(Query=PatronCertifications, ForceArray=true) />
+<cfif MasterCourse.RecordCount>
+	<cfset data.MASTERCOURSE = true />
+<cfelse>
+	<cfset data.MASTERCOURSE = false />
+</cfif>
 
 <!--- Set special info on placeholder account --->
 <cfif id IS "21221012345678">

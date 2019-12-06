@@ -92,3 +92,13 @@ IF NOT EXISTS (SELECT d.OfficeCode FROM vsd.MakerspaceUpdates u
 	JOIN deleted d ON d.OfficeCode=u.OfficeCode
 	AND d.OfficeCode=u.OfficeCode
 END
+
+
+
+--JDL: 2019-12-06 added suppport for multiple certs in makerspace booking resources
+CREATE TABLE vsd.MakerspaceBookingResourcesCerts (
+	RID INT FOREIGN KEY REFERENCES vsd.MakerspaceBookingResources(RID),
+	MCID INT FOREIGN KEY REFERENCES vsd.MakerCerts(MCID),
+	ModifiedBy varchar(30) NOT NULL,
+	Modified DATETIME NOT NULL
+)

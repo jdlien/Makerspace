@@ -180,6 +180,7 @@ and check that their applicable times don't collide with the new event --->
 	</cfif><!---if Continuous/else--->
 </cfloop><!---BlockedTimes--->
 
+
 <!--- If we're using editEvent, at this point we can output the data structure with no error --->
 <cfif isDefined('form.tid')>
 	<cfoutput>#SerializeJSON(data)#</cfoutput>

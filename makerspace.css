@@ -4,6 +4,16 @@
 	/*Overrides .fc-time-grid .fc-slats td { height: 1.5em*/
 }
 
+/* Override today background colour with one that is more dark-mode friendly */
+#appsBody .fc-unthemed td.fc-today {
+    background-color:rgba(255, 226, 128, 0.15);
+}
+
+/* Override border color */
+.fc-unthemed .fc-content, .fc-unthemed .fc-divider, .fc-unthemed .fc-list-heading td, .fc-unthemed .fc-list-view, .fc-unthemed .fc-popover, .fc-unthemed .fc-row, .fc-unthemed tbody, .fc-unthemed td, .fc-unthemed th, .fc-unthemed thead {
+    border-color: rgba(127,127,127,0.35);
+}
+
 
 .fc-time-grid-container {
 	/*height:none !important;*/
@@ -339,6 +349,11 @@ label.helpIcon {
 }
 
 
+.masterCourse {
+	font-weight:bold;
+	margin-bottom:12px;
+}
+
 table.certifications caption {
 	font-weight:bold;
 }
@@ -350,4 +365,52 @@ table.certifications td+td {
 
 #patronCertsPopup {
 	font-size:13px;
+}
+
+
+/* Used in Makerspace Resources and resourceTypes */
+.linkField {
+	text-align:center;
+}
+
+.editableUsers {
+	width:30px;
+}
+.colorselection {
+	width:100%;
+	height:22px;
+}
+
+.numberControl {
+	padding-left:2px !important;
+	padding-right:2px !important;
+	white-space:nowrap;
+}
+
+.numberControl button {
+	margin-right:0px;
+	margin-left:0px;
+	width:18px;
+	padding:0;
+	text-align:center;
+	visibility:hidden;
+}
+
+.numberControl input {
+	max-width:25px;
+	margin-bottom:2px;
+	margin-left:1px;
+	margin-right:1px;
+	text-align:center;
+	/*background-color:white;*/
+	/*color:black;*/
+}
+
+.visibleButtons button {
+	visibility:visible;
+}
+
+.editCell {
+	width:46px;
+	text-align: center;
 }

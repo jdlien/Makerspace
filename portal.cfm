@@ -29,7 +29,7 @@
 
 <cfset adminButton = structNew()>
 <cfset adminButton.permType="reso">
-<cfset adminButton.link="resources.cfm">
+<cfset adminButton.link="resources.cfm?branch=#ThisLocation#">
 <cfset adminButton.label="Resources">
 <cfset adminButton.title="Manage Consoles, PCs, etc.">
 <cfset ArrayAppend(adminButtons, adminButton)>	
@@ -222,9 +222,15 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 				$('#altCard').hide();
 				$('#onlyShow').show();
 				
-				/*
 				// Append Certification Information
 				var certPopupText = ""
+					certPopupText += '<div class="masterCourse">Fab Lab Safety: ';
+				if (dataObj.MASTERCOURSE) {
+					certPopupText += '<span class="success">Yes</span>';
+				} else {
+					certPopupText += '<span class="error">No</span>';
+				}
+				certPopupText +='</div>';
 				certPopupText += '<table class="certifications"><caption>Certifications</caption>';
 				$.each(data.CERTIFICATIONS, function(key, certInfo) {
 					var allowed = '<span class="error">No</span>';
@@ -235,7 +241,6 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 
 				$("#userStatus").append('&nbsp;<a id="patronCertsPopup" href="javascript:void(0);">Certifications <span class="helpIcon"></span></a>');
 				$('#patronCertsPopup').opentip(certPopupText, {style:'clickInfo'});
-				*/
 
 			}
 		});

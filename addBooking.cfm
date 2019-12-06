@@ -290,6 +290,31 @@
 			</cfif>
 
 
+			<!--- Check that the user has any required certs --->
+			<cfquery name="resourceCerts" dbtype="ODBC" datasource="SecureSource">
+				SELECT * FROM vsd.MakerspaceBookingResourcesCerts rc
+				JOIN vsd.MakerCerts c ON rc.MCID=c.MCID
+				WHERE RID=#form.rid#
+			</cfquery>
+
+			<cfif resourceCerts.recordCount GT 0>
+				<cfloop query="resourceCerts">
+					<cfquery name="certCheck" dbtype="ODBC" datasource="SecureSource">
+						SELECT * FROM vsd.MakerCertsCustomers WHERE UserKey = #form.userKey# AND MCID=#resourceCerts.MCID#
+					</cfquery>
+
+					<cfif certCheck.recordCount EQ 0>
+						<cfset data.ERROR = true />
+						<cfset data.ERRORMSG&="Patron does not have the <b>#resourceCerts.CertiName#</b> certificate.<br />" />
+					</cfif>
+
+				</cfloop>
+					<cfif isDefined('data.ERROR') AND data.ERROR EQ true>
+						<cfset data.MSG&='<span class="warning">'&data.ERRORMSG&'</span>' />
+						<cfoutput>#SerializeJSON(data)#</cfoutput>
+						<cfabort />						
+					</cfif>
+			</cfif>
 
 
 			<!--- If we have gotten this far, things look good. Ensure we don't have bookings that conflict with concurrency --->
