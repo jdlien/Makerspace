@@ -32,4 +32,8 @@
 			)
 	</cfquery>
 </cfif>
-<cflocation addtoken="no" url="resources.cfm">
+<cfif isDefined('url.branch')>
+	<cflocation addtoken="no" url="resources.cfm?branch=#url.branch#">
+<cfelse>
+	<cflocation addtoken="no" url="resources.cfm">
+</cfif>

@@ -142,7 +142,7 @@
 	</tr>
 	</thead>
 	<tr>
-		<form name="newResource" id="newResource" action="insertResource.cfm" method="post">
+		<form name="newResource" id="newResource" action="insertResource.cfm?branch=<cfoutput>#ThisLocation#</cfoutput>" method="post">
 		<td></td>
 		<td><input type="text" name="resourceName" id="resourceName" placeholder="Enter a Name" /></td>
 		<td><input type="text" name="description" id="description" style="width:370px;" placeholder="Enter a Description"/></td>
