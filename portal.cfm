@@ -1,7 +1,7 @@
-<cfset enableToastr=true>
+<cfset app.toastr=true />
 <cfset RemoveSidebar="yes">
-<cfset ApplicationID="MakerspaceBooking">
-<cfset pagetitle="Makerspace Booking System">
+<cfset app.id="MakerspaceBooking">
+<cfset app.title="Makerspace Booking System">
 
 <cfinclude template="/Includes/INTYouKnowVariables.cfm" />
 
@@ -19,20 +19,20 @@
 	<cfset adminButton.link="portal.cfm?branch=ESQ">
 	<cfset adminButton.label="ESQ Branch">
 	<cfset adminButton.title="ESQ Branch Bookings">
-	<cfset ArrayAppend(adminButtons, adminButton)>	
+	<cfset ArrayAppend(app.adminButtons, adminButton)>	
 </cfif>
 
 <cfset adminButton = structNew()>
 <cfset adminButton.link="stats.cfm">
 <cfset adminButton.label="Stats">
-<cfset ArrayAppend(adminButtons, adminButton)>
+<cfset ArrayAppend(app.adminButtons, adminButton)>
 
 <cfset adminButton = structNew()>
 <cfset adminButton.permType="reso">
 <cfset adminButton.link="resources.cfm?branch=#ThisLocation#">
 <cfset adminButton.label="Resources">
 <cfset adminButton.title="Manage Consoles, PCs, etc.">
-<cfset ArrayAppend(adminButtons, adminButton)>	
+<cfset ArrayAppend(app.adminButtons, adminButton)>	
 
 <cfset adminButton = structNew()>
 <cfset adminButton.permType="block">
@@ -42,7 +42,7 @@
 </cfif>
 <cfset adminButton.label="Blocked Times">
 <cfset adminButton.title="Manage Periods of Unavailability">
-<cfset ArrayAppend(adminButtons, adminButton)>	
+<cfset ArrayAppend(app.adminButtons, adminButton)>	
 
 <cfinclude template="/AppsRoot/Includes/IntraHeader.cfm">
 <!--- Used for the current location of the user in Makerspace Booking System --->

@@ -1,8 +1,8 @@
-<cfset pagetitle = "Makerspace Resources Manager">
+<cfset app.title="Makerspace Resources Manager">
 <cfset ParentPage="Makerspace Resource Booking">
 <cfset ParentLink="/DLI/Makerspace/">
-<cfset ApplicationID="MakerspaceBooking">
-<cfset PermissionsRequired_List="view,reso">
+<cfset app.id="MakerspaceBooking">
+<cfset app.permissionsRequired="view,reso">
 
 <cfset adminButtons = ArrayNew(1)>
 
@@ -11,14 +11,14 @@
 <cfset adminButton.link="blockedtimes.cfm">
 <cfset adminButton.label="Blocked Times">
 <cfset adminButton.title="Manage Periods of Unavailability">
-<cfset ArrayAppend(adminButtons, adminButton)>	
+<cfset ArrayAppend(app.adminButtons, adminButton)>	
 
 <cfset adminButton = structNew()>
 <cfset adminButton.permType="reso">
 <cfset adminButton.link="resourceTypes.cfm">
 <cfset adminButton.label="Resource Types">
 <cfset adminButton.title="Manage Categories of Resources">
-<cfset ArrayAppend(adminButtons, adminButton)>
+<cfset ArrayAppend(app.adminButtons, adminButton)>
 
 <cfinclude template="/Includes/IntraHeader.cfm">
 <cfset ThisLocation=RealStateBuilding/>

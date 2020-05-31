@@ -1,9 +1,9 @@
 <cfsetting showdebugoutput="false" />
-<cfset ApplicationID="MakerspaceBooking" />
-<cfset PermissionsRequired_List="view,reso" />
+<cfset app.id="MakerspaceBooking" />
+<cfset app.permissionsRequired="view,reso" />
 <cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm" />
 <!--- Include Form validation JS --->
-<cfinclude template="/AppsRoot/Includes/FormTools.cfm" />
+<script src="/Javascript/appFormTools/formTools.js"></script>
 
 <style>
 	.colorSelect {

@@ -1,7 +1,7 @@
 <cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
 <!--- <cfinclude template="/Includes/IntraHeader.cfm"> --->
-<cfset ApplicationID="MakerspaceBooking">
-<cfset PermissionsRequired_List="view,delete">
+<cfset app.id="MakerspaceBooking">
+<cfset app.permissionsRequired="view,delete">
 <cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
 <cfif isDefined('form.id')>
 	<cfquery name="EventCheck" dbtype="ODBC" datasource="SecureSource">

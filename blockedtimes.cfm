@@ -8,11 +8,11 @@
 
 
 
-<cfset pagetitle = "Makerspace Blocked Times Manager">
+<cfset app.title="Makerspace Blocked Times Manager">
 <cfset ParentPage="Makerspace Resource Booking">
 <cfset ParentLink="portal.cfm?branch=#ThisLocation#">
-<cfset ApplicationID="MakerspaceBooking">
-<cfset PermissionsRequired_List="view,block">
+<cfset app.id="MakerspaceBooking">
+<cfset app.permissionsRequired="view,block">
 
 <cfset adminButtons = ArrayNew(1)>
 <cfset adminButton = structNew()>
@@ -20,7 +20,7 @@
 <cfset adminButton.link="resources.cfm">
 <cfset adminButton.label="Resources">
 <cfset adminButton.title="Manage Consoles, PCs, etc.">
-<cfset ArrayAppend(adminButtons, adminButton)>	
+<cfset ArrayAppend(app.adminButtons, adminButton)>	
 
 <cfinclude template="/Includes/IntraHeader.cfm">
 

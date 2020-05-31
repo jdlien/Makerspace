@@ -1,4 +1,4 @@
-<cfset PageTitle="Makerspace Statistics" />
+<cfset app.title="Makerspace Statistics" />
 
 <cfinclude template="/Includes/IntraHeader.cfm" />
 

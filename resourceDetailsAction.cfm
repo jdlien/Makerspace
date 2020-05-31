@@ -1,7 +1,7 @@
 <!--- Updates the database when a makerspace resource is changed with resourceDetails.cfm --->
 
-<cfset ApplicationID="MakerspaceBooking" />
-<cfset PermissionsRequired_List="view,reso" />
+<cfset app.id="MakerspaceBooking" />
+<cfset app.permissionsRequired="view,reso" />
 <cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm" />
 
 <!--- <cfdump var="#form#"> --->

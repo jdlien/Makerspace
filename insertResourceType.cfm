@@ -1,7 +1,7 @@
 <!--- YouKnowIAm identifies the currently authenticated user on Staffweb --->
 <cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
-<cfset ApplicationID="MakerspaceBooking">
-<cfset PermissionsRequired_List="view,reso">
+<cfset app.id="MakerspaceBooking">
+<cfset app.permissionsRequired="view,reso">
 <cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
 <cfif isDefined('SubmitNew')>
 	<cfquery name="InsertResource" datasource="ReadWriteSource" dbtype="ODBC">

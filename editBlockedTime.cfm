@@ -1,8 +1,8 @@
 <cfsetting showdebugoutput="no">
 <cfsetting enablecfoutputonly="yes">
 <cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
-<cfset ApplicationID="MakerspaceBooking">
-<cfset PermissionsRequired_List="view,block">
+<cfset app.id="MakerspaceBooking">
+<cfset app.permissionsRequired="view,block">
 <cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
 
 <!--- Changes click-to-edit Start Time --->
