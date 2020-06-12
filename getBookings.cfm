@@ -44,42 +44,6 @@ string function escapedq(string s) {
 </cfquery>
 
 
-<!--- I wanted coldfusion to generate JSON from an structure, but it wasn't working very well 
-	[
-<cfoutput query="Bookings">
-	<cfset noteIcon='' />
-	<cfif len(Note)>
-		<cfset noteIcon='<div class=\"noteIcon\"></div>' />
-	</cfif>
-	<cfif form.hideOther IS "true" AND UserBarcode IS NOT form.id>
-		<cfset titleDesc="">
-	<cfelseif form.isStaff IS 'true'>
-		<cfset titleDesc="#FirstName# #LastName#">
-	<cfelseif len(form.id) AND form.id IS UserBarcode>
-		<cfset titleDesc="Your #ResourceName# Booking">
-	<cfelse>
-		<cfset titleDesc=#ResourceName#>
-	</cfif>
-	{
-	"title":"#escapedq(titleDesc)#",
-	"start":"#StartTime#",
-	"end":"#EndTime#",
-	<cfif len(form.id) AND form.id IS UserBarcode>
-		"borderColor":"black",
-	</cfif>
-	<cfif form.isStaff IS 'true'>
-		"description":"<b>#escapedq(ResourceName)#</b><cfif len(Description)> - #escapedq(Description)#</cfif><br /><b>#escapedq(FirstName)# #escapedq(LastName)#</b><br /> #REReplace(trim(UserBarcode), "(\d{5})(\d{5})(\d{4})", "\1 \2 \3")#<cfif len(Note)><br /><b>Note: </b>#escapedq(Note)#</cfif>",
-		"tid":"#TID#",
-	</cfif>
-	"rid":"#RID#",
-	"className":"resourcebooking Res#RID#<cfif len(form.id) AND form.id IS UserBarcode> yourBooking</cfif><cfif form.isStaff> event#TID#</cfif>",
-	"color":"<cfif form.hideOther IS "true" AND UserBarcode IS NOT form.id>##DDDDDD<cfelse>#color#</cfif>",
-	"noteIcon":"<cfif form.hideOther IS "true" AND UserBarcode IS NOT form.id><cfelse>#noteIcon#</cfif>"
-	}<cfif CurrentRow NEQ RecordCount>,</cfif>
-</cfoutput>
-	]
-
---->
 <cfscript>
 bookingsArray=ArrayNew(1);
 for (r in Bookings) {
