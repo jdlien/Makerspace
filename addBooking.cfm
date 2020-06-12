@@ -1,4 +1,4 @@
-<cfset YouKnowIAm = REReplace(getauthuser(), '(?:.*[\\\/])?(.*)', '\1')>
+<cfset session.identity = REReplace(getauthuser(), '(?:.*[\\\/])?(.*)', '\1')>
 <cfsetting showdebugoutput="no">
 <cfsetting enablecfoutputonly="no">
 <cfheader name="Content-Type" value="application/json">
@@ -30,7 +30,7 @@
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
-	<cfinclude template="/AppsRoot/Includes/IPOffices.cfm">
+	<cfinclude template="#appsIncludes#/appsInitIPLocation.cfm">
 	<cfset ThisLocation=RealStateBuilding/>
 </cfif>
 
@@ -337,7 +337,7 @@
 						'#form.newstart#',
 						'#form.newend#',
 						GETDATE(),
-						'#YouKnowIAm#'
+						'#session.identity#'
 						<cfif isDefined('form.firstname')>, '#form.firstname#'</cfif>
 						<cfif isDefined('form.lastname')>, '#form.lastname#'</cfif>
 						<cfif isDefined('form.email') AND isValid("email", form.email)>, '#form.email#'</cfif>

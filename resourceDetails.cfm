@@ -1,7 +1,7 @@
 <cfsetting showdebugoutput="false" />
 <cfset app.id="MakerspaceBooking" />
 <cfset app.permissionsRequired="view,reso" />
-<cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm" />
+<cfinclude template="#appsIncludes#/appsPermissions.cfm" />
 <!--- Include Form validation JS --->
 <script src="/Javascript/appFormTools/formTools.js"></script>
 

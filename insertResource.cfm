@@ -1,8 +1,8 @@
-<!--- YouKnowIAm identifies the currently authenticatd user on Staffweb --->
-<cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
+<!--- session.identity identifies the currently authenticatd user on Staffweb --->
+<cfinclude template="#appsIncludes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,reso">
-<cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
+<cfinclude template="#appsIncludes#/appsPermissions.cfm">
 <cfif isDefined('SubmitNew')>
 	<cfquery name="InsertResource" datasource="ReadWriteSource" dbtype="ODBC">
 		INSERT INTO MakerSpaceBookingResources (
@@ -27,7 +27,7 @@
 			<cfif isDefined('form.WeekdayMaxBookings') AND IsNumeric(form.WeekdayMaxBookings)>#form.WeekdayMaxBookings#<cfelse>NULL</cfif>,
 			<cfif isDefined('form.WeekendMaxBookings') AND IsNumeric(form.WeekendMaxBookings)>#form.WeekendMaxBookings#<cfelse>NULL</cfif>,
 			<cfif isDefined('form.FutureMaxBookings') AND IsNumeric(form.FutureMaxBookings)>#form.FutureMaxBookings#<cfelse>NULL</cfif>,
-			'#YouKnowIAm#',
+			'#session.identity#',
 			GETDATE()
 			)
 	</cfquery>

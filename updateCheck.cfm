@@ -4,7 +4,7 @@
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
-	<cfinclude template="/Includes/INTYouKnowVariables.cfm" />
+	<cfinclude template="#appsIncludes#/appsInit.cfm" />
 	<cfparam name="ThisLocation" default="#RealStateBuilding#" />
 </cfif>
 

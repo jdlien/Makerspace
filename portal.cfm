@@ -1,59 +1,43 @@
 <cfset app.toastr=true />
-<cfset RemoveSidebar="yes">
 <cfset app.id="MakerspaceBooking">
 <cfset app.title="Makerspace Booking System">
-
-<cfinclude template="/Includes/INTYouKnowVariables.cfm" />
-
-<cfparam name="ThisLocation" default="#RealStateBuilding#" />
-
-<cfif isDefined('url.branch')>
-	<cfset ThisLocation=url.branch />
-</cfif>
+<cfinclude template="#appsIncludes#/appsInit.cfm" />
 
 <!--- List structure of permissions, links, and descriptions for which to get admin links --->
-<cfset adminButtons = ArrayNew(1)>
+<cfscript>
+param ThisLocation=session.physicalLocation;
+// Can be set to false for a customer-facing version in the future
+isStaff=true;
 
-<cfif ThisLocation NEQ "ESQ">
-	<cfset adminButton = structNew()>
-	<cfset adminButton.link="portal.cfm?branch=ESQ">
-	<cfset adminButton.label="ESQ Branch">
-	<cfset adminButton.title="ESQ Branch Bookings">
-	<cfset ArrayAppend(app.adminButtons, adminButton)>	
-</cfif>
+if (isDefined('url.branch')) ThisLocation=url.branch;
+if (ThisLocation=="External") ThisLocation='ESQ';
+if (ThisLocation!="ESQ") addAdminButton('ESQ Branch', 'portal.cfm?branch=ESQ');
+addAdminButton('Stats', 'stats.cfm');
+addAdminButton('Resources', 'resources.cfm?branch='&ThisLocation, 'Manage Consoles, PCs, etc.', 'reso');
+addAdminButton('Blocked Times', 'blockedTimes.cfm?branch='&ThisLocation, 'Manage Periods of Unavailability', 'block');
+</cfscript>
 
-<cfset adminButton = structNew()>
-<cfset adminButton.link="stats.cfm">
-<cfset adminButton.label="Stats">
-<cfset ArrayAppend(app.adminButtons, adminButton)>
-
-<cfset adminButton = structNew()>
-<cfset adminButton.permType="reso">
-<cfset adminButton.link="resources.cfm?branch=#ThisLocation#">
-<cfset adminButton.label="Resources">
-<cfset adminButton.title="Manage Consoles, PCs, etc.">
-<cfset ArrayAppend(app.adminButtons, adminButton)>	
-
-<cfset adminButton = structNew()>
-<cfset adminButton.permType="block">
-<cfset adminButton.link="blockedtimes.cfm">
-<cfif isDefined('url.branch')>
-	<cfset adminButton.link="blockedtimes.cfm?branch=#url.branch#">
-</cfif>
-<cfset adminButton.label="Blocked Times">
-<cfset adminButton.title="Manage Periods of Unavailability">
-<cfset ArrayAppend(app.adminButtons, adminButton)>	
-
-<cfinclude template="/AppsRoot/Includes/IntraHeader.cfm">
+<cfinclude template="#appsIncludes#/appsHeader.cfm">
 <!--- Used for the current location of the user in Makerspace Booking System --->
 <cfset MBSPath="#REReplace(cgi.script_name, "(.*)/.*", "\1")#" />
 
-
 <!--- Add fullCalendar plugin for the calendar view. --->
-<link rel='stylesheet' href='/javascript/fullcalendar-3.6.2/fullcalendar.min.css' />
-<script src='/javascript/fullcalendar-3.6.2/fullcalendar.min.js'></script>	
+<link rel='stylesheet' href='/Javascript/fullcalendar-3.10.0/fullcalendar.min.css' />
+<script src='/Javascript/fullcalendar-3.10.0/fullcalendar.min.js'></script>	
 
+<!--- 2020-Jun-10: Trying to upgrade this to FullCalendar 4.4.2 --->
+<!---
+<link href='/Javascript/fullcalendar-scheduler-4/packages/core/main.css' rel='stylesheet' />
+<link href='/Javascript/fullcalendar-scheduler-4/packages/daygrid/main.css' rel='stylesheet' />
+<script src='/Javascript/fullcalendar-scheduler-4/packages/core/main.js'></script>
+<script src='/Javascript/fullcalendar-scheduler-4/packages/interaction/main.js'></script>
+<script src='/Javascript/fullcalendar-scheduler-4/packages/daygrid/main.js'></script>
+<script src='/Javascript/fullcalendar-scheduler-4/packages-premium/resource-common/main.js'></script>
+<script src='/Javascript/fullcalendar-scheduler-4/packages-premium/resource-daygrid/main.js'></script>
+ --->
 
+<!--- Inputmask is used on card number input --->
+<script src='/Javascript/jquery.inputmask.bundle.min.js' type="text/javascript"></script>
 <!--- Stylesheet is now external --->
 <link rel="stylesheet" type="text/css" href="makerspace.css" />
 
@@ -64,7 +48,6 @@
 	WHERE t.OfficeCode='#ThisLocation#'
 	ORDER BY r.TypeID
 </cfquery>
-
 
 <cfquery name="BlockedResources" dbtype="ODBC" datasource="SecureSource">
 	SELECT * FROM MakerspaceBookingResources r
@@ -80,19 +63,11 @@
 	FROM MakerspaceBookingResources ro GROUP BY TypeID
 </cfquery>
 
-
 <cfquery name="TypeList" datasource="SecureSource" dbtype="ODBC">
 	SELECT * FROM Vsd.Vsd.MakerSpaceBookingResourceTypes
 	WHERE OfficeCode='#ThisLocation#'
 	ORDER BY TypeID
 </cfquery>
-
-<!--- This variable determines what information and control is given to the user --->
-<cfset isStaff=true>
-
-<script src='/Javascript/jquery.inputmask.bundle.min.js' type="text/javascript"></script>
-
-
 
 <cfquery name="PriorUsers" dbtype="ODBC" datasource="SecureSource">
 	SELECT DISTINCT UserBarCode, FirstName, LastName, 1 AS CustSort FROM MakerspaceBookingTimes
@@ -134,19 +109,20 @@
 		<!--- I just use this to check that the card is validated. (I check again on the server side when inserting) --->
 		<input type="hidden" name="validatedCard" id="validatedCard" value="false" />
 	</form>
-<!---user Information or errors will be displayed here --->
-<div id="userStatus"></div>	
+	<!---user Information or errors will be displayed here --->
+	<div id="userStatus"></div>	
 </div><!--userSelection-->
 
 <input type="hidden" id="rid" name="rid" />
-<!--- Can set default vaules for displayed type here --->
+<!--- Can set default values for displayed type here --->
 
 
 <cfquery name="DefaultTypes" dbtype="ODBC" datasource="SecureSource">
 SELECT * FROM MakerspaceBookingResourceTypes WHERE ShowByDefault=1 AND OfficeCode='#ThisLocation#'
 </cfquery>
-<input type="hidden" id="typeID" name="typeID" value="<cfoutput query="DefaultTypes"><cfif currentRow NEQ 1>,</cfif>#TypeID#</cfoutput>" />
-<span id="errorrid" class="error" style="display:none;float:right;text-align:right;clear:right;margin-right:40px;">You must select a resource before booking a time.</span>
+<input type="hidden" id="typeID" name="typeID"
+	value="<cfoutput query="DefaultTypes"><cfif currentRow NEQ 1>,</cfif>#TypeID#</cfoutput>" />
+<span id="errorrid" class="error hidden" style="float:right;text-align:right;clear:right;margin-right:40px;">You must select a resource before booking a time.</span>
 
 <div style="clear:both;margin-top:8px;"></div>
 
@@ -154,13 +130,11 @@ SELECT * FROM MakerspaceBookingResourceTypes WHERE ShowByDefault=1 AND OfficeCod
 <div id="calendar"></div>
 
 <script language="Javascript">
-	/* Enable submit only if 14 characters have been entered 
-	This is obviated by inputmask
-	$('#id').keyup(function() {
-		var cleanNumber=$(this).val().replace(/\s/g, '');
-		if (cleanNumber.length == 14 && isNaN(cleanNumber)===false) $('#userSelectionSubmit').removeAttr('disabled');
-		else $('#userSelectionSubmit').attr('disabled', 'disabled');
-	});*/
+//Makerspace Booking System path (not needed, usually this is the current directory)
+<cfoutput>
+var thisLocation='#thisLocation#', isStaff=#isStaff#, MBSPath='#REReplace(cgi.script_name, "(.*)/.*", "\1")#/';
+</cfoutput>
+var userData = new Object();
 
 /* OpenTip Style for Events */
 Opentip.styles.eventInfo = {
@@ -182,10 +156,7 @@ Opentip.styles.clickInfo = {
   hideOn: "click",
   tipJoint: "top"
 };
-		
-/* Get the width of the contents of the Makerspace Booking Calendar where events go */
-var calHeader='.fc-day-header.fc-widget-header';
-		
+				
 /* attach a submit handler to the login form */
 $(document).on('submit', '#userSelectionForm', function(event) {
 	/* stop form from submitting normally */
@@ -199,25 +170,23 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 	
 	//If cardnumber isn't blank, submit it to patronlookup.cfm
 	if (cardNumber.length) {
-		var url = $('#userSelectionForm').attr( 'action' );
-		var formdata = $('#userSelectionForm').serialize();
-		$.post(url, formdata).done(function(data){
-			dataObj = data;
-			// console.log(dataObj);
+		$.post($('#userSelectionForm').attr('action'), $('#userSelectionForm').serialize()).done(function(data){
+			userData = data;
+			// console.log(data);
 			$("#userStatus").html('');
 			//Display our errors, if any
-			if (typeof dataObj.ERROR === 'object') {
-				for(key in dataObj.ERROR) {
-				$("#userStatus").append('<span class="error">'+dataObj.ERROR[key]+'</span><br />');
+			if (typeof data.ERROR === 'object') {
+				for(key in data.ERROR) {
+				$("#userStatus").append('<span class="error">'+data.ERROR[key]+'</span><br />');
 				}
 				$('#validatedCard').val('false');
-			} else {//else no errors from dataObj
+			} else {//else no errors from data
 				$('#validatedCard').val('true');
-				$('#userkey').val(dataObj.CUSTOMER.USERKEY);
-				if (dataObj.CUSTOMER.STATUS == 'BLOCKED') {
-					$("#userStatus").append('<span class="blockWarn"><b>'+dataObj.CUSTOMER.FULLNAME+'</b> is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
+				$('#userkey').val(data.CUSTOMER.USERKEY);
+				if (data.CUSTOMER.STATUS == 'BLOCKED') {
+					$("#userStatus").append('<span class="blockWarn"><b>'+data.CUSTOMER.FULLNAME+'</b> is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
 				}else {
-					$("#userStatus").append('<span class="success"><b>'+dataObj.CUSTOMER.FULLNAME+'</b> is valid.</span>&nbsp; Click a time to book it.');
+					$("#userStatus").append('<span class="success"><b>'+data.CUSTOMER.FULLNAME+'</b> is valid.</span>&nbsp; Click a time to book it.');
 				}
 				$('#altCard').hide();
 				$('#onlyShow').show();
@@ -225,7 +194,7 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 				// Append Certification Information
 				var certPopupText = ""
 					certPopupText += '<div class="masterCourse">Fab Lab Safety: ';
-				if (dataObj.MASTERCOURSE) {
+				if (data.MASTERCOURSE) {
 					certPopupText += '<span class="success">Yes</span>';
 				} else {
 					certPopupText += '<span class="error">No</span>';
@@ -268,58 +237,7 @@ Now if you want the name, you need the object property name
 		typeID:#TypeID#,
 		color:"#Color#"
 	};
-	//This should die eventually
-	<!---var offsetRes#RID#=#CurrentRow#;--->
 </cfoutput>
-/*Will have to fix all references to 
-	DONE -resources array 
-	DONE-offsetRes# variables (now a property of Resources[#].offset
-	-resCount variable (now a function taking types as parameter)
-*/
-
-//Change offset into a function that accepts a resource for parameter then calculates its offset.
-//Or... figure it out whenever the typeID field changes and update offset in the Resources Objects.
-//Maybe I can do this as part of resCount.
-
-var resCount = function(){
-	var i, types, count=0;
-	//will use the array of types passed to this function as arguments
-	//If no arguments were passed, default to the typeID hidden form field
-	if (arguments.length == 0) {
-		if ($('#typeID').val().length > 0) {
-			var arguments=$('#typeID').val().split(',');
-		} else {
-		//If the field is blank, we want arguments to be all types.
-		var arguments=[<cfoutput query="TypeList"><cfif CurrentRow GT 1>,</cfif>#TypeID#</cfoutput>];
-		}
-	}
-	
-	//reset all offsets (I may not need this)
-	for( var i=0; i < Resources.length; i++) {
-		if (typeof Resources[i] === "object") {Resources[i].offset='';}
-	}
-	
-	//loop through all types passed as arguments, set the offset of all resources
-	for(i=0; i<arguments.length;i++) {
-		//sub loop through all resources to look for matches. Increment counter if found.
-		for( var j=0; j < Resources.length; j++) {
-			if (typeof Resources[j] === "object") {
-				if (Resources[j].typeID == arguments[i]) {
-					count++;
-					Resources[j].offset = count;
-				}
-			}
-		}
-	}
-	return count;	
-};
-
-
-/* resCount should probably become a function that uses the typeID field to determine the number of resources. TypeID is a list.
-	-Create array of objects for all resources
-	-Loop through the array given a list of 
- */
-<!---var resCount=<cfoutput>#ResourceList.RecordCount#</cfoutput>;--->
 
 //I may have to redo this with pure JS as well.
 <cfoutput query="ResourceTypeCols">
@@ -329,7 +247,9 @@ var type#TypeID#Col = {columns:#Columns#, firstRID:#firstRID#};
 
 $('#id').focus(function(){
 	$(this).val('');
-	delete dataObj;
+	// delete data;
+	delete userData;
+	//This probably needs to be userData
 	$('#userStatus').html('');
 	$('#prevUsers').val('');
 	$('#prevUsers').trigger("chosen:updated");
@@ -400,9 +320,6 @@ function setTimeline(view, element) {
 
 }//end setTimeline()
 
-function evenWidth() {
-	return $(calHeader).width()/resCount()-4;
-}
 
 
 function addDayResourceColumns() {
@@ -621,9 +538,6 @@ $(document).ready(function(){
 					//Use first RID for the type, get offset from Resources array.
 					var offset=Resources[eval(event.className[typeClassIdx]+"Col").firstRID].offset;
 				} else if (typeof event.className[1] != 'undefined' && event.className[1] != 'All') {
-					// This applies to events that are not for a whole class and not for All events
-					//$(".resourcebooking, .blockedTime."+event.className[1]).css('width',evenWidth());
-
 					//Instead of manipulating the width, move this event into the right column.
 
 					//need to calculate an offset value based on the classname of a booking event
@@ -638,9 +552,6 @@ $(document).ready(function(){
 					var offset=Resources[thisRID].offset;
 				}
 				
-				//           Left time col    col position for res    'margin'
-				// position = (evenWidth()*offset) + (offset*4) - evenWidth() -3;
-				// element.css('left',position);
 				labelColumns();
 				$('#resourceSelection').remove();
 			} else if (view.name=="agendaWeek" && $('#resourceSelection').length==0) {
@@ -703,7 +614,7 @@ $(document).ready(function(){
 			}
 			</cfoutput>
 			
-			/* Show the header row when viewing all resources in day view */
+			// Show the header row when viewing all resources in day view
 			if (view.name=="agendaDay" && $('#rid').val()=='') {
 				labelColumns();
 				// This isn't enough - it doesn't update when you change the categories.
@@ -752,13 +663,13 @@ $(document).ready(function(){
 
 			}
 		
-			/* Draw time line for current time every three minutes. */
+			// Draw time line for current time every three minutes.
 			if (first) {
 				first = false;
 			} else {
 				window.clearInterval(timelineInterval);
 			}
-			/* Update the time line every 3 minutes */
+			// Update the time line every 3 minutes
 			timelineInterval=setInterval(function(){try{setTimeline(view, element)}catch(err){}}, 180000);
 			try {
 				setTimeline(view, element);
@@ -782,10 +693,10 @@ $(document).ready(function(){
 		</cfif> --->
 		eventSources: [
 			{
-				url: '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>',
+				url: MBSPath+'getBookings.cfm?branch='+thisLocation,
 				type: 'POST',
 				data: {
-					isStaff:'<cfoutput>#isStaff#</cfoutput>',
+					isStaff: isStaff,
 					id:$('#id').val(),
 					rid:$('#rid').val(),  //This won't update dynamically. Have to reset event sources onchange.
 					typeID:$('#typeID').val(),
@@ -793,7 +704,7 @@ $(document).ready(function(){
 				}
 			},
 			{
-				url: '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>',
+				url: MBSPath+'getBlockedTimes.cfm?branch='+thisLocation,
 				type: 'POST',
 				data: {	rid:$('#rid').val(),typeID:$('#typeID').val()}					
 			}
@@ -801,8 +712,6 @@ $(document).ready(function(){
 		
 		
 	});//fullCalendar
-	
-
 
 
 
@@ -853,7 +762,7 @@ var updateSeq = 0;
 
 //Simply updates the 'updateSeq' variable to the current value to prevent a useless update.
 function setUpdateSequence() {
-	$.get('updateCheck.cfm?branch=<cfoutput>#ThisLocation#</cfoutput>').done(function(data){
+	$.get('updateCheck.cfm?branch='+thisLocation).done(function(data){
 			updateSeq = data;
 	});
 }	
@@ -861,11 +770,8 @@ function setUpdateSequence() {
 //Set the initial update sequence, otherwise a useless update is done shortly after page load.
 setUpdateSequence();
 
-
-
-
 setInterval(function() {
-	$.get('updateCheck.cfm?branch=<cfoutput>#ThisLocation#</cfoutput>').done(function(data){
+	$.get('updateCheck.cfm?branch='+thisLocation).done(function(data){
 		// console.log(updateSeq);
 		// console.log(data);
 		if (parseInt(data) > parseInt(updateSeq)) {
@@ -876,7 +782,7 @@ setInterval(function() {
 
 		}
 	});
-}, 5000);
+}, 10000);
 
 
 
@@ -884,10 +790,10 @@ function updateFullCalendar() {
 
 	/*Remove events and only show events for the newly selected resource */
 	$('#calendar').fullCalendar('removeEvents');
-	$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>');
-	$('#calendar').fullCalendar('removeEventSource', '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>');
+	$('#calendar').fullCalendar('removeEventSource', 'getBookings.cfm?branch='+thisLocation);
+	$('#calendar').fullCalendar('removeEventSource', 'getBlockedTimes.cfm?branch='+thisLocation);
 	$('#calendar').fullCalendar('addEventSource', {
-		url: '<cfoutput>#MBSPath#/getBookings.cfm?branch=#thisLocation#</cfoutput>',
+		url: 'getBookings.cfm?branch='+thisLocation,
 		type: 'POST',
 		data: {
 			id:$('#id').val(),
@@ -897,7 +803,7 @@ function updateFullCalendar() {
 		}
 	});
 	$('#calendar').fullCalendar('addEventSource', {
-		url: '<cfoutput>#MBSPath#/getBlockedTimes.cfm?branch=#thisLocation#</cfoutput>',
+		url: 'getBlockedTimes.cfm?branch='+thisLocation,
 		type: 'POST',
 		data: {rid:$('#rid').val(),typeID:$('#typeID').val()}
 	});
@@ -1009,17 +915,17 @@ function doDayClick(date, jsEvent, view, confirmDelete) {
 		//console.log('rid: '+rid);
 		if (allowedToBook(newEvent, rid)) {
 			$('#calendar').fullCalendar('removeEvents', 'newBooking');
-			$.post('addBooking.cfm?branch=<cfoutput>#ThisLocation#</cfoutput>', {
+			$.post('addBooking.cfm?branch='+thisLocation, {
 				'userkey':$('#userkey').val(),
 				'id':$('#id').val(),
 				'rid':rid,
 				'newstart':newEvent.start,
 				'newend':newEvent.end,
-				'status':dataObj.CUSTOMER.STATUS,
-				'firstname':dataObj.CUSTOMER.FIRST,
-				'lastname':dataObj.CUSTOMER.LAST,
-				'email':dataObj.CUSTOMER.EMAIL,
-				'age':dataObj.CUSTOMER.AGE,
+				'status':userData.CUSTOMER.STATUS,
+				'firstname':userData.CUSTOMER.FIRST,
+				'lastname':userData.CUSTOMER.LAST,
+				'email':userData.CUSTOMER.EMAIL,
+				'age':userData.CUSTOMER.AGE,
 				'confirmDelete':confirmDelete
 			})
 			.done(function(data){
@@ -1145,4 +1051,4 @@ $('#prevUsers').change(function() {
 
 
 </script>
-<cfinclude template="/AppsRoot/Includes/IntraFooter.cfm">
+<cfinclude template="#appsIncludes#/appsFooter.cfm">

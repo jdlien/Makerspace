@@ -4,7 +4,7 @@
 <cfheader name="Content-Type" value="application/json" />
 <cfobject component="PatronInfo" name="PatronInfo" />
 
-<cfinclude template="/AppsRoot/Includes/functions/QueryToStruct.cfm" />
+<cfinclude template="#appsIncludes#/functions/queryToStruct.cfm" />
 
 <cfif isDefined('form.id')><cfset url.id=form.id></cfif>
 <!--- return an error if we didn't get a valid card number --->
@@ -37,7 +37,7 @@ Order by CertiName
 	WHERE UserKey = '#data.CUSTOMER.USERKEY#'
 </cfquery>
 
-<cfset data.Certifications = QueryToStruct(Query=PatronCertifications, ForceArray=true) />
+<cfset data.Certifications = queryToStruct(Query=PatronCertifications, ForceArray=true) />
 <cfif MasterCourse.RecordCount>
 	<cfset data.MASTERCOURSE = true />
 <cfelse>

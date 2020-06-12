@@ -15,7 +15,7 @@
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
-	<cfinclude template="/AppsRoot/Includes/IPOffices.cfm">
+	<cfinclude template="#appsIncludes#/appsInitIPLocation.cfm">
 	<cfset ThisLocation=RealStateBuilding/>
 </cfif>
 

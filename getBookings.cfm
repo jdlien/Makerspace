@@ -1,7 +1,7 @@
-<cfsetting showdebugoutput="no">
+<cfsetting showdebugoutput="no" enableCFOutputOnly="yes">
+<cfheader name="Content-Type" value="application/json">
 <cfparam name="form.isStaff" default="true">
 <cfparam name="form.hideOther" default="false">
-<cfheader name="Content-Type" value="application/json">
 
 <cfscript>
 string function escapedq(string s) {
@@ -12,7 +12,7 @@ string function escapedq(string s) {
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
-	<cfinclude template="/AppsRoot/Includes/IPOffices.cfm">
+	<cfinclude template="#appsIncludes#/appsInitIPLocation.cfm">
 	<cfset ThisLocation=RealStateBuilding/>
 </cfif>
 
@@ -42,7 +42,9 @@ string function escapedq(string s) {
 		</cfloop>)
 	</cfif>
 </cfquery>
-<!--- I wanted coldfusion to generate JSON from an structure, but it wasn't working very well --->
+
+
+<!--- I wanted coldfusion to generate JSON from an structure, but it wasn't working very well 
 	[
 <cfoutput query="Bookings">
 	<cfset noteIcon='' />
@@ -76,3 +78,38 @@ string function escapedq(string s) {
 	}<cfif CurrentRow NEQ RecordCount>,</cfif>
 </cfoutput>
 	]
+
+--->
+<cfscript>
+bookingsArray=ArrayNew(1);
+for (r in Bookings) {
+	s=StructNew();
+	noteIcon=len(r.Note)?'<div class="noteIcon"></div>':'';
+	if (form.hideOther==true && r.UserBarcode!=form.id) titleDesc="";
+	else if (form.isStaff==true) titleDesc="#r.FirstName# #r.LastName#";
+	else if (form?.id==r.UserBarcode) titleDesc="Your #r.ResourceName# Booking";
+	else titleDesc=r.ResourceName;
+
+	s.title=titleDesc;
+	s.start=r.StartTime;
+	s.end=r.EndTime;
+	if (form?.id==r.UserBarcode) borderColor='black';
+	if (form?.isStaff==true) {
+		s.description='<b>#r.ResourceName#</b>';
+		if (len(r.Description)) s.description&=' - #r.Description#';
+		s.description&= '<br /><b>#r.FirstName# #r.LastName#</b><br />';
+		s.description&=REReplace(trim(r.UserBarcode), "(\d{5})(\d{5})(\d{4})", "\1 \2 \3");
+		if (len(r.Note)) s.description&='<br /><b>Note: </b>#r.Note#';
+		s.tid=r.TID;
+	} else s.description='';
+	s.rid=r.RID;
+	s.className="resourcebooking Res#r.RID#";
+	if (form?.id==r.UserBarcode) s.className&=" yourBooking";
+	if (form?.isStaff==true) s.className&=" event#r.TID#";
+	s.color=(form?.hideOther==true && r.UserBarcode != form.id)?'##DDDDDD':r.color;
+	s.noteIcon=(form?.hideOther==true && r.UserBarcode != form.id)?'':noteIcon;
+	ArrayAppend(bookingsArray, s);
+}
+</cfscript>
+
+<cfoutput>#SerializeJSON(bookingsArray)#</cfoutput>

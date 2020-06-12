@@ -109,9 +109,10 @@ label.spaced {
 	margin-left:0px;
 }
 
-.grayButton {
+main .grayButton {
+/* This style messes up the adminButtons... needs to be more specific if it is needed at all
 	margin:3px 3px;
-	margin-bottom:15px;
+	margin-bottom:15px;*/
 }
 
 #userStatus {
@@ -413,4 +414,13 @@ table.certifications td+td {
 .editCell {
 	width:46px;
 	text-align: center;
+}
+
+.timePickers .formGroup select {
+	flex:1;
+	margin-right:5px;
+}
+
+.timePickers .formGroup select+select {
+	margin-left:5px;
 }

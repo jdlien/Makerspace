@@ -12,11 +12,11 @@
 		<cfset thisMinute=TimeFormat(time, "m") />
 	</cfif>
 	<cfoutput>
-	<select name="#prefix#Hour" id="#prefix#Hour" class="hour" style="width:40px;">
+	<select name="#prefix#Hour" id="#prefix#Hour" class="hour">
 		<cfloop from="9" to="21" index="i">
 			<option value="#i#" <cfif i IS thisHour>selected</cfif>><cfif i GT 12>#i-12#<cfelse>#i#</cfif></option>
 		</cfloop>
-	</select>:<select name="#prefix#Minute" id="#prefix#Minute" class="minute" style="width:50px;">
+	</select>:<select name="#prefix#Minute" id="#prefix#Minute" class="minute">
 		<cfloop from="0" to="55" index="i" step="5">
 			<option value="#i#" <cfif i IS thisMinute>selected</cfif>>#NumberFormat(i, "09")#</option>
 		</cfloop>
@@ -71,13 +71,13 @@
 	<form class="appForm" id="eventDetails" method="post">
 		<cfoutput>
 		
-		<div class="formItem">Start Time
+		<div class="formItem timePickers">Start Time
 		<span class="formGroup">
 			#timePicker("start", TimeFormat(Event.StartTime, "HH:mm"))#
 		</span>
 		</div>
 
-		<div class="formItem">End Time
+		<div class="formItem timePickers">End Time
 		<span class="formGroup">
 			#timePicker("end", TimeFormat(Event.EndTime, "HH:mm"))#
 		</span>

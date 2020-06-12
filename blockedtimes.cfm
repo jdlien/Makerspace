@@ -1,4 +1,4 @@
-<cfinclude template="/Includes/INTYouKnowVariables.cfm" />
+<cfinclude template="#appsIncludes#/appsInit.cfm" />
 
 <cfparam name="ThisLocation" default="#RealStateBuilding#" />
 
@@ -22,7 +22,7 @@
 <cfset adminButton.title="Manage Consoles, PCs, etc.">
 <cfset ArrayAppend(app.adminButtons, adminButton)>	
 
-<cfinclude template="/Includes/IntraHeader.cfm">
+<cfinclude template="#appsIncludes#/appsHeader.cfm" />
 
 <style type="text/css">
 	.linkField {
@@ -518,6 +518,6 @@ $.editable.addInputType("multiselect", {
 	
 </script>
 
-<cfinclude template="/AppsRoot/Includes/IntraFooter.cfm">
+<cfinclude template="#appsIncludes#/appsFooter.cfm">
 
 

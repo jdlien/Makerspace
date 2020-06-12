@@ -1,8 +1,8 @@
-<!--- YouKnowIAm identifies the currently authenticatd user on Staffweb --->
-<cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
+<!--- session.identity identifies the currently authenticatd user on Staffweb --->
+<cfinclude template="#appsIncludes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,block">
-<cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
+<cfinclude template="#appsIncludes#/appsPermissions.cfm">
 <cfparam name="form.RID" default="">
 <!---<cfdump var="#form#">--->
 <cfif isDefined('SubmitNew') AND len(trim(form.beginDate)) AND len(trim(form.endDate))>
@@ -19,7 +19,7 @@
 			<cfif isNumeric(trim(form.dow))>'#form.dow#'<cfelse>NULL</cfif>,
 			'#continuous#',
 			'#trim(form.description)#',
-			'#YouKnowIAm#',
+			'#session.identity#',
 			GETDATE(),
 			'#form.Branch#'
 		)
@@ -37,7 +37,7 @@
 			'#InsertBlockedTime.BID#',
 			<cfif isNumeric(trim(ResourceID))>'#ResourceID#'<cfelse>NULL</cfif>,
 			<cfif Len(TypeID)>'#TypeID#'<cfelse>NULL</cfif>,
-			'#YouKnowIAm#',
+			'#session.identity#',
 			GETDATE()
 		)
 		</cfquery>

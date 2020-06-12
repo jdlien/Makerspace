@@ -21,7 +21,7 @@
 <cfset ArrayAppend(app.adminButtons, adminButton)>
 
 
-<cfinclude template="/Includes/IntraHeader.cfm">
+<cfinclude template="#appsIncludes#/appsHeader.cfm" />
 <cfset ThisLocation=RealStateBuilding/>
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />

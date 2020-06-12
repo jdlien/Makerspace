@@ -1,9 +1,9 @@
 <cfsetting showdebugoutput="no">
 <cfsetting enablecfoutputonly="yes">
-<cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
+<cfinclude template="#appsIncludes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,block">
-<cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
+<cfinclude template="#appsIncludes#/appsPermissions.cfm">
 
 <!--- Changes click-to-edit Start Time --->
 <cfif isDefined('form.NewStartHour')>
@@ -14,7 +14,7 @@
 	</cfquery>
 	<cfset newStartTime=DateFormat(original.StartTime, "YYYY-MMM-DD")&" "&form.NewStartHour&":"&TimeFormat(original.StartTime, "mm")>
 	<cfquery name="UpdateStartDate" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerspaceBlockedTimes SET StartTime='#newStartTime#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerspaceBlockedTimes SET StartTime='#newStartTime#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
 	<cfoutput>#TimeFormat(newStartTime, "HH")#</cfoutput>
@@ -28,7 +28,7 @@
 	</cfquery>
 	<cfset newStartTime=DateFormat(original.StartTime, "YYYY-MMM-DD")&" "&TimeFormat(original.StartTime, "HH")&":"&form.newStartMinute>
 	<cfquery name="UpdateStartDate" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerspaceBlockedTimes SET StartTime='#newStartTime#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerspaceBlockedTimes SET StartTime='#newStartTime#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
 	<cfoutput>#TimeFormat(newStartTime, "mm")#</cfoutput>
@@ -43,7 +43,7 @@
 	</cfquery>
 	<cfset newEndTime=DateFormat(original.EndTime, "YYYY-MMM-DD")&" "&form.NewEndHour&":"&TimeFormat(original.EndTime, "mm")>
 	<cfquery name="UpdateEndDate" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerspaceBlockedTimes SET EndTime='#newEndTime#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerspaceBlockedTimes SET EndTime='#newEndTime#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
 	<cfoutput>#TimeFormat(newEndTime, "HH")#</cfoutput>
@@ -57,7 +57,7 @@
 	</cfquery>
 	<cfset newEndTime=DateFormat(original.EndTime, "YYYY-MMM-DD")&" "&TimeFormat(original.EndTime, "HH")&":"&form.newEndMinute>
 	<cfquery name="UpdateEndDate" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerspaceBlockedTimes SET EndTime='#newEndTime#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerspaceBlockedTimes SET EndTime='#newEndTime#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
 	<cfoutput>#TimeFormat(newEndTime, "mm")#</cfoutput>
@@ -73,7 +73,7 @@
 	</cfquery>
 	<cfset newStartTime=form.newStartDate&" "&TimeFormat(originalStartTime.StartTime, "HH:mm")>
 	<cfquery name="UpdateStartDate" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerspaceBlockedTimes SET StartTime='#newStartTime#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerspaceBlockedTimes SET StartTime='#newStartTime#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
 	<cfoutput>#dateformat(newStartTime, "YYYY-MMM-DD")#</cfoutput>
@@ -88,7 +88,7 @@
 	</cfquery>
 	<cfset newEndTime=form.newEndDate&" "&TimeFormat(originalEndTime.EndTime, "HH:mm")>
 	<cfquery name="UpdateEndDate" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerspaceBlockedTimes SET EndTime='#newEndTime#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerspaceBlockedTimes SET EndTime='#newEndTime#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
 	<cfoutput>#dateformat(newEndTime, "YYYY-MMM-DD")#</cfoutput>
@@ -103,7 +103,7 @@
 		UPDATE vsd.vsd.MakerspaceBlockedTimes
 		SET DayofWeek=<cfif isNumeric(form.newDoW)>'#form.newDoW#'<cfelse>NULL</cfif>,
 			Continuous=#Continuous#,
-			ModifiedBy='#YouKnowIAm#',
+			ModifiedBy='#session.identity#',
 			Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
@@ -128,7 +128,7 @@
 		UPDATE vsd.vsd.MakerspaceBlockedTimes
 		SET RID=NULL,
 			TypeID=NULL,
-			ModifiedBy='#YouKnowIAm#',
+			ModifiedBy='#session.identity#',
 			Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
@@ -163,7 +163,7 @@
 					VALUES (#form.id#,
 						<cfif isNumeric(trim(ResourceID))>'#ResourceID#'<cfelse>NULL</cfif>,
 						<cfif len(TypeID)>'#TypeID#'<cfelse>NULL</cfif>,
-						'#YouKnowIAm#',
+						'#session.identity#',
 						GETDATE()
 					)
 				</cfquery>
@@ -181,7 +181,7 @@
 <cfif isDefined('form.NewDesc')>
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfquery name="UpdateDescription" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerspaceBlockedTimes SET Description='#trim(form.NewDesc)#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerspaceBlockedTimes SET Description='#trim(form.NewDesc)#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE BID=#form.id#
 	</cfquery>
 	<cfoutput>#trim(form.NewDesc)#</cfoutput>

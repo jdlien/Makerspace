@@ -20,7 +20,7 @@
 <cfset adminButton.title="Manage Categories of Resources">
 <cfset ArrayAppend(app.adminButtons, adminButton)>
 
-<cfinclude template="/Includes/IntraHeader.cfm">
+<cfinclude template="#appsIncludes#/appsHeader.cfm" />
 <cfset ThisLocation=RealStateBuilding/>
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
@@ -392,6 +392,6 @@ function incNum(RID, param) {
 
 </script>
 
-<cfinclude template="/AppsRoot/Includes/IntraFooter.cfm">
+<cfinclude template="#appsIncludes#/appsFooter.cfm">
 
 

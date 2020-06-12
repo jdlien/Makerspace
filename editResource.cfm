@@ -1,13 +1,13 @@
 <cfsetting showdebugoutput="no">
-<cfinclude template="/AppsRoot/Includes/INTYouKnowVariables.cfm">
+<cfinclude template="#appsIncludes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,reso">
-<cfinclude template="/AppsRoot/Includes/PermissionsInclude.cfm">
+<cfinclude template="#appsIncludes#/appsPermissions.cfm">
 <!--- Changes click-to-edit URL --->
 <cfif isDefined('form.NewDesc')>
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfquery name="UpdateDescription" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResources SET Description='#form.NewDesc#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResources SET Description='#form.NewDesc#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE RID=#form.id#
 	</cfquery>
 	<cfoutput>#form.NewDesc#</cfoutput>
@@ -17,7 +17,7 @@
 <cfif isDefined('form.NewName')>
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfquery name="UpdateName" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResources SET ResourceName='#form.NewName#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResources SET ResourceName='#form.NewName#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE RID=#form.id#
 	</cfquery>
 	<cfoutput>#form.NewName#</cfoutput>
@@ -27,7 +27,7 @@
 <cfif isDefined('form.NewTypeName')>
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfquery name="UpdateTypeName" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResourceTypes SET TypeName='#form.NewTypeName#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResourceTypes SET TypeName='#form.NewTypeName#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE TypeID=#form.id#
 	</cfquery>
 	<cfoutput>#form.NewTypeName#</cfoutput>
@@ -39,7 +39,7 @@
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfquery name="UpdateType" dbtype="ODBC" datasource="ReadWriteSource">
 		UPDATE vsd.vsd.MakerSpaceBookingResources
-		SET TypeID='#form.NewType#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		SET TypeID='#form.NewType#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE RID=#form.id#
 	</cfquery>
 	<cfquery name="TypeName" datasource="SecureSource" dbtype="ODBC">
@@ -54,7 +54,7 @@
 <cfif isDefined('form.NewBranch')>
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfquery name="UpdateBranch" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResourceTypes SET OfficeCode='#form.NewBranch#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResourceTypes SET OfficeCode='#form.NewBranch#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE TypeID=#form.id#
 	</cfquery>
 	<cfoutput>#form.NewBranch#</cfoutput>
@@ -71,12 +71,12 @@
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfif FindNoCase('Type', form.param)>
 		<cfquery name="UpdateTypeNumber" dbtype="ODBC" datasource="ReadWriteSource">
-			UPDATE vsd.vsd.MakerSpaceBookingResourceTypes SET #form.param#=#form.number#, ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+			UPDATE vsd.vsd.MakerSpaceBookingResourceTypes SET #form.param#=#form.number#, ModifiedBy='#session.identity#', Modified=GETDATE()
 			WHERE TypeID=#form.id#
 		</cfquery>	
 	<cfelse>
 		<cfquery name="UpdateNumber" dbtype="ODBC" datasource="ReadWriteSource">
-			UPDATE vsd.vsd.MakerSpaceBookingResources SET #form.param#=#form.number#, ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+			UPDATE vsd.vsd.MakerSpaceBookingResources SET #form.param#=#form.number#, ModifiedBy='#session.identity#', Modified=GETDATE()
 			WHERE RID=#form.id#
 		</cfquery>
 	</cfif>
@@ -85,7 +85,7 @@
 
 <cfif isDefined('url.id') AND isDefined('url.users')>
 	<cfquery name="UpdateMaxUsers" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResources SET MaxUsers='#url.users#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResources SET MaxUsers='#url.users#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE RID=#url.id#
 	</cfquery>
 </cfif>
@@ -94,7 +94,7 @@
 <cfif isDefined('form.color')>
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>
 	<cfquery name="UpdateColor" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResources SET Color='#form.color#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResources SET Color='#form.color#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE RID=#form.id#
 	</cfquery>
 </cfif>
@@ -108,7 +108,7 @@
 	</cfif>
 	<cfset form.id = REReplace(form.id, "(\d+)\D+", "\1")>
 	<cfquery name="UpdateBlocked" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResources SET AllowBlocked='#allowBlocked#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResources SET AllowBlocked='#allowBlocked#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE RID=#form.id#
 	</cfquery>
 </cfif>
@@ -123,7 +123,7 @@
 	</cfif>
 	<cfset form.id = REReplace(form.id, "(\d+)\D+", "\1")>
 	<cfquery name="UpdateBlocked" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResources SET Concurrent='#allowConcurrent#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResources SET Concurrent='#allowConcurrent#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE RID=#form.id#
 	</cfquery>
 </cfif>
@@ -138,7 +138,7 @@
 	</cfif>
 	<cfset form.id = REReplace(form.id, "(\d+)\D+", "\1")>
 	<cfquery name="UpdateShow" dbtype="ODBC" datasource="ReadWriteSource">
-		UPDATE vsd.vsd.MakerSpaceBookingResourceTypes SET ShowByDefault='#ShowByDefault#', ModifiedBy='#YouKnowIAm#', Modified=GETDATE()
+		UPDATE vsd.vsd.MakerSpaceBookingResourceTypes SET ShowByDefault='#ShowByDefault#', ModifiedBy='#session.identity#', Modified=GETDATE()
 		WHERE TypeID=#form.id#
 	</cfquery>
 </cfif>
