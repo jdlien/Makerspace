@@ -1,5 +1,5 @@
 <cfset app.title="Makerspace Statistics" />
-
+<cfset addParent("Makerspace Booking System") />
 <cfinclude template="#appsIncludes#/appsHeader.cfm" />
 
 <script src="/javascript/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
