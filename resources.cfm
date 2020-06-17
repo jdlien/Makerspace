@@ -1,6 +1,5 @@
 <cfset app.title="Makerspace Resources Manager">
-<cfset ParentPage="Makerspace Resource Booking">
-<cfset ParentLink="/DLI/Makerspace/">
+<cfset addParent("Makerspace Resource Booking", "./") />
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,reso">
 

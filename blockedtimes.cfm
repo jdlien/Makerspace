@@ -9,8 +9,7 @@
 
 
 <cfset app.title="Makerspace Blocked Times Manager">
-<cfset ParentPage="Makerspace Resource Booking">
-<cfset ParentLink="portal.cfm?branch=#ThisLocation#">
+<cfset addParent("Makerspace Resource Booking", "portal.cfm?branch=#ThisLocation#") />
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,block">
 
