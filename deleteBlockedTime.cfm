@@ -1,7 +1,7 @@
-<cfinclude template="#appsIncludes#/appsInit.cfm">
+<cfinclude template="#app.includes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,block">
-<cfinclude template="#appsIncludes#/appsPermissions.cfm">
+<cfinclude template="#app.includes#/appsPermissions.cfm">
 <cfquery name="BlockedResourcesDelete" dbtype="ODBC" datasource="ReadWriteSource">
 	DELETE FROM MakerspaceBlockedTimeResources WHERE BID='#url.delID#'
 </cfquery>

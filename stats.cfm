@@ -1,6 +1,6 @@
 <cfset app.title="Makerspace Statistics" />
-<cfset addParent("Makerspace Booking System") />
-<cfinclude template="#appsIncludes#/appsHeader.cfm" />
+<cfset app.addParent("Makerspace Booking System") />
+<cfinclude template="#app.includes#/appsHeader.cfm" />
 
 <script src="/javascript/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
 <script>
@@ -34,7 +34,7 @@ $(document).ready(function(){
 
 
 <cfif NOT isDefined('url.to') OR NOT isDefined('url.from')>
-	<cfinclude template="#appsIncludes#/appsFooter.cfm" />
+	<cfinclude template="#app.includes#/appsFooter.cfm" />
 	<cfabort />
 </cfif>
 
@@ -149,4 +149,4 @@ $(document).ready(function(){
 
 
 
-<cfinclude template="#appsIncludes#/appsFooter.cfm" />
+<cfinclude template="#app.includes#/appsFooter.cfm" />

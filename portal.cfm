@@ -1,7 +1,7 @@
 <cfset app.toastr=true />
 <cfset app.id="MakerspaceBooking">
 <cfset app.title="Makerspace Booking System">
-<cfinclude template="#appsIncludes#/appsInit.cfm" />
+<cfinclude template="#app.includes#/appsInit.cfm" />
 
 <!--- List structure of permissions, links, and descriptions for which to get admin links --->
 <cfscript>
@@ -11,13 +11,13 @@ isStaff=true;
 
 if (isDefined('url.branch')) ThisLocation=url.branch;
 if (ThisLocation=="External") ThisLocation='ESQ';
-if (ThisLocation!="ESQ") addAdminButton('ESQ Branch', 'portal.cfm?branch=ESQ');
-addAdminButton('Stats', 'stats.cfm');
-addAdminButton('Resources', 'resources.cfm?branch='&ThisLocation, 'Manage Consoles, PCs, etc.', 'reso');
-addAdminButton('Blocked Times', 'blockedTimes.cfm?branch='&ThisLocation, 'Manage Periods of Unavailability', 'block');
+if (ThisLocation!="ESQ") app.addAdminButton('ESQ Branch', 'portal.cfm?branch=ESQ');
+app.addAdminButton('Stats', 'stats.cfm');
+app.addAdminButton('Resources', 'resources.cfm?branch='&ThisLocation, 'Manage Consoles, PCs, etc.', 'reso');
+app.addAdminButton('Blocked Times', 'blockedTimes.cfm?branch='&ThisLocation, 'Manage Periods of Unavailability', 'block');
 </cfscript>
 
-<cfinclude template="#appsIncludes#/appsHeader.cfm">
+<cfinclude template="#app.includes#/appsHeader.cfm">
 <!--- Used for the current location of the user in Makerspace Booking System --->
 <cfset MBSPath="#REReplace(cgi.script_name, "(.*)/.*", "\1")#" />
 
@@ -1051,4 +1051,4 @@ $('#prevUsers').change(function() {
 
 
 </script>
-<cfinclude template="#appsIncludes#/appsFooter.cfm">
+<cfinclude template="#app.includes#/appsFooter.cfm">

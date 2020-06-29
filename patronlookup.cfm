@@ -4,7 +4,7 @@
 <cfheader name="Content-Type" value="application/json" />
 <cfobject component="PatronInfo" name="PatronInfo" />
 
-<cfinclude template="#appsIncludes#/functions/queryToStruct.cfm" />
+<cfinclude template="#app.includes#/functions/queryToStruct.cfm" />
 
 <cfif isDefined('form.id')><cfset url.id=form.id></cfif>
 <!--- return an error if we didn't get a valid card number --->

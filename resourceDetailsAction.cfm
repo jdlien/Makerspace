@@ -2,7 +2,7 @@
 
 <cfset app.id="MakerspaceBooking" />
 <cfset app.permissionsRequired="view,reso" />
-<cfinclude template="#appsIncludes#/appsPermissions.cfm" />
+<cfinclude template="#app.includes#/appsPermissions.cfm" />
 
 <!--- <cfdump var="#form#"> --->
 

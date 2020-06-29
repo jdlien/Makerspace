@@ -1,8 +1,8 @@
 <!--- session.identity identifies the currently authenticatd user on Staffweb --->
-<cfinclude template="#appsIncludes#/appsInit.cfm">
+<cfinclude template="#app.includes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,block">
-<cfinclude template="#appsIncludes#/appsPermissions.cfm">
+<cfinclude template="#app.includes#/appsPermissions.cfm">
 <cfparam name="form.RID" default="">
 <!---<cfdump var="#form#">--->
 <cfif isDefined('SubmitNew') AND len(trim(form.beginDate)) AND len(trim(form.endDate))>

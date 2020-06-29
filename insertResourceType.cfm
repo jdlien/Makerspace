@@ -1,8 +1,8 @@
 <!--- session.identity identifies the currently authenticated user on Staffweb --->
-<cfinclude template="#appsIncludes#/appsInit.cfm">
+<cfinclude template="#app.includes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,reso">
-<cfinclude template="#appsIncludes#/appsPermissions.cfm">
+<cfinclude template="#app.includes#/appsPermissions.cfm">
 <cfif isDefined('SubmitNew')>
 	<cfquery name="InsertResource" datasource="ReadWriteSource" dbtype="ODBC">
 		INSERT INTO MakerSpaceBookingResourceTypes (TypeName, ShowByDefault,

@@ -1,5 +1,5 @@
 <cfset app.title="Makerspace Resources Manager">
-<cfset addParent("Makerspace Resource Booking", "./") />
+<cfset app.addParent("Makerspace Resource Booking", "./") />
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,reso">
 
@@ -9,17 +9,17 @@
 <cfset adminButton.permType="block">
 <cfset adminButton.link="blockedtimes.cfm">
 <cfset adminButton.label="Blocked Times">
-<cfset adminButton.title="Manage Periods of Unavailability">
+<cfset adminButton.tooltip="Manage Periods of Unavailability">
 <cfset ArrayAppend(app.adminButtons, adminButton)>	
 
 <cfset adminButton = structNew()>
 <cfset adminButton.permType="reso">
 <cfset adminButton.link="resourceTypes.cfm">
 <cfset adminButton.label="Resource Types">
-<cfset adminButton.title="Manage Categories of Resources">
+<cfset adminButton.tooltip="Manage Categories of Resources">
 <cfset ArrayAppend(app.adminButtons, adminButton)>
 
-<cfinclude template="#appsIncludes#/appsHeader.cfm" />
+<cfinclude template="#app.includes#/appsHeader.cfm" />
 <cfset ThisLocation=RealStateBuilding/>
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
@@ -391,6 +391,6 @@ function incNum(RID, param) {
 
 </script>
 
-<cfinclude template="#appsIncludes#/appsFooter.cfm">
+<cfinclude template="#app.includes#/appsFooter.cfm">
 
 

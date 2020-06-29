@@ -1,8 +1,8 @@
 <cfsetting showdebugoutput="no">
-<cfinclude template="#appsIncludes#/appsInit.cfm">
+<cfinclude template="#app.includes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,reso">
-<cfinclude template="#appsIncludes#/appsPermissions.cfm">
+<cfinclude template="#app.includes#/appsPermissions.cfm">
 <!--- Changes click-to-edit URL --->
 <cfif isDefined('form.NewDesc')>
 <cfset form.id = REReplace(form.id, "\D+(\d+)", "\1")>

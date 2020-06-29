@@ -1,9 +1,9 @@
 <cfsetting showdebugoutput="no">
 <cfsetting enablecfoutputonly="yes">
-<cfinclude template="#appsIncludes#/appsInit.cfm">
+<cfinclude template="#app.includes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,block">
-<cfinclude template="#appsIncludes#/appsPermissions.cfm">
+<cfinclude template="#app.includes#/appsPermissions.cfm">
 <cfquery name="CheckHidden" dbtype="ODBC" datasource="SecureSource">
 	SELECT Hidden FROM MakerspaceBlockedTimes WHERE BID='#url.id#'
 </cfquery>

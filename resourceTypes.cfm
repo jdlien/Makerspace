@@ -1,5 +1,5 @@
 <cfset app.title="Makerspace Resource Types">
-<cfset addParent("Makerspace Resource Booking", "./") />
+<cfset app.addParent("Makerspace Resource Booking", "./") />
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,reso">
 
@@ -9,18 +9,18 @@
 <cfset adminButton.permType="block">
 <cfset adminButton.link="blockedtimes.cfm">
 <cfset adminButton.label="Blocked Times">
-<cfset adminButton.title="Manage Periods of Unavailability">
+<cfset adminButton.tooltip="Manage Periods of Unavailability">
 <cfset ArrayAppend(app.adminButtons, adminButton)>	
 
 <cfset adminButton = structNew()>
 <cfset adminButton.permType="reso">
 <cfset adminButton.link="resources.cfm">
 <cfset adminButton.label="Resources">
-<cfset adminButton.title="Manage Consoles, PCs, etc.">
+<cfset adminButton.tooltip="Manage Consoles, PCs, etc.">
 <cfset ArrayAppend(app.adminButtons, adminButton)>
 
 
-<cfinclude template="#appsIncludes#/appsHeader.cfm" />
+<cfinclude template="#app.includes#/appsHeader.cfm" />
 <cfset ThisLocation=RealStateBuilding/>
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />

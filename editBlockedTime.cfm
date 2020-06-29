@@ -1,9 +1,9 @@
 <cfsetting showdebugoutput="no">
 <cfsetting enablecfoutputonly="yes">
-<cfinclude template="#appsIncludes#/appsInit.cfm">
+<cfinclude template="#app.includes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,block">
-<cfinclude template="#appsIncludes#/appsPermissions.cfm">
+<cfinclude template="#app.includes#/appsPermissions.cfm">
 
 <!--- Changes click-to-edit Start Time --->
 <cfif isDefined('form.NewStartHour')>

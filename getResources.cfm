@@ -2,7 +2,7 @@
 cfheader(name="Content-Type", value="application/json");
 cfsetting(showDebugOutput="false", enableCFoutputOnly="true");
 app.id="Makerspace";
-include "#appsIncludes#/appsPermissions.cfm";
+include "#app.includes#/appsPermissions.cfm";
 data = StructNew();
 data.message = '';
 data.error=false;

@@ -1,4 +1,4 @@
-<cfinclude template="#appsIncludes#/appsInit.cfm" />
+<cfinclude template="#app.includes#/appsInit.cfm" />
 
 <cfparam name="ThisLocation" default="#RealStateBuilding#" />
 
@@ -9,7 +9,7 @@
 
 
 <cfset app.title="Makerspace Blocked Times Manager">
-<cfset addParent("Makerspace Resource Booking", "portal.cfm?branch=#ThisLocation#") />
+<cfset app.addParent("Makerspace Resource Booking", "portal.cfm?branch=#ThisLocation#") />
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,block">
 
@@ -18,10 +18,10 @@
 <cfset adminButton.permType="reso">
 <cfset adminButton.link="resources.cfm">
 <cfset adminButton.label="Resources">
-<cfset adminButton.title="Manage Consoles, PCs, etc.">
+<cfset adminButton.tooltip="Manage Consoles, PCs, etc.">
 <cfset ArrayAppend(app.adminButtons, adminButton)>	
 
-<cfinclude template="#appsIncludes#/appsHeader.cfm" />
+<cfinclude template="#app.includes#/appsHeader.cfm" />
 
 <style type="text/css">
 	.linkField {
@@ -517,6 +517,6 @@ $.editable.addInputType("multiselect", {
 	
 </script>
 
-<cfinclude template="#appsIncludes#/appsFooter.cfm">
+<cfinclude template="#app.includes#/appsFooter.cfm">
 
 
