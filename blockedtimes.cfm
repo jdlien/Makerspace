@@ -1,6 +1,6 @@
 <cfinclude template="#app.includes#/appsInit.cfm" />
 
-<cfparam name="ThisLocation" default="#RealStateBuilding#" />
+<cfparam name="ThisLocation" default="#session.physicalLocation#" />
 
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />

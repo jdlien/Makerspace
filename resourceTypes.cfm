@@ -21,7 +21,7 @@
 
 
 <cfinclude template="#app.includes#/appsHeader.cfm" />
-<cfset ThisLocation=RealStateBuilding/>
+<cfset ThisLocation=session.physicalLocation/>
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 </cfif>

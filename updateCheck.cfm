@@ -5,7 +5,7 @@
 	<cfset ThisLocation=url.branch />
 <cfelse>
 	<cfinclude template="#app.includes#/appsInit.cfm" />
-	<cfparam name="ThisLocation" default="#RealStateBuilding#" />
+	<cfparam name="ThisLocation" default="#session.physicalLocation#" />
 </cfif>
 
 <cfquery name="Update" dbtype="ODBC" datasource="SecureSource">

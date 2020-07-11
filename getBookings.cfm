@@ -13,7 +13,7 @@ string function escapedq(string s) {
 	<cfset ThisLocation=url.branch />
 <cfelse>
 	<cfinclude template="#app.includes#/appsInitIPLocation.cfm">
-	<cfset ThisLocation=RealStateBuilding/>
+	<cfset ThisLocation=session.physicalLocation/>
 </cfif>
 
 <cfif isDefined('url.rid') and url.rid NEQ ''><cfset form.rid=url.rid></cfif>
