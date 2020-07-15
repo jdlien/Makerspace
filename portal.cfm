@@ -1,8 +1,6 @@
 <cfset app.toastr=true />
 <cfset app.id="MakerspaceBooking">
 <cfset app.title="Makerspace Booking System">
-<cfinclude template="#app.includes#/appsInit.cfm" />
-
 <!--- List structure of permissions, links, and descriptions for which to get admin links --->
 <cfscript>
 param ThisLocation=session.physicalLocation;

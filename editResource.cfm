@@ -1,5 +1,4 @@
 <cfsetting showdebugoutput="no">
-<cfinclude template="#app.includes#/appsInit.cfm">
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,reso">
 <cfinclude template="#app.includes#/appsPermissions.cfm">

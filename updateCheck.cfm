@@ -4,7 +4,6 @@
 <cfif isDefined('url.branch')>
 	<cfset ThisLocation=url.branch />
 <cfelse>
-	<cfinclude template="#app.includes#/appsInit.cfm" />
 	<cfparam name="ThisLocation" default="#session.physicalLocation#" />
 </cfif>
 

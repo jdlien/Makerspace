@@ -1,4 +1,3 @@
-<cfinclude template="#app.includes#/appsInit.cfm">
 <!--- <cfinclude template="#app.includes#/appsHeader.cfm" /> --->
 <cfset app.id="MakerspaceBooking">
 <cfset app.permissionsRequired="view,delete">
