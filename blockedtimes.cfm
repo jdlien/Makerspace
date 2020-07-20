@@ -38,7 +38,7 @@
 	}
 	
 	.datepicker, .hasDatepicker {
-		background-image:url('/resources/images/calendar_icon16.png');
+		background-image:url('/images/calendar_icon16.png');
 		background-position: 100% 50%;
 		background-repeat:no-repeat;
 		width:100%;
@@ -276,7 +276,7 @@
 	<!--- Compare start time to end time to determine if end time is after start time --->
 	<cfset SaneDate=DateCompare(StartTime, EndTime) />
 	<tr id="row#BID#" class="existingBlock<cfif CurrentRow MOD 2> altRow</cfif><cfif Hidden IS 1> hiddenRow</cfif><cfif SaneDate GT 0> rowError</cfif>" style="text-align:center;">
-		<td><div class="editableDayOfWeek" id="dow#BID#"><cfif SaneDate GT 0><img class="blockError" src="/Resources/images/notice_icon_24.png" title="Invalid Blocked Time. Check date/time." /></cfif> #DayOfWeekDesc#</div></td>
+		<td><div class="editableDayOfWeek" id="dow#BID#"><cfif SaneDate GT 0><img class="blockError" src="/images/notice_icon_24.png" title="Invalid Blocked Time. Check date/time." /></cfif> #DayOfWeekDesc#</div></td>
 		<!--- I think I can use the same classes for both of the time and dates, respectively --->
 		<td class="timeCell"><div><span class="editableStartHour" id="startTime#BID#">#TimeFormat(StartTime, "HH")#</span><span>:</span><span class="editableStartMinute" id="startTime#BID#">#TimeFormat(StartTime, "mm")#</span></div></td>
 		<td class="timeCell"><div><span class="editableEndHour" id="startTime#BID#">#TimeFormat(EndTime, "HH")#</span><span>:</span><span class="editableEndMinute" id="startTime#BID#">#TimeFormat(EndTime, "mm")#</span></div></td>

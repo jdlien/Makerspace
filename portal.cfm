@@ -592,8 +592,8 @@ $(document).ready(function(){
 				var tid = $(this).attr('id').replace('event', '');
 				var title = $(this).find('.fc-title').html();
 				// console.log(title);
-				var $editButton='<a class="eventEditButton" href="javascript:void(0)" onclick="editEvent(\''+tid+'\');"><img src="/Resources/Images/gear.svg" /></a>';
-				// var $noteButton='<a class="eventNoteButton" href="javascript:void(0)" title="Add/Edit Note" onclick="createNote(\''+tid+'\',\''+title+'\');"><img src="/Resources/Images/editPencilCircle_64.png" /></a>';
+				var $editButton='<a class="eventEditButton" href="javascript:void(0)" onclick="editEvent(\''+tid+'\');"><img src="/images/gear.svg" /></a>';
+				// var $noteButton='<a class="eventNoteButton" href="javascript:void(0)" title="Add/Edit Note" onclick="createNote(\''+tid+'\',\''+title+'\');"><img src="/images/editPencilCircle_64.png" /></a>';
 				 $(this).append($editButton).children('.eventEditButton').hide().fadeIn(100);
 				// $(this).append($noteButton).children('.eventNoteButton').hide().fadeIn(100);
 
@@ -682,8 +682,8 @@ $(document).ready(function(){
 				//Remove any existing delete buttons
 				$('.eventEditButton').remove();
 				$('.eventNoteButton').remove();
-				var $editButton='<a class="eventEditButton" href="javascript:void(0)" onclick="editEvent(\''+calEvent.tid+'\',\''+calEvent.title+'\');"><img src="/Resources/Images/gear.svg" /></a>';
-				var $noteButton='<a class="eventNoteButton" href="javascript:void(0)" title="Add/Edit Note" onclick="createNote(\''+calEvent.tid+'\',\''+calEvent.title+'\');"><img src="/Resources/Images/editPencilCircle_64.png" /></a>';
+				var $editButton='<a class="eventEditButton" href="javascript:void(0)" onclick="editEvent(\''+calEvent.tid+'\',\''+calEvent.title+'\');"><img src="/images/gear.svg" /></a>';
+				var $noteButton='<a class="eventNoteButton" href="javascript:void(0)" title="Add/Edit Note" onclick="createNote(\''+calEvent.tid+'\',\''+calEvent.title+'\');"><img src="/images/editPencilCircle_64.png" /></a>';
 				$(this).append($editButton).children('.eventEditButton').hide().fadeIn(100);
 				$(this).append($noteButton).children('.eventNoteButton').hide().fadeIn(100);
 			}
