@@ -79,11 +79,13 @@
 	<!--- Re-insert certifications for this resource --->
 	<cfquery name="delInsertCerts" dbtype="ODBC" datasource="ReadWriteSource">
 		DELETE FROM vsd.MakerspaceBookingResourcesCerts WHERE RID=#form.rid#
-		INSERT INTO vsd.MakerspaceBookingResourcesCerts (RID, MCID, ModifiedBy, Modified) VALUES
+		<cfif isDefined('form.certs')>
+			INSERT INTO vsd.MakerspaceBookingResourcesCerts (RID, MCID, ModifiedBy, Modified) VALUES
 
-		<cfloop list="#form.certs#" index="certid"><cfif counter++ GT 0>,</cfif>
-		(#form.rid#, #certid#, '#session.identity#', GETDATE())
-		</cfloop>
+			<cfloop list="#form.certs#" index="certid"><cfif counter++ GT 0>,</cfif>
+			(#form.rid#, #certid#, '#session.identity#', GETDATE())
+			</cfloop>
+		</cfif>
 	</cfquery>
 
 	<!--- Relocate to resources.cfm --->
