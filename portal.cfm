@@ -11,7 +11,7 @@ if (isDefined('url.branch')) ThisLocation=url.branch;
 if (ThisLocation=="External") ThisLocation='MNA';
 if (ThisLocation!="MNA") app.addAdminButton('MNA', 'portal.cfm?branch=MNA');
 if (ThisLocation!="MNJ") app.addAdminButton('MNJ', 'portal.cfm?branch=MNJ');
-if (ThisLocation!="MKR") app.addAdminButton('MKR', 'portal.cfm?branch=MKR');
+// if (ThisLocation!="MKR") app.addAdminButton('MKR', 'portal.cfm?branch=MKR');
 if (ThisLocation!="GMR") app.addAdminButton('GMR', 'portal.cfm?branch=GMR');
 app.addAdminButton('Stats', 'stats.cfm');
 app.addAdminButton('Resources', 'resources.cfm?branch='&ThisLocation, 'Manage Consoles, PCs, etc.', 'reso');
