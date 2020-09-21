@@ -45,6 +45,20 @@
 	font-weight:bold;
 }
 
+
+#idClear {
+	cursor: pointer;
+}
+
+#idClear i {
+	color:gray;
+	position:absolute;
+}
+
+#idClear i:hover {
+	opacity:60%;
+}
+
 .bold {
 	font-weight:bold;
 }

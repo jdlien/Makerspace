@@ -98,7 +98,7 @@ app.addAdminButton('Blocked Times', 'blockedTimes.cfm?branch='&ThisLocation, 'Ma
 	</cfif><!---isStaff--->
 		<div style="float:left;position:relative;">
 			<label class="" for="id">Card #: </label><input type="text" name="id" id="id" style="width:140px;" /><input type="submit" id="userSelectionSubmit" value="Check" style="display:none;">
-			<span id="idClear" data-tooltip="Clear User" style="cursor: pointer;"><i class="fas fa-times" style="color:gray;position:absolute;right:4px;top:13%;"></i></span>
+			<span id="idClear" data-tooltip="Clear User" style="cursor: pointer;"><i class="fas fa-times" style="right:4px;top:13%;"></i></span>
 		</div>
 		<input type="submit" value="&#8629;" style="padding-left:0;padding-right:0;" />
 		<span id="onlyShow" class="hidden"><label for="hideOtherBookings" style="margin-left:12px;margin-right:2px;">Highlight:</label><input type="checkbox" id="hideOtherBookings" name="hideOtherBookings" style="vertical-align:middle;"/><label id="highlightHelp" for="hideOtherBookings" style="margin-left:2px;" class="helpIcon"></label></span>
