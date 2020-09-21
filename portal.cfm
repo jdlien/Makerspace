@@ -188,7 +188,7 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 				if (data.CUSTOMER.STATUS == 'BLOCKED') {
 					$("#userStatus").append('<span class="blockWarn"><b>'+data.CUSTOMER.FULLNAME+'</b> ('+data.CUSTOMER.PROFILEID+') is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
 				}else {
-					$("#userStatus").append('<span class="success"><b>'+data.CUSTOMER.FULLNAME+'</b> ('+data.CUSTOMER.PROFILEID+').</span>&nbsp; Click a time to book it.');
+					$("#userStatus").append('<span class="success"><b>'+data.CUSTOMER.FULLNAME+'</b> ('+data.CUSTOMER.PROFILEID+') is valid.</span>&nbsp; Click a time to book it.');
 				}
 				$('#altCard').hide();
 				$('#onlyShow').show();
