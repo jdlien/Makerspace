@@ -39,7 +39,7 @@ app.addAdminButton('Blocked Times', 'blockedTimes.cfm?branch='&ThisLocation, 'Ma
 <!--- Inputmask is used on card number input --->
 <script src='/Javascript/jquery.inputmask.bundle.min.js' type="text/javascript"></script>
 <!--- Stylesheet is now external --->
-<link rel="stylesheet" type="text/css" href="makerspace.css" />
+<link rel="stylesheet" type="text/css" href="makerspace.css?v=2" />
 
 
 <cfquery name="ResourceList" datasource="SecureSource" dbtype="ODBC">
