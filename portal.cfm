@@ -8,8 +8,10 @@ param ThisLocation=session.physicalLocation;
 isStaff=true;
 
 if (isDefined('url.branch')) ThisLocation=url.branch;
-if (ThisLocation=="External") ThisLocation='ESQ';
-if (ThisLocation!="ESQ") app.addAdminButton('ESQ Branch', 'portal.cfm?branch=ESQ');
+if (ThisLocation=="External") ThisLocation='MNA';
+if (ThisLocation!="MNA") app.addAdminButton('MNA', 'portal.cfm?branch=MNA');
+if (ThisLocation!="MKR") app.addAdminButton('MKR', 'portal.cfm?branch=MKR');
+if (ThisLocation!="GMR") app.addAdminButton('GMR', 'portal.cfm?branch=GMR');
 app.addAdminButton('Stats', 'stats.cfm');
 app.addAdminButton('Resources', 'resources.cfm?branch='&ThisLocation, 'Manage Consoles, PCs, etc.', 'reso');
 app.addAdminButton('Blocked Times', 'blockedTimes.cfm?branch='&ThisLocation, 'Manage Periods of Unavailability', 'block');
@@ -94,8 +96,9 @@ app.addAdminButton('Blocked Times', 'blockedTimes.cfm?branch='&ThisLocation, 'Ma
 			</select>
 		</div>
 	</cfif><!---isStaff--->
-		<div style="float:left;">
-			<label class="" for="id">Card #: </label><input type="text" name="id" id="id" style="width:135px;" /><input type="submit" id="userSelectionSubmit" value="Check" style="display:none;">
+		<div style="float:left;position:relative;">
+			<label class="" for="id">Card #: </label><input type="text" name="id" id="id" style="width:140px;" /><input type="submit" id="userSelectionSubmit" value="Check" style="display:none;">
+			<span id="idClear" data-tooltip="Clear User" style="cursor: pointer;"><i class="fas fa-times" style="color:red;position:absolute;right:4px;top:13%;"></i></span>
 		</div>
 		<input type="submit" value="&#8629;" style="padding-left:0;padding-right:0;" />
 		<span id="onlyShow" class="hidden"><label for="hideOtherBookings" style="margin-left:12px;margin-right:2px;">Highlight:</label><input type="checkbox" id="hideOtherBookings" name="hideOtherBookings" style="vertical-align:middle;"/><label id="highlightHelp" for="hideOtherBookings" style="margin-left:2px;" class="helpIcon"></label></span>
@@ -182,9 +185,9 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 				$('#validatedCard').val('true');
 				$('#userkey').val(data.CUSTOMER.USERKEY);
 				if (data.CUSTOMER.STATUS == 'BLOCKED') {
-					$("#userStatus").append('<span class="blockWarn"><b>'+data.CUSTOMER.FULLNAME+'</b> is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
+					$("#userStatus").append('<span class="blockWarn"><b>'+data.CUSTOMER.FULLNAME+'</b> ('+data.CUSTOMER.PROFILEID+') is BLOCKED.<cfif BlockedResources.RecordCount><br />These may not booked: </cfif><cfoutput query="BlockedResources"><cfif CurrentRow NEQ 1>, </cfif>#ResourceName#</cfoutput></span>');
 				}else {
-					$("#userStatus").append('<span class="success"><b>'+data.CUSTOMER.FULLNAME+'</b> is valid.</span>&nbsp; Click a time to book it.');
+					$("#userStatus").append('<span class="success"><b>'+data.CUSTOMER.FULLNAME+'</b> ('+data.CUSTOMER.PROFILEID+').</span>&nbsp; Click a time to book it.');
 				}
 				$('#altCard').hide();
 				$('#onlyShow').show();
@@ -205,6 +208,7 @@ $(document).on('submit', '#userSelectionForm', function(event) {
 					certPopupText += '<tr><td>'+certInfo.CertiName+'</td><td>'+allowed+'</td></tr>';
 				});
 				certPopupText += '</table>';
+				certPopupText +='<div class="centered"><a target="_blank" href="https://apps.epl.ca/makercerts/MakerCertsCustomer.cfm?card='+data.CUSTOMER.CARDNUMBER+'">Edit Certifications</a></div>';
 
 				$("#userStatus").append('&nbsp;<a id="patronCertsPopup" href="javascript:void(0);">Certifications <span class="helpIcon"></span></a>');
 				$('#patronCertsPopup').opentip(certPopupText, {style:'clickInfo'});
@@ -243,8 +247,8 @@ var type#TypeID#Col = {columns:#Columns#, firstRID:#firstRID#};
 //console.log(TypeCol#TypeID#);
 </cfoutput>
 
-$('#id').focus(function(){
-	$(this).val('');
+$('#idClear').click(function(){
+	$('#id').val('');
 	// delete data;
 	delete userData;
 	//This probably needs to be userData

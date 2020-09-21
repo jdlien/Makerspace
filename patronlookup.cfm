@@ -54,4 +54,6 @@ Order by CertiName
 	<!--- <cfset data.CUSTOMER.EMAIL="jlien@epl.ca" /> --->
 </cfif>
 
+<cfset data.CUSTOMER.CARDNUMBER = id />
+
 <cfoutput>#SerializeJSON(data)#</cfoutput>
