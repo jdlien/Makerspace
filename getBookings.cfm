@@ -27,7 +27,8 @@ string function escapedq(string s) {
 <cfset form.id=REplace(form.id,' ', '', 'ALL')>
 
 <cfquery name="Bookings" datasource="ReadWriteSource" dbtype="ODBC">
-	SELECT * from MakerSpaceBookingTimes t
+	SELECT *, ISNULL((SELECT TOP 1 1 FROM vsd.MakerspaceBookingResourcesCerts WHERE RID=t.RID), 0) AS hasCert
+	FROM MakerSpaceBookingTimes t
 	JOIN MakerSpaceBookingResources r ON t.RID=r.RID
 	JOIN MakerspaceBookingResourceTypes ty ON r.TypeID=ty.TypeID
 	WHERE ty.OfficeCode='#ThisLocation#'
@@ -42,6 +43,7 @@ string function escapedq(string s) {
 		</cfloop>)
 	</cfif>
 </cfquery>
+
 
 
 <cfscript>
@@ -73,6 +75,28 @@ for (r in Bookings) {
 	s.color=(form?.hideOther==true && r.UserBarcode != form.id)?'##DDDDDD':r.color;
 	s.noteIcon=(form?.hideOther==true && r.UserBarcode != form.id)?'':noteIcon;
 	ArrayAppend(bookingsArray, s);
+	// If this resource has certs and they aren't required, show icon if the patron doesn't have the cert
+	s.certInfo = "";
+	if (r.hasCert==1 && r.RequireCerts!=1) {
+		// Look up the patron's certificates
+		userResourceCerts = queryExecute("SELECT cc.UserKey, cc.LibraryCard, r.RID, rc.MCID, c.CertiName FROM vsd.MakerspaceBookingResources r
+			JOIN vsd.MakerspaceBookingResourcesCerts rc ON rc.RID=r.RID
+			JOIN vsd.MakerCerts c ON rc.MCID=c.MCID
+			LEFT OUTER JOIN vsd.MakerCertsCustomers cc ON cc.MCID=rc.MCID AND cc.UserKey=#r.UserKey#
+			WHERE r.RID=#r.RID#");
+
+			// If any records have a blank userkey (or library card) the user is missing a required cert
+
+		for (c in userResourceCerts) {
+			if (c.UserKey == "") {
+				if (len(s.certInfo) == 0) s.certInfo = "<b>Missing certs: </b>";
+				else s.certInfo &= ", ";
+				s.certInfo &= c.CertiName;
+			}
+		}
+
+	} // end if hasCert and doesn't require it
+	if (len(s.certInfo)) s.description &= '<br />#s.certInfo#';
 }
 </cfscript>
 

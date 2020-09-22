@@ -517,6 +517,9 @@ $(document).ready(function(){
 
 			//Renders HTML in the event title (ie for notes image)
 			element.find('.fc-title').prepend(event.noteIcon);
+			if (event.certInfo && event.certInfo.length > 0) {
+				element.find('.fc-title').prepend('<i class="fas fa-user-graduate slash"></i> ');
+			}
 			//Here, if the view is day, I adjust the positioning to make columns
 			//There will be a number of columns. Basically I need to figure out which column index each event goes into.
 			//I need to fix this to position the bookings/blocked times correctly with the selected types

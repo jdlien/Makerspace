@@ -438,3 +438,19 @@ table.certifications td+td {
 .timePickers .formGroup select+select {
 	margin-left:5px;
 }
+
+
+.fas.fa-user-graduate {
+	position: relative;
+}
+
+
+.fas.slash:after {
+  position: absolute;
+  content: "/";
+  color: red;
+  font-weight: 700;
+  font-size: 2em;
+  left: 2px;
+  top: -7px;
+}
