@@ -297,7 +297,7 @@
 				WHERE RID=#form.rid#
 			</cfquery>
 
-			<cfif resourceCerts.recordCount GT 0>
+			<cfif resourceCerts.recordCount GT 0 AND ResourceInfo.RequireCerts EQ "1">
 				<cfloop query="resourceCerts">
 					<cfquery name="certCheck" dbtype="ODBC" datasource="SecureSource">
 						SELECT * FROM vsd.MakerCertsCustomers WHERE UserKey = #form.userKey# AND MCID=#resourceCerts.MCID#
@@ -314,6 +314,10 @@
 						<cfoutput>#SerializeJSON(data)#</cfoutput>
 						<cfabort />						
 					</cfif>
+			<cfelseif resourceCerts.recordCount GT 0>
+				<!--- Show a warning that the user doesn't have non-required certs --->
+				<cfset data.ERRORMSG&="Patron does not have the <b>#resourceCerts.CertiName#</b> certificate.<br />" />
+				<cfset data.MSG&='<span class="warning">'&data.ERRORMSG&'</span>' />
 			</cfif>
 
 

@@ -102,3 +102,6 @@ CREATE TABLE vsd.MakerspaceBookingResourcesCerts (
 	ModifiedBy varchar(30) NOT NULL,
 	Modified DATETIME NOT NULL
 )
+
+
+ALTER TABLE vsd.MakerspaceBookingResources ADD RequireCerts bit NULL

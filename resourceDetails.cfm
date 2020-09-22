@@ -109,13 +109,17 @@
 </cfif>
 </div>
 
-<label for="certs">Required Certs <div class="helpIcon" data-tooltip="Patrons require all of the selected certifications to use this resource."></div>
-	<select multiple id="certs" name="certs" class="chzn-select">
+<label for="certs">Certificates <div class="helpIcon" data-tooltip="Patrons require all of the selected certifications to use this resource."></div>
+	<select multiple id="certs" name="certs" class="chzn-select" data-placeholder="Select certificate(s)"> 
 		<option></option>
 		<cfloop query="MakerCerts">
 			<option value="#MCID#" <cfif hasID AND ListFind(certList, MCID)>selected="selected"</cfif>>#CertiName#</option>
 		</cfloop>
 	</select>
+</label>
+
+<label for="requireCerts" style="padding-top:10px;">Required to Book<div class="helpIcon" data-tooltip="If checked, the patron cannot book the resource before they have the above certificate(s). Leave this unchecked if the patron can be trained quickly before arriving for their booking."></div>
+	<span class="checkboxLeft"><input type="checkbox" id="requireCerts" name="requireCerts" <cfif hasID AND resInfo.requireCerts EQ 1>checked="checked"</cfif> /></span>
 </label>
 
 <div class="formItem">Colour

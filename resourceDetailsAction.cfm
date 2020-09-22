@@ -44,6 +44,7 @@
 			WeekdaymaxBookings = <cfif isNumeric(form.WeekdayMaxBookings)>#form.WeekdayMaxBookings#<cfelse>NULL</cfif>,
 			WeekendmaxBookings = <cfif isNumeric(form.WeekendMaxBookings)>#form.WeekendMaxBookings#<cfelse>NULL</cfif>,
 			FutureMaxBookings = <cfif isNumeric(form.FutureMaxBookings)>#form.FutureMaxBookings#<cfelse>NULL</cfif>,
+			RequireCerts = <cfif isDefined('form.requireCerts')>1<cfelse>0</cfif>,
 			ModifiedBy = '#session.identity#',
 			Modified = GETDATE()
 			WHERE RID=#form.rid#
@@ -54,7 +55,7 @@
 
 		<cfquery name="insertResource" dbtype="ODBC" datasource="ReadWriteSource">
 			INSERT INTO vsd.MakerspaceBookingResources (ResourceName, Description, Color, MaxUsers, TypeID,
-				AllowBlocked, Concurrent, WeekdayMaxBookings, WeekendMaxBookings, FutureMaxBookings, ModifiedBy, Modified) VALUES(
+				AllowBlocked, Concurrent, WeekdayMaxBookings, WeekendMaxBookings, FutureMaxBookings, RequireCerts, ModifiedBy, Modified) VALUES(
 			'#form.ResourceName#',
 			'#form.Description#',
 			'#form.color#',
@@ -65,6 +66,7 @@
 			<cfif isNumeric(form.WeekdayMaxBookings)>#form.WeekdayMaxBookings#<cfelse>NULL</cfif>,
 			<cfif isNumeric(form.WeekendMaxBookings)>#form.WeekendMaxBookings#<cfelse>NULL</cfif>,
 			<cfif isNumeric(form.FutureMaxBookings)>#form.FutureMaxBookings#<cfelse>NULL</cfif>,
+			<cfif isDefined('form.requireCerts')>1<cfelse>0</cfif>,
 			'#session.identity#',
 			GETDATE()							
 			)
